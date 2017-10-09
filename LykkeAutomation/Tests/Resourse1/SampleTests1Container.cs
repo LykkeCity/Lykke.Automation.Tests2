@@ -1,4 +1,4 @@
-﻿using LukkeAutomation.TestsCore;
+﻿using LykkeAutomation.TestsCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LukkeAutomation.Tests.Resourse1
+namespace LykkeAutomation.Tests.Resourse1
 {
     class SampleTests1Container
     {
