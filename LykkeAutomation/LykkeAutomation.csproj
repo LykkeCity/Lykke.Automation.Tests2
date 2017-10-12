@@ -69,6 +69,10 @@
       <HintPath>packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -79,13 +83,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiModels\PersonalDataModel.cs" />
+    <Compile Include="Api\Api.cs" />
+    <Compile Include="Api\LykkeApi.cs" />
+    <Compile Include="Api\PersonalData\PersonalData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsCore\BaseTest.cs" />
+    <Compile Include="Tests\PersonalData\PersonalDataResourceTests.cs" />
     <Compile Include="Tests\Resourse1\SampleTests1Container.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ApiModels\" />
-    <Folder Include="Api\" />
     <Folder Include="TestsData\" />
   </ItemGroup>
   <ItemGroup>
@@ -93,8 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Ghpr.Core.Settings.json" />
-    <None Include="Ghpr.NUnit.Settings.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
