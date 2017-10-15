@@ -49,6 +49,10 @@
       <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json.Schema, Version=3.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.Schema.3.0.4\lib\net45\Newtonsoft.Json.Schema.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit-agent, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NUnit.Engine.3.7.0\lib\nunit-agent.exe</HintPath>
       <Private>True</Private>
@@ -86,6 +90,8 @@
     <Compile Include="Api\ApiModels\Registration\AccountRegistrationModel.cs" />
     <Compile Include="Api\ApiModels\PersonalData\PersonalDataModel.cs" />
     <Compile Include="Api\Api.cs" />
+    <Compile Include="Api\apiSchemes.cs" />
+    <Compile Include="Api\JsonSchemes\PersonalData\PersonalDataScheme.cs" />
     <Compile Include="Api\LykkeApi.cs" />
     <Compile Include="Api\PersonalData.cs" />
     <Compile Include="Api\Registration.cs" />

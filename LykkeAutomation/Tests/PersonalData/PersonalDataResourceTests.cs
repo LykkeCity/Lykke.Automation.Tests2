@@ -1,5 +1,7 @@
 ﻿using LykkeAutomation.ApiModels;
 using LykkeAutomation.TestsCore;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using NUnit.Framework;
 using RestSharp;
 using System;
@@ -55,6 +57,10 @@ namespace LykkeAutomation.Tests.PersonalData
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(registationResponse.Result.Token);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.False, "Invalid response content");
+
+                JObject responseObject = JObject.Parse(response.Content);
+                bool valid = responseObject.IsValid(apiSchemes.PersonalDataSheme.PersonalDataResponseSchema, out schemesError);
+                ValidateScheme(valid, schemesError);
 
                 var responseModel = lykkeApi.PersonalData.GetPersonalDataModel(registationResponse.Result.Token);
                 Assert.That(responseModel.PersonalData.FullName, Is.EqualTo(user.FullName), "Full Name is not the same");

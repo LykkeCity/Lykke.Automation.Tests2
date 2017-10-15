@@ -12,6 +12,8 @@ namespace LykkeAutomation.TestsCore
     class BaseTest
     {
         public LykkeApi lykkeApi;
+        public ApiSchemes apiSchemes;
+        public IList<string> schemesError;
         public static Dictionary<string, List<IRestResponse>> responses = new Dictionary<string, List<IRestResponse>>();
 
         public static string RequestInfo(IRestRequest request)
@@ -30,10 +32,21 @@ namespace LykkeAutomation.TestsCore
             return info;
         }
 
+        public static void ValidateScheme(bool valid, IList<string> errors)
+        {
+            if (!valid)
+            {
+                errors.ToList().ForEach(e => Console.WriteLine(e));
+                Assert.Fail("Scheme not valid");
+            }
+        }
+
         [SetUp]
         public void SetUp()
         {
             lykkeApi = new LykkeApi();
+            apiSchemes = new ApiSchemes();
+            schemesError = new List<string>();
             Console.WriteLine("SetUp");
         }
 
