@@ -10,6 +10,7 @@ namespace LykkeAutomation.Api
     class LykkeApi
     {
         public PersonalData.PersonalData PersonalData => new PersonalData.PersonalData();
+        public Registration Registration => new Registration();
 
     }
 }

@@ -12,6 +12,7 @@ namespace LykkeAutomation.TestsCore
     class BaseTest
     {
         public LykkeApi lykkeApi;
+        public static Dictionary<string, List<IRestResponse>> responses = new Dictionary<string, List<IRestResponse>>();
 
         public static string RequestInfo(IRestRequest request)
         {
@@ -37,11 +38,21 @@ namespace LykkeAutomation.TestsCore
         }
 
 
-
         [TearDown]
         public void TearDown()
         {
             Console.WriteLine("TearDown");
+            //we can do it only in case if test fails. Discuss to test team
+            Console.WriteLine("Whole Test API log");
+            List<IRestResponse> logs = new List<IRestResponse>();
+            responses.TryGetValue(TestContext.CurrentContext.Test.FullName, out logs);
+            logs?.ForEach(l => 
+            {
+                Console.WriteLine(RequestInfo(l.Request));
+                Console.WriteLine(ResponseInfo(l));
+                Console.WriteLine("--------------------");
+            });
+            responses.Remove(TestContext.CurrentContext.Test.FullName);
         }
 
     }

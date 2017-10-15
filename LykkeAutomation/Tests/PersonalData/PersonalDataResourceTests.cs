@@ -1,4 +1,5 @@
-﻿using LykkeAutomation.TestsCore;
+﻿using LykkeAutomation.ApiModels;
+using LykkeAutomation.TestsCore;
 using NUnit.Framework;
 using RestSharp;
 using System;
@@ -21,8 +22,9 @@ namespace LykkeAutomation.Tests.PersonalData
             {
                 var invalidToken = "invalidToken";
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(invalidToken);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), $"Invalid status code;\n {RequestInfo(response.Request)}, \n {ResponseInfo(response)}");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.False, $"Invalid response content \n {RequestInfo(response.Request)}, \n {ResponseInfo(response)}");
+
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), $"Invalid status code");
+                Assert.That(string.IsNullOrEmpty(response.Content), Is.False, $"Invalid response content ");
             }
         }
 
@@ -34,8 +36,30 @@ namespace LykkeAutomation.Tests.PersonalData
             {
                 var emptyToken = "";
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(emptyToken);
+
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), "Invalid status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Invalid response content");
+            }
+        }
+
+        public class PersonalDataValidToken : BaseTest
+        {
+            [Test]
+            [Category("PersonalData"), Category("All")]
+            public void PersonalDataValidTokenTest()
+            {
+                AccountRegistrationModel user = new AccountRegistrationModel();
+                var registationResponse = lykkeApi.Registration.PostRegistrationResponse(user);
+                Assert.That(registationResponse.Error, Is.Null, "Error is not null");
+
+                var response = lykkeApi.PersonalData.GetPersonalDataResponse(registationResponse.Result.Token);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
+                Assert.That(string.IsNullOrEmpty(response.Content), Is.False, "Invalid response content");
+
+                var responseModel = lykkeApi.PersonalData.GetPersonalDataModel(registationResponse.Result.Token);
+                Assert.That(responseModel.PersonalData.FullName, Is.EqualTo(user.FullName), "Full Name is not the same");
+                Assert.That(responseModel.PersonalData.Email, Is.EqualTo(user.Email), "Email is not the same");
+                Assert.That(responseModel.PersonalData.Phone, Is.EqualTo(user.ContactPhone), "Phone is not the same");
             }
         }
     }

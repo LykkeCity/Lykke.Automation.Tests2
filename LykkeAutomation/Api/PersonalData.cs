@@ -17,16 +17,14 @@ namespace LykkeAutomation.Api.PersonalData
         public IRestResponse GetPersonalDataResponse(string token)
         {
             request = new RestRequest(resource, Method.GET);
-            request.AddHeader("Authorization", token);
+            request.AddHeader("Authorization", "Bearer " + token);
             response = client.Execute(request);
             return response;
         }
 
         public PersonalDataModel GetPersonalDataModel(string token)
         {
-            request = new RestRequest(resource, Method.GET);
-            request.AddHeader("Authorization", token);
-            response = client.Execute(request);
+            response = GetPersonalDataResponse(token);
             return JsonConvert.DeserializeObject<PersonalDataModel>(response?.Content);
         }
     }
