@@ -27,7 +27,7 @@ namespace LykkeAutomation.Tests.PersonalData
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(invalidToken);
 
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), $"Invalid status code");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.False, $"Invalid response content ");
+                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, $"Invalid response content ");
             }
         }
 
