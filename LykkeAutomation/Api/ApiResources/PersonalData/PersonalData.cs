@@ -1,4 +1,5 @@
 ﻿using LykkeAutomation.ApiModels;
+using LykkeAutomation.ApiModels.PersonalDataModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.Api.PersonalData
+namespace LykkeAutomation.Api.PersonalDataResource
 {
     class PersonalData : Api
     {
@@ -22,10 +23,5 @@ namespace LykkeAutomation.Api.PersonalData
             return response;
         }
 
-        public PersonalDataModel GetPersonalDataModel(string token)
-        {
-            response = GetPersonalDataResponse(token);
-            return JsonConvert.DeserializeObject<PersonalDataModel>(response?.Content);
-        }
-    }
+        public PersonalDataModel GetPersonalDataModel(string token) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponse(token)?.Content);    }
 }

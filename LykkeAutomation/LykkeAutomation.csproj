@@ -87,18 +87,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ApiModels\Auth\AuthModels.cs" />
+    <Compile Include="Api\ApiModels\ErrorModel.cs" />
     <Compile Include="Api\ApiModels\Registration\AccountRegistrationModel.cs" />
     <Compile Include="Api\ApiModels\PersonalData\PersonalDataModel.cs" />
     <Compile Include="Api\Api.cs" />
+    <Compile Include="Api\ApiResources\Auth\Auth.cs" />
     <Compile Include="Api\apiSchemes.cs" />
+    <Compile Include="Api\JsonSchemes\Auth\AuthScheme.cs" />
     <Compile Include="Api\JsonSchemes\PersonalData\PersonalDataScheme.cs" />
     <Compile Include="Api\LykkeApi.cs" />
-    <Compile Include="Api\PersonalData.cs" />
-    <Compile Include="Api\Registration.cs" />
+    <Compile Include="Api\ApiResources\PersonalData\PersonalData.cs" />
+    <Compile Include="Api\ApiResources\Registration\Registration.cs" />
     <Compile Include="Api\RestClientWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsCore\BaseTest.cs" />
     <Compile Include="TestsData\PersonalTestData.cs" />
+    <Compile Include="Tests\Auth\AuthTests.cs" />
     <Compile Include="Tests\PersonalData\PersonalDataResourceTests.cs" />
     <Compile Include="Tests\Registration\RegistrationResourceTests.cs" />
     <Compile Include="Tests\Resourse1\SampleTests1Container.cs" />

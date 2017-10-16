@@ -1,4 +1,5 @@
 ﻿using LykkeAutomation.ApiModels;
+using LykkeAutomation.ApiModels.RegistrationModels;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.Api
+namespace LykkeAutomation.Api.RegistrationResource
 {
     public class Registration : Api
     {

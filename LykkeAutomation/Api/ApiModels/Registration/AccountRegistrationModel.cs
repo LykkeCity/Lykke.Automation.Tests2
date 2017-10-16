@@ -1,4 +1,6 @@
-﻿using LykkeAutomation.TestsData;
+﻿using LykkeAutomation.Api.ApiModels.ErrorModel;
+using LykkeAutomation.ApiModels.PersonalDataModels;
+using LykkeAutomation.TestsData;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.ApiModels
+namespace LykkeAutomation.ApiModels.RegistrationModels
 {
     public class AccountRegistrationModel
     {

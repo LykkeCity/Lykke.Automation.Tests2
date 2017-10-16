@@ -1,4 +1,5 @@
-﻿using LykkeAutomation.Api.JsonSchemes.PersonalData;
+﻿using LykkeAutomation.Api.JsonSchemes.Auth;
+using LykkeAutomation.Api.JsonSchemes.PersonalData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace LykkeAutomation.Api
     public class ApiSchemes
     {
         public PersonalDataSchemes PersonalDataSheme => new PersonalDataSchemes();
+        public AuthScheme AuthScheme => new AuthScheme();
     }
 }

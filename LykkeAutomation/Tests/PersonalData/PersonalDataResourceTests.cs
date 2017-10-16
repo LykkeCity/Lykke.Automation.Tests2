@@ -1,4 +1,5 @@
 ﻿using LykkeAutomation.ApiModels;
+using LykkeAutomation.ApiModels.RegistrationModels;
 using LykkeAutomation.TestsCore;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;

@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using LykkeAutomation.TestsData;
 using Newtonsoft.Json;
+using LykkeAutomation.Api.ApiModels.ErrorModel;
 
-namespace LykkeAutomation.ApiModels
+namespace LykkeAutomation.ApiModels.PersonalDataModels
 {
     public class PersonalDataModel
     {
@@ -43,11 +44,4 @@ namespace LykkeAutomation.ApiModels
             this.FullName = $"{FirstName} {LastName}";
         }
     }
-
-    public class Error
-    {
-        public string Code { get; set; }
-        public string Field { get; set; }
-        public string Message { get; set; }
-    }  
 }

@@ -1,16 +1,19 @@
-﻿using System;
+﻿using LykkeAutomation.Api.AuthResource;
+using LykkeAutomation.Api.PersonalDataResource;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using LykkeAutomation.Api.RegistrationResource;
 
 namespace LykkeAutomation.Api
 {
     class LykkeApi
     {
-        public PersonalData.PersonalData PersonalData => new PersonalData.PersonalData();
+        public PersonalData PersonalData => new PersonalData();
         public Registration Registration => new Registration();
+        public Auth Auth => new Auth();
 
     }
 }
