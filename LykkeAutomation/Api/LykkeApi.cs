@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LykkeAutomation.Api.RegistrationResource;
+using LykkeAutomation.Api.ApiModels.AccountExistModels;
+using LykkeAutomation.Api.ApiResources.AccountExist;
 
 namespace LykkeAutomation.Api
 {
@@ -14,6 +16,6 @@ namespace LykkeAutomation.Api
         public PersonalData PersonalData => new PersonalData();
         public Registration Registration => new Registration();
         public Auth Auth => new Auth();
-
+        public AccountExist AccountExist => new AccountExist();
     }
 }

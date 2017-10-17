@@ -22,8 +22,8 @@ namespace LykkeAutomation.ApiModels.RegistrationModels
 
         public AccountRegistrationModel()
         {
-            Email = PersonalTestData.GenerateEmail();
-            FullName = PersonalTestData.FullName();
+            Email = TestData.GenerateEmail();
+            FullName = TestData.FullName();
             Password = "654321";
             ContactPhone = "+71234567";
             Hint = "Holmes";

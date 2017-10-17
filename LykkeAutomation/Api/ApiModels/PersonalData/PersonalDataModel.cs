@@ -32,12 +32,12 @@ namespace LykkeAutomation.ApiModels.PersonalDataModels
         public PersonalData()
         {
             SetName();
-            Email = PersonalTestData.GenerateEmail();
+            Email = TestData.GenerateEmail();
         }
 
         public void SetName()
         {
-            var person = PersonalTestData.FirstLastName();
+            var person = TestData.FirstLastName();
 
             this.FirstName = person.Key;
             this.LastName = person.Value;

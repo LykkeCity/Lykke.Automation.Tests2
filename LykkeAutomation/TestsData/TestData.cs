@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LykkeAutomation.TestsData
 {
-    public class PersonalTestData
+    public class TestData
     {
         private static Dictionary<string, string> Names()
         {

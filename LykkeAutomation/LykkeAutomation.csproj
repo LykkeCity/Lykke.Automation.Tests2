@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ghpr.Core, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Ghpr.Core.0.6.0\lib\net452\Ghpr.Core.dll</HintPath>
+    <Reference Include="Ghpr.Core, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Ghpr.Core.0.7.0\lib\net452\Ghpr.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ghpr.NUnit, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -87,13 +87,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ApiModels\AccountExist\AccountExist.cs" />
     <Compile Include="Api\ApiModels\Auth\AuthModels.cs" />
     <Compile Include="Api\ApiModels\ErrorModel.cs" />
     <Compile Include="Api\ApiModels\Registration\AccountRegistrationModel.cs" />
     <Compile Include="Api\ApiModels\PersonalData\PersonalDataModel.cs" />
     <Compile Include="Api\Api.cs" />
+    <Compile Include="Api\ApiResources\AccountExist\AccountExist.cs" />
     <Compile Include="Api\ApiResources\Auth\Auth.cs" />
     <Compile Include="Api\apiSchemes.cs" />
+    <Compile Include="Api\JsonSchemes\AccountExist\AccountExistSchemecs.cs" />
     <Compile Include="Api\JsonSchemes\Auth\AuthScheme.cs" />
     <Compile Include="Api\JsonSchemes\PersonalData\PersonalDataScheme.cs" />
     <Compile Include="Api\LykkeApi.cs" />
@@ -102,7 +105,8 @@
     <Compile Include="Api\RestClientWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestsCore\BaseTest.cs" />
-    <Compile Include="TestsData\PersonalTestData.cs" />
+    <Compile Include="TestsData\TestData.cs" />
+    <Compile Include="Tests\AccountExist\AccountExistTests.cs" />
     <Compile Include="Tests\Auth\AuthTests.cs" />
     <Compile Include="Tests\PersonalData\PersonalDataResourceTests.cs" />
     <Compile Include="Tests\Registration\RegistrationResourceTests.cs" />
