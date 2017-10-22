@@ -353,3 +353,5 @@ ModelManifest.xml
 /LykkeAutomation/packages/RestSharp.105.2.3/lib/windowsphone81/RestSharp.dll
 /LykkeAutomation/packages/RestSharp.105.2.3/lib/windowsphone81/RestSharp.xml
 /LykkeAutomation/packages/RestSharp.105.2.3/readme.txt
+/LykkeAutomation/TestReportHelpers/AllureLog.txt
+/LykkeAutomation/TestReportHelpers/report.trx
