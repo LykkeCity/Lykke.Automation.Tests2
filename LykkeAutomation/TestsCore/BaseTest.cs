@@ -14,9 +14,10 @@ namespace LykkeAutomation.TestsCore
         public LykkeApi lykkeApi;
         public ApiSchemes apiSchemes;
         public IList<string> schemesError;
-        public static Dictionary<string, List<IRestResponse>> responses = new Dictionary<string, List<IRestResponse>>();
 
-        public static string RequestInfo(IRestRequest request)
+        public static Dictionary<string, List<HttpResponseMessageWrapper>> responses ;
+
+        public static string RequestInfoOld(IRestRequest request)
         {
             string parameters = "";
             request?.Parameters.ForEach(p => parameters += $"{p.Name}: {p.Value}\r\n");
@@ -24,11 +25,29 @@ namespace LykkeAutomation.TestsCore
             return info;
         }
 
-        public static string ResponseInfo(IRestResponse response)
+        public static string ResponseInfoOld(IRestResponse response)
         {
             string headers = "";
             response?.Headers.ToList().ForEach(h => headers += $"{h.Name}: {h.Value}\r\n");
             var info = $"\r\nresponseInfo\r\nStatusCode: {response?.StatusCode}\r\n{headers}Content: \r\n{response?.Content}";
+            return info;
+        }
+
+        public static string RequestInfo(HttpResponseMessageWrapper response)
+        {
+            string parameters = "";
+            response?.Request.Properties.ToList().ForEach(p => parameters += $"{p.Key}: {p.Value}\r\n");
+            string headers = "";
+            response?.Request.Headers.ToList().ForEach(h => headers += $"{h.Key}: {h.Value.ElementAt(0)}\r\n");
+            var info = $"\r\nrequestInfo: {response?.Request?.Method}\r\n{headers}resource: {response?.Request?.RequestUri}\r\n{response?.Request.ContentJson}";
+            return info;
+        }
+
+        public static string ResponseInfo(HttpResponseMessageWrapper response)
+        {
+            string headers = "";
+            response?.Headers.ToList().ForEach(h => headers += $"{h.Key}: {h.Value.ElementAt(0)}\r\n");
+            var info = $"\r\nresponseInfo\r\nStatusCode: {response?.StatusCode}\r\n{headers}Content: \r\n{response?.ContentJson}";
             return info;
         }
 
@@ -44,6 +63,7 @@ namespace LykkeAutomation.TestsCore
         [SetUp]
         public void SetUp()
         {
+            responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
             lykkeApi = new LykkeApi();
             apiSchemes = new ApiSchemes();
             schemesError = new List<string>();
@@ -57,11 +77,11 @@ namespace LykkeAutomation.TestsCore
             Console.WriteLine("TearDown");
             //we can do it only in case if test fails. Discuss to test team
             Console.WriteLine("Whole Test API log");
-            List<IRestResponse> logs = new List<IRestResponse>();
+            List<HttpResponseMessageWrapper> logs = new List<HttpResponseMessageWrapper>();
             responses.TryGetValue(TestContext.CurrentContext.Test.FullName, out logs);
             logs?.ForEach(l => 
             {
-                Console.WriteLine(RequestInfo(l.Request));
+                Console.WriteLine(RequestInfo(l));
                 Console.WriteLine(ResponseInfo(l));
                 Console.WriteLine("--------------------");
             });

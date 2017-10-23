@@ -15,13 +15,13 @@ namespace LykkeAutomation.Api
         public new IRestResponse Execute(IRestRequest request)
         {
             var response = base.Execute(request);
-            List<IRestResponse> r;
+            /*List<IRestResponse> r;
             BaseTest.responses.TryGetValue(TestContext.CurrentContext.Test.FullName, out r);
             if(r==null)
                 r= new List<IRestResponse>();
             r.Add(response);
             BaseTest.responses[TestContext.CurrentContext.Test.FullName] = r;
-
+            */
             return response;
         }
 

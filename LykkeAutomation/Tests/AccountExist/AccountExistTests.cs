@@ -25,32 +25,12 @@ namespace LykkeAutomation.Tests
                 var response = lykkeApi.AccountExist.GetAccountExistResponse(invalidEmail);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
 
-                var obj = JObject.Parse(response.Content);
+                var obj = JObject.Parse(response.ContentJson);
                 ValidateScheme(obj.IsValid(apiSchemes.AccountExistSchemes.AuthResponseScheme, out schemesError), schemesError);
 
-                var model = AccountExistModel.ConvertToAccountExistModel(response.Content);
+                var model = AccountExistModel.ConvertToAccountExistModel(response.ContentJson);
                 Assert.That(model.Result.IsEmailRegistered, Is.False, "Email is registered");
                 Assert.That(model.Error, Is.Null, "Error is not null");
-            }
-        }
-
-
-        public class AccountExistInvalidEmail1 : BaseTest
-        {
-            [Test]
-            [Category("AccountExist"), Category("All")]
-            public void AccountExistInvalidEmail1Test()
-            {
-                string invalidEmail = TestData.GenerateEmail();
-                lykkeApi.AccountExist.GetAccountExistNew(invalidEmail).Wait();
-                //Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
-
-               // var obj = JObject.Parse(response.Content);
-               // ValidateScheme(obj.IsValid(apiSchemes.AccountExistSchemes.AuthResponseScheme, out schemesError), schemesError);
-
-               // var model = AccountExistModel.ConvertToAccountExistModel(response.Content);
-               // Assert.That(model.Result.IsEmailRegistered, Is.False, "Email is registered");
-               // Assert.That(model.Error, Is.Null, "Error is not null");
             }
         }
     }

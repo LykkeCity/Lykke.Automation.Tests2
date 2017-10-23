@@ -31,10 +31,10 @@ namespace LykkeAutomation.Tests.Auth
                 var authResponse = lykkeApi.Auth.PostAuthResponse(auth);
                 Assert.That(authResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
 
-                var obj = JObject.Parse(authResponse.Content);
+                var obj = JObject.Parse(authResponse.ContentJson);
                 Assert.That(obj.IsValid(apiSchemes.AuthScheme.AuthResponseScheme), Is.True, "Responce JSON is not valid scheme");
 
-                var authModel = AuthModels.ConvertToAuthModelResponse(authResponse.Content);
+                var authModel = AuthModels.ConvertToAuthModelResponse(authResponse.ContentJson);
                 Assert.That(authModel.Result.PersonalData.FullName, Is.EqualTo(newUser.FullName), "Invalid Full Name");
             }
         }

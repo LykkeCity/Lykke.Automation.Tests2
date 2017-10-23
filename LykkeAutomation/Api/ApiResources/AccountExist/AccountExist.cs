@@ -15,8 +15,8 @@ namespace LykkeAutomation.Api.ApiResources.AccountExist
     {
 
         private string resource = "/AccountExist";
-
-        public IRestResponse GetAccountExistResponse(string email)
+/*
+        public IRestResponse GetAccountExistResponseOld(string email)
         {
             var request = new RestRequest(resource, Method.GET);
             request.AddQueryParameter("email", email);
@@ -24,24 +24,17 @@ namespace LykkeAutomation.Api.ApiResources.AccountExist
             return response;
         }
 
-        public AccountExistModel GetAccountExistResponseModel(string email) => 
-            JsonConvert.DeserializeObject<AccountExistModel>(GetAccountExistResponse(email)?.Content);
-
-        public async Task GetAccountExistNew(string email)
+        public AccountExistModel GetAccountExistResponseModelOld(string email) => 
+            JsonConvert.DeserializeObject<AccountExistModel>(GetAccountExistResponseOld(email)?.Content);
+            */
+        public HttpResponseMessageWrapper GetAccountExistResponse(string email)
         {
             var client = new HttpClientWrapper();
             client.DefaultRequestHeaders.Accept.Clear(); 
-            var stringTask = client.GetAsync(BaseUri + resource + $"?email={email}");
-
-            //var msg = await stringTask;
-            /*string text = await msg.Content.ReadAsStringAsync(); //тут контент
-            Console.Write(msg);
-            Console.WriteLine(msg.Content);
-            //Console.WriteLine(text);
-            Console.WriteLine(msg.RequestMessage); // тут запрос, все хорошо
-            Console.WriteLine(msg.RequestMessage.RequestUri);
-            Console.WriteLine(msg.RequestMessage.Content);
-            */
+            return client.GetAsync(BaseUri + resource + $"?email={email}"); 
         }
+
+        public AccountExistModel GetAccountExistResponseModel(string email) =>
+            JsonConvert.DeserializeObject<AccountExistModel>(GetAccountExistResponse(email)?.ContentJson);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using LykkeAutomation.Api.ApiModels.AuthModels;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static LykkeAutomation.Api.ApiModels.AuthModels.AuthModels;
@@ -15,24 +17,21 @@ namespace LykkeAutomation.Api.AuthResource
         private const string resource = "/Auth";
         private const string resourceLogOut = "/Auth/LogOut";
 
-        public IRestResponse PostAuthResponse(AuthenticateModel auth)
+        public HttpResponseMessageWrapper PostAuthResponse(AuthenticateModel auth)
         {
-            request = new RestRequest(resource, Method.POST);
-            request.AddJsonBody(auth);
-            response = client.Execute(request);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(auth));
+            var response = client.PostAsync(resource, content);
             return response;
         }
 
         public AuthModelResponse PostAuthResponseModel(AuthenticateModel auth)
         {
-            return JsonConvert.DeserializeObject<AuthModelResponse>(PostAuthResponse(auth)?.Content);
+            return JsonConvert.DeserializeObject<AuthModelResponse>(PostAuthResponse(auth)?.ContentJson);
         }
 
-        public IRestResponse PostAuthLogOutResponse(AuthenticateModel auth)
+        public HttpResponseMessageWrapper PostAuthLogOutResponse(AuthenticateModel auth)
         {
-            request = new RestRequest(resource, Method.GET);
-            request.AddBody(auth);
-            response = client.Execute(request);
+            var response = client.PostAsync(resourceLogOut, new StringContent(JsonConvert.SerializeObject(auth)));
             return response;
         }
     }

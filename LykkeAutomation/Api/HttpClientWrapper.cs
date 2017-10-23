@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LykkeAutomation.TestsCore;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -8,72 +10,102 @@ using System.Threading.Tasks;
 
 namespace LykkeAutomation.Api
 {
-    class HttpClientWrapper : HttpClient
+    public class HttpClientWrapper : HttpClient
     {
+        private string BaseURI = "";
 
         public new HttpResponseMessageWrapper GetAsync(string requestUri)
         {
-            var rMessage = new HttpResponseMessageWrapper(base.GetAsync(requestUri));
-            return rMessage;
-        }
-/*
-        public new Task<HttpResponseMessageWrapper> PostAsync(string requestUri, HttpContent content)
-        {
-            return base.PostAsync(requestUri, content);
+            var response = new HttpResponseMessageWrapper(base.GetAsync(BaseURI + requestUri));
+            AddToLog(response);
+            return response;
         }
 
-        public new Task<HttpResponseMessageWrapper> DeleteAsync(string requestUri)
+        public new HttpResponseMessageWrapper PostAsync(string requestUri, HttpContent content)
         {
-            return base.DeleteAsync(requestUri);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var response = new HttpResponseMessageWrapper(base.PostAsync(BaseURI + requestUri, content));
+            AddToLog(response);
+            return response;
         }
 
-        public new Task<HttpResponseMessageWrapper> PutAsync(string requestUri, HttpContent content)
+        public new HttpResponseMessageWrapper DeleteAsync(string requestUri)
         {
-            return base.PutAsync(requestUri, content);
-        }*/
+            var response = new HttpResponseMessageWrapper(base.DeleteAsync(BaseURI + requestUri));
+            AddToLog(response);
+            return response;
+        }
+
+        public new HttpResponseMessageWrapper PutAsync(string requestUri, HttpContent content)
+        {
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var response = new HttpResponseMessageWrapper(base.PutAsync(BaseURI + requestUri, content));
+            AddToLog(response);
+            return response;
+
+        }
+
+        private void AddToLog(HttpResponseMessageWrapper response)
+        {
+            List<HttpResponseMessageWrapper> r;
+            BaseTest.responses.TryGetValue(TestContext.CurrentContext.Test.FullName, out r);
+            if (r == null)
+                r = new List<HttpResponseMessageWrapper>();
+            r.Add(response);
+            BaseTest.responses[TestContext.CurrentContext.Test.FullName] = r;
+        }
+
+        public HttpClientWrapper()
+        {
+
+        }
+
+        public HttpClientWrapper(string baseUri)
+        {
+            BaseURI = baseUri;
+        }
+    }
+
+    public class HttpRequestMessageWrapper : HttpRequestMessage
+    {
+        public string ContentJson { get { return Message.Content?.ReadAsStringAsync().Result == null? "": Message.Content.ReadAsStringAsync().Result; } }
+        private HttpRequestMessage Message;
+
+        public new HttpRequestHeaders Headers { get { return Message.Headers; } }
+
+        public HttpRequestMessageWrapper(HttpRequestMessage message)
+        {
+            Message = message;
+            Version = message.Version;
+            Method = message.Method;
+            RequestUri = message.RequestUri;
+        }
     }
 
     public class HttpResponseMessageWrapper : HttpResponseMessage
     {
+        private HttpResponseMessage resultMessage;
         public string ContentJson = "";
 
-        public HttpRequestMessage Request;
-        //
-        public new HttpContent Content { get; set; }
-       
-        public new HttpResponseHeaders Headers { get; }
-        
-        public new bool IsSuccessStatusCode { get; }
-        
-        public new string ReasonPhrase { get; set; }
+        public new HttpResponseHeaders Headers { get { return resultMessage.Headers; } }
 
-        public new HttpRequestMessage RequestMessage { get; set; }
+        public new bool IsSuccessStatusCode { get { return resultMessage.IsSuccessStatusCode; } }
 
-        public new HttpStatusCode StatusCode { get; set; }
-
-        public new Version Version { get; set; }
-
-        public new void Dispose() { base.Dispose(); }
-
-        public new HttpResponseMessage EnsureSuccessStatusCode() { return base.EnsureSuccessStatusCode(); }
-
-        public override string ToString() { return base.ToString(); }
-
-        protected new void Dispose(bool disposing) { base.Dispose(); }
-
+        public HttpRequestMessageWrapper Request;
 
         public async void PerformRequest(Task<HttpResponseMessage> t) {
-            var tt = (await t);
-            Request = tt.RequestMessage;
+            Request = new HttpRequestMessageWrapper((await t).RequestMessage);
         }
 
-        //
         public HttpResponseMessageWrapper(Task<HttpResponseMessage> t)
         {
-            this.ContentJson = t.Result.Content.ReadAsStringAsync().Result;
+            resultMessage = t.Result;
+            ContentJson = resultMessage.Content.ReadAsStringAsync().Result;
             PerformRequest(t);
+            Content = t.Result.Content;
+            ReasonPhrase = t.Result.ReasonPhrase;
+            StatusCode = t.Result.StatusCode;
+            Version = t.Result.Version;
         }
-
-        
     }
 }

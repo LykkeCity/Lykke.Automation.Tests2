@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RestSharp;
+using System.Net.Http.Headers;
 
 namespace LykkeAutomation.Api
 {
@@ -16,17 +17,22 @@ namespace LykkeAutomation.Api
 
         public List<IRestResponse> responses = new List<IRestResponse>();
 
-        protected RestClientWrapper client;
+        protected HttpClientWrapper client;
+        
 
         public Api(string BaseUri)
         {
             this.BaseUri = BaseUri;
-            client = new RestClientWrapper(BaseUri);
+            client = new HttpClientWrapper(BaseUri);
+            client.DefaultRequestHeaders.Accept
+            .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public Api()
         {
-            client = new RestClientWrapper(BaseUri);
+            client = new HttpClientWrapper(BaseUri);
+            client.DefaultRequestHeaders.Accept
+            .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
         
     }

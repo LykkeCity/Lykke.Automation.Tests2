@@ -6,6 +6,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,13 +16,13 @@ namespace LykkeAutomation.Api.PersonalDataResource
     {
         private const string resource = "/PersonalData";
 
-        public IRestResponse GetPersonalDataResponse(string token)
+        public HttpResponseMessageWrapper GetPersonalDataResponse(string token)
         {
-            request = new RestRequest(resource, Method.GET);
-            request.AddHeader("Authorization", "Bearer " + token);
-            response = client.Execute(request);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = client.GetAsync(resource);
             return response;
         }
 
-        public PersonalDataModel GetPersonalDataModel(string token) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponse(token)?.Content);    }
+        public PersonalDataModel GetPersonalDataModel(string token) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponse(token)?.ContentJson);
+    }
 }
