@@ -20,6 +20,7 @@ namespace LykkeAutomation.Tests.PersonalData
         public class PersonalDataInvalidToken : BaseTest
         {
             [Test]
+            [Parallelizable]
             [Category("PersonalData"), Category("All")]
             public void PersonalDataInvalidTokenTest()
             {
@@ -34,6 +35,7 @@ namespace LykkeAutomation.Tests.PersonalData
         public class PersonalDataEmptyToken : BaseTest
         {
             [Test]
+            [Parallelizable]
             [Category("PersonalData"), Category("All")]
             public void PersonalDataEmptyTokenTest()
             {
@@ -48,6 +50,7 @@ namespace LykkeAutomation.Tests.PersonalData
         public class PersonalDataValidToken : BaseTest
         {
             [Test]
+            [Parallelizable]
             [Category("PersonalData"), Category("All")]
             public void PersonalDataValidTokenTest()
             {

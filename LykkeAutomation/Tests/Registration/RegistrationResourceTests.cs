@@ -16,6 +16,7 @@ namespace LykkeAutomation.Tests.Registration
         public class PostRegistrationPositive : BaseTest
         {
             [Test]
+            [Parallelizable]
             [Category("Registration"), Category("All")]
             public void PostRegistrationPositiveTest()
             {

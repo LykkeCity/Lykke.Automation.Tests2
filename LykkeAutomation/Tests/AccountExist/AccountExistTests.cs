@@ -18,6 +18,7 @@ namespace LykkeAutomation.Tests
         public class AccountExistInvalidEmail : BaseTest
         {
             [Test]
+            [Parallelizable]
             [Category("AccountExist"), Category("All")]
             public void AccountExistInvalidEmailTest()
             {

@@ -20,6 +20,7 @@ namespace LykkeAutomation.Tests.Auth
         public class SuccessAuthAfterRegistration : BaseTest
         {
             [Test]
+            [Parallelizable]
             [Category("Auth"), Category("All")]
             public void SuccessAuthAfterRegistrationTest()
             {

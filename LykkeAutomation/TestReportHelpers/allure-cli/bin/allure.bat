@@ -1,98 +1,84 @@
-@echo off
+@if "%DEBUG%" == "" @echo off
+@rem ##########################################################################
+@rem
+@rem  allure startup script for Windows
+@rem
+@rem ##########################################################################
 
-@REM ==== START VALIDATION ====
-if not "%JAVA_HOME%" == "" goto OkJHome
+@rem Set local scope for the variables with windows NT shell
+if "%OS%"=="Windows_NT" setlocal
 
-echo.
-echo Error: JAVA_HOME not found in your environment. >&2
-echo Please set the JAVA_HOME variable in your environment to match the >&2
-echo location of your Java installation. >&2
-echo.
-goto error
+set DIRNAME=%~dp0
+if "%DIRNAME%" == "" set DIRNAME=.
+set APP_BASE_NAME=%~n0
+set APP_HOME=%DIRNAME%..
 
-:OkJHome
-if exist "%JAVA_HOME%\bin\java.exe" goto checkAllureHome
+@rem Add default JVM options here. You can also use JAVA_OPTS and ALLURE_OPTS to pass JVM options to this script.
+set DEFAULT_JVM_OPTS=
 
-echo.
-echo Error: JAVA_HOME is set to an invalid directory. >&2
-echo JAVA_HOME = "%JAVA_HOME%" >&2
-echo Please set the JAVA_HOME variable in your environment to match the >&2
-echo location of your Java installation. >&2
-echo.
-goto error
+@rem Find java.exe
+if defined JAVA_HOME goto findJavaFromJavaHome
 
-:checkAllureHome
-if not "%ALLURE_HOME%" == "" goto AllureHomeCurrentFolder
-
-:AllureHomeCurrentFolder
-SETLOCAL ENABLEEXTENSIONS
-SET ALLURE_HOME=%~dp0..
-goto retryCheckAllureHome
-
-:retryCheckAllureHome
-if not "%ALLURE_HOME%" == "" goto OkAllureHome
+set JAVA_EXE=java.exe
+%JAVA_EXE% -version >NUL 2>&1
+if "%ERRORLEVEL%" == "0" goto init
 
 echo.
-echo Error: ALLURE_HOME not found in your environment. >&2
+echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 echo.
-goto error
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
 
-:OkAllureHome
-SET ALLURE_CLI_JAR="%ALLURE_HOME%\lib\allure-cli.jar"
-if exist %ALLURE_CLI_JAR% goto init
+goto fail
+
+:findJavaFromJavaHome
+set JAVA_HOME=%JAVA_HOME:"=%
+set JAVA_EXE=%JAVA_HOME%/bin/java.exe
+
+if exist "%JAVA_EXE%" goto init
 
 echo.
-echo Error: ALLURE_HOME is set to an invalid directory. >&2
-echo ALLURE_HOME = "%ALLURE_HOME%" >&2
-echo Please set the ALLURE_HOME variable in your environment to match the >&2
-echo location of your Allure installation. >&2
+echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
 echo.
-goto error
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
+
+goto fail
 
 :init
-@REM Decide how to startup depending on the version of windows
+@rem Get command-line arguments, handling Windows variants
 
-@REM -- Windows NT with Novell Login
-if "%OS%"=="WINNT" goto WinNTNovell
+if not "%OS%" == "Windows_NT" goto win9xME_args
 
-@REM -- Win98ME
-if NOT "%OS%"=="Windows_NT" goto Win9xArg
-
-:WinNTNovell
-
-@REM -- 4NT shell
-if "%@eval[2+2]" == "4" goto 4NTArgs
-
-@REM -- Regular WinNT shell
-set CMD_LINE_ARGS=%*
-goto endInit
-
-@REM The 4NT Shell from jp software
-:4NTArgs
-set CMD_LINE_ARGS=%$
-goto endInit
-
-:Win9xArg
-@REM Slurp the command line arguments. This loop allows for an unlimited number
-@REM of agruments (up to the command line limit, anyway).
+:win9xME_args
+@rem Slurp the command line arguments.
 set CMD_LINE_ARGS=
-:Win9xApp
-if %1a==a goto endInit
-set CMD_LINE_ARGS=%CMD_LINE_ARGS% %1
-shift
-goto Win9xApp
+set _SKIP=2
 
-@REM Reaching here means variables are defined and arguments have been captured
-:endInit
-SET JAVA_EXE="%JAVA_HOME%\bin\java.exe"
+:win9xME_args_slurp
+if "x%~1" == "x" goto execute
 
-if ERRORLEVEL 1 goto error
-goto end
+set CMD_LINE_ARGS=%*
 
-:error
-if "%OS%"=="Windows_NT" @endlocal
-if "%OS%"=="WINNT" @endlocal
-set ERROR_CODE=1
+:execute
+@rem Setup the command line
+
+set CLASSPATH=%APP_HOME%\lib\commons-codec-1.9.jar;%APP_HOME%\lib\commons-io-2.5.jar;%APP_HOME%\lib\javax.servlet-api-3.1.0.jar;%APP_HOME%\lib\config;%APP_HOME%\lib\flexmark-0.19.4.jar;%APP_HOME%\lib\log4j-1.2.17.jar;%APP_HOME%\lib\jackson-dataformat-yaml-2.8.6.jar;%APP_HOME%\lib\jackson-core-2.8.6.jar;%APP_HOME%\lib\snakeyaml-1.17.jar;%APP_HOME%\lib\jetty-http-9.2.2.v20140723.jar;%APP_HOME%\lib\commons-logging-1.2.jar;%APP_HOME%\lib\flexmark-util-0.19.4.jar;%APP_HOME%\lib\jackson-databind-2.8.6.jar;%APP_HOME%\lib\properties-2.0.RC5.jar;%APP_HOME%\lib\allure2-model-jackson-1.0-BETA4.jar;%APP_HOME%\lib\jetty-server-9.2.2.v20140723.jar;%APP_HOME%\lib\jackson-module-jaxb-annotations-2.8.6.jar;%APP_HOME%\lib\jaxb-utils-1.0.jar;%APP_HOME%\lib\allure2-model-pojo-1.0-BETA4.jar;%APP_HOME%\lib\httpcore-4.4.6.jar;%APP_HOME%\lib\allure1-model-1.0.jar;%APP_HOME%\lib\jackson-annotations-2.8.0.jar;%APP_HOME%\lib\slf4j-log4j12-1.7.21.jar;%APP_HOME%\lib\jcommander-1.64.jar;%APP_HOME%\lib\httpclient-4.5.3.jar;%APP_HOME%\lib\slf4j-api-1.7.21.jar;%APP_HOME%\lib\freemarker-2.3.23.jar;%APP_HOME%\lib\jetty-io-9.2.2.v20140723.jar;%APP_HOME%\lib\tika-core-1.14.jar;%APP_HOME%\lib\jetty-util-9.2.2.v20140723.jar;%APP_HOME%\lib\allure2-model-api-1.0-BETA4.jar;%APP_HOME%\lib\allure-commandline-2.3.1.jar;%APP_HOME%\lib\allure-plugin-api-2.3.1.jar;%APP_HOME%\lib\allure-generator-2.3.1.jar
+
+@rem Execute allure
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ALLURE_OPTS%  -classpath "%CLASSPATH%" io.qameta.allure.CommandLine %CMD_LINE_ARGS%
 
 :end
-%JAVA_EXE% -jar %ALLURE_CLI_JAR% %CMD_LINE_ARGS%
+@rem End local scope for the variables with windows NT shell
+if "%ERRORLEVEL%"=="0" goto mainEnd
+
+:fail
+rem Set variable ALLURE_EXIT_CONSOLE if you need the _script_ return code instead of
+rem the _cmd.exe /c_ return code!
+if  not "" == "%ALLURE_EXIT_CONSOLE%" exit 1
+exit /b 1
+
+:mainEnd
+if "%OS%"=="Windows_NT" endlocal
+
+:omega
