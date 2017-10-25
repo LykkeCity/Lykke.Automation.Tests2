@@ -11,7 +11,6 @@
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.4" />
     <PackageReference Include="NUnit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <PackageReference Include="NunitXml.TestLogger" Version="1.0.0" />
     <PackageReference Include="RestSharp" Version="106.0.0-alpha0282" />
     <PackageReference Include="XunitXml.TestLogger" Version="2.0.0" />
   </ItemGroup>
