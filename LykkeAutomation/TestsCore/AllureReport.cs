@@ -39,7 +39,7 @@ namespace LykkeAutomation.TestsCore
 
         public void RunStarted(string workDirectory)
         {
-            resultDir = workDirectory + "\\allure-results\\";
+            resultDir = workDirectory + "allure-results/";
             AllureConfig.ResultsPath = resultDir;
             if (Directory.Exists(AllureConfig.ResultsPath)) {
                 try { Directory.Delete(AllureConfig.ResultsPath, true); }
