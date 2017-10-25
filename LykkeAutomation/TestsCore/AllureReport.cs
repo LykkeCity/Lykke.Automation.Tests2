@@ -41,10 +41,6 @@ namespace LykkeAutomation.TestsCore
         {
             resultDir = workDirectory + "allure-results/";
             AllureConfig.ResultsPath = resultDir;
-            if (Directory.Exists(AllureConfig.ResultsPath)) {
-                try { Directory.Delete(AllureConfig.ResultsPath, true); }
-                catch (Exception e) { TestLog.WriteLine($"Cannot delete allure working directory {AllureConfig.ResultsPath} with exception {e.StackTrace}"); }
-            }
             Directory.CreateDirectory(AllureConfig.ResultsPath);
             _lifecycle = Allure.Lifecycle;
         }
