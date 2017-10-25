@@ -1,4 +1,5 @@
-﻿using LykkeAutomation.TestsCore;
+﻿using LykkeAutomation.TestCore;
+using LykkeAutomation.TestsCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -47,12 +48,8 @@ namespace LykkeAutomation.Api
 
         private void AddToLog(HttpResponseMessageWrapper response)
         {
-            List<HttpResponseMessageWrapper> r;
-            BaseTest.responses.TryGetValue(TestContext.CurrentContext.Test.FullName, out r);
-            if (r == null)
-                r = new List<HttpResponseMessageWrapper>();
-            r.Add(response);
-            BaseTest.responses[TestContext.CurrentContext.Test.FullName] = r;
+            TestLog.WriteLine(BaseTest.RequestInfo(response));
+            TestLog.WriteLine(BaseTest.ResponseInfo(response));
         }
 
         public HttpClientWrapper()

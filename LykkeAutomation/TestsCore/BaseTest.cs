@@ -1,6 +1,6 @@
 ﻿using LykkeAutomation.Api;
+using LykkeAutomation.TestCore;
 using NUnit.Framework;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,22 +17,7 @@ namespace LykkeAutomation.TestsCore
 
         public static Dictionary<string, List<HttpResponseMessageWrapper>> responses ;
 
-        public static string RequestInfoOld(IRestRequest request)
-        {
-            string parameters = "";
-            request?.Parameters.ForEach(p => parameters += $"{p.Name}: {p.Value}\r\n");
-            var info = $"\r\nrequestInfo: {request?.Method}\r\n{parameters}resource: {request?.Resource}";
-            return info;
-        }
-
-        public static string ResponseInfoOld(IRestResponse response)
-        {
-            string headers = "";
-            response?.Headers.ToList().ForEach(h => headers += $"{h.Name}: {h.Value}\r\n");
-            var info = $"\r\nresponseInfo\r\nStatusCode: {response?.StatusCode}\r\n{headers}Content: \r\n{response?.Content}";
-            return info;
-        }
-
+        #region response info
         public static string RequestInfo(HttpResponseMessageWrapper response)
         {
             string parameters = "";
@@ -60,14 +45,19 @@ namespace LykkeAutomation.TestsCore
             }
         }
 
+#endregion
+
+        #region before after
         [SetUp]
         public void SetUp()
         {
+            AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
+                TestContext.CurrentContext.Test.Name, "");
             responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
             lykkeApi = new LykkeApi();
             apiSchemes = new ApiSchemes();
             schemesError = new List<string>();
-            Console.WriteLine("SetUp");
+            TestContext.WriteLine("SetUp");
         }
 
 
@@ -75,18 +65,48 @@ namespace LykkeAutomation.TestsCore
         public void TearDown()
         {
             Console.WriteLine("TearDown");
-            //we can do it only in case if test fails. Discuss to test team
-            Console.WriteLine("Whole Test API log");
-            List<HttpResponseMessageWrapper> logs = new List<HttpResponseMessageWrapper>();
-            responses.TryGetValue(TestContext.CurrentContext.Test.FullName, out logs);
-            logs?.ForEach(l => 
-            {
-                Console.WriteLine(RequestInfo(l));
-                Console.WriteLine(ResponseInfo(l));
-                Console.WriteLine("--------------------");
-            });
-            responses.Remove(TestContext.CurrentContext.Test.FullName);
+          
+            AllureReport.GetInstance().CaseFinished(TestContext.CurrentContext.Test.FullName,
+                TestContext.CurrentContext.Result.Outcome.Status, null);
         }
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            var path = TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "TestReportHelpers/";
+            AllureReport.GetInstance().RunStarted(path);
+        }
+
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            AllureReport.GetInstance().RunFinished();
+        }
+
+    #endregion
+
+    #region allure helpers
+
+        public static void Step(string name, Action action)
+        {
+            Exception ex = null;
+            try
+            {
+                AllureReport.GetInstance().StepStarted(TestContext.CurrentContext.Test.FullName,
+                    name);
+                TestLog.WriteLine($"Step: {name}");
+                action();
+            }catch(Exception e) {
+                ex = e;
+            }
+            finally
+            {
+                AllureReport.GetInstance().StepFinished(TestContext.CurrentContext.Test.FullName,
+             TestContext.CurrentContext.Result.Outcome.Status, ex);
+            }
+        }
+        #endregion
 
     }
 }
