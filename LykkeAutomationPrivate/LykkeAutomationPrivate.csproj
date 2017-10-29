@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <Folder Include="JsonSchemes\" />
-    <Folder Include="Resources\" />
-    <Folder Include="Tests\" />
   </ItemGroup>
 
   <ItemGroup>

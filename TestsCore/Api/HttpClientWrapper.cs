@@ -78,6 +78,11 @@ namespace LykkeAutomation.TestsCore
         {
             BaseURI = baseUri;
         }
+
+        public void SetBaseURI(string BaseURI)
+        {
+            this.BaseURI = BaseURI;
+        }
     }
 
     public class HttpRequestMessageWrapper : HttpRequestMessage

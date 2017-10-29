@@ -32,7 +32,7 @@ namespace LykkeAutomation.Api.ApiResources.AccountExist
         {
             var client = new HttpClientWrapper();
             client.DefaultRequestHeaders.Accept.Clear(); 
-            return client.GetAsync(BaseUri + resource + $"?email={email}"); 
+            return client.GetAsync(resource + $"?email={email}"); 
         }
 
         public AccountExistModel GetAccountExistResponseModel(string email) =>
