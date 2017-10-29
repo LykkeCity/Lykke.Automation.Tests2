@@ -1,5 +1,5 @@
 ﻿using LykkeAutomation.Api;
-using LykkeAutomation.TestCore;
+using LykkeAutomation.TestsCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.TestsCore
+namespace LykkeAutomation.Tests
 {
     class BaseTest
     {
@@ -19,23 +19,7 @@ namespace LykkeAutomation.TestsCore
         public static Dictionary<string, List<HttpResponseMessageWrapper>> responses ;
 
         #region response info
-        public static string RequestInfo(HttpResponseMessageWrapper response)
-        {
-            string parameters = "";
-            response?.Request.Properties.ToList().ForEach(p => parameters += $"{p.Key}: {p.Value}\r\n");
-            string headers = "";
-            response?.Request.Headers.ToList().ForEach(h => headers += $"{h.Key}: {h.Value.ElementAt(0)}\r\n");
-            var info = $"\r\nrequestInfo: {response?.Request?.Method}\r\n{headers}resource: {response?.Request?.RequestUri}\r\n{response?.Request.ContentJson}";
-            return info;
-        }
-
-        public static string ResponseInfo(HttpResponseMessageWrapper response)
-        {
-            string headers = "";
-            response?.Headers.ToList().ForEach(h => headers += $"{h.Key}: {h.Value.ElementAt(0)}\r\n");
-            var info = $"\r\nresponseInfo\r\nStatusCode: {response?.StatusCode}\r\n{headers}Content: \r\n{response?.ContentJson}";
-            return info;
-        }
+       
 
         public static void ValidateScheme(bool valid, IList<string> errors)
         {

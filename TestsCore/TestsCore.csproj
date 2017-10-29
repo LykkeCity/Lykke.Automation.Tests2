@@ -17,11 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\TestsCore\TestsCore.csproj" />
+    <Reference Include="AllureCSharpCommons">
+      <HintPath>..\LykkeAutomation\TestReportHelpers\AllureCSharpCommons.dll</HintPath>
+    </Reference>
+    <Reference Include="MSTestAllureAdapter.Console">
+      <HintPath>..\LykkeAutomation\TestReportHelpers\MSTestAllureAdapter.Console.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

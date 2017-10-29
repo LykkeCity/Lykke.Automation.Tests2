@@ -1,5 +1,4 @@
 ﻿using LykkeAutomation.Api.ApiModels.AccountExistModels;
-using LykkeAutomation.TestCore;
 using LykkeAutomation.TestsCore;
 using LykkeAutomation.TestsData;
 using Newtonsoft.Json.Linq;

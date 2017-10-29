@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LykkeAutomation", "LykkeAutomation\LykkeAutomation.csproj", "{64DA89F8-8C11-46A1-980C-10D237D8EE90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkeAutomation", "LykkeAutomation\LykkeAutomation.csproj", "{64DA89F8-8C11-46A1-980C-10D237D8EE90}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF} = {86261EE1-5708-45C8-ADB1-C732D4140BFF}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkeAutomationPrivate", "LykkeAutomationPrivate\LykkeAutomationPrivate.csproj", "{38F9D2E3-A50D-4957-B0D9-BC3347084578}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF} = {86261EE1-5708-45C8-ADB1-C732D4140BFF}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsCore", "TestsCore\TestsCore.csproj", "{86261EE1-5708-45C8-ADB1-C732D4140BFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,14 @@ Global
 		{64DA89F8-8C11-46A1-980C-10D237D8EE90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64DA89F8-8C11-46A1-980C-10D237D8EE90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64DA89F8-8C11-46A1-980C-10D237D8EE90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38F9D2E3-A50D-4957-B0D9-BC3347084578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38F9D2E3-A50D-4957-B0D9-BC3347084578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38F9D2E3-A50D-4957-B0D9-BC3347084578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38F9D2E3-A50D-4957-B0D9-BC3347084578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

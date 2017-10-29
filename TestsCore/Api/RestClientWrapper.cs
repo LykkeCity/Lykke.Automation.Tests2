@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.Api
+namespace LykkeAutomation.TestsCore
 {
     public class RestClientWrapper : RestClient
     {

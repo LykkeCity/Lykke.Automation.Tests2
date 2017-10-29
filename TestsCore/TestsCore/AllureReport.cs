@@ -7,7 +7,6 @@ using AllureCSharpCommons;
 using AllureCSharpCommons.AllureModel;
 using AllureCSharpCommons.Events;
 using NUnit.Framework.Interfaces;
-using LykkeAutomation.TestCore;
 
 namespace LykkeAutomation.TestsCore
 {

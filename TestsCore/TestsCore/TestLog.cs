@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LykkeAutomation.TestCore
+namespace LykkeAutomation.TestsCore
 {
     public static class TestLog
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RestSharp;
 using System.Net.Http.Headers;
 
-namespace LykkeAutomation.Api
+namespace LykkeAutomation.TestsCore
 {
     public abstract class Api
     {

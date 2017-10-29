@@ -1,4 +1,5 @@
 ﻿using LykkeAutomation.Api.ApiModels.AuthModels;
+using LykkeAutomation.TestsCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -12,7 +13,7 @@ using static LykkeAutomation.Api.ApiModels.AuthModels.AuthModels;
 
 namespace LykkeAutomation.Api.AuthResource
 {
-    public class Auth : Api
+    public class Auth : TestsCore.Api
     {
         private const string resource = "/Auth";
         private const string resourceLogOut = "/Auth/LogOut";

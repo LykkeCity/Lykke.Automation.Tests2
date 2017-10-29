@@ -1,5 +1,6 @@
 ﻿using LykkeAutomation.ApiModels;
 using LykkeAutomation.ApiModels.RegistrationModels;
+using LykkeAutomation.TestsCore;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LykkeAutomation.Api.RegistrationResource
 {
-    public class Registration : Api
+    public class Registration : LykkeAutomation.TestsCore.Api
     {
 
         private const string resource = "/Registration";

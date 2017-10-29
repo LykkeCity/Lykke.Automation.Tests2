@@ -8,10 +8,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using LykkeAutomation.TestsCore;
 
 namespace LykkeAutomation.Api.ApiResources.AccountExist
 {
-    public class AccountExist : Api
+    public class AccountExist : LykkeAutomation.TestsCore.Api
     {
 
         private string resource = "/AccountExist";

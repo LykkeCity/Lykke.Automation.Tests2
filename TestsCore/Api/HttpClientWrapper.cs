@@ -1,19 +1,36 @@
-﻿using LykkeAutomation.TestCore;
-using LykkeAutomation.TestsCore;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.Api
+namespace LykkeAutomation.TestsCore
 {
     public class HttpClientWrapper : HttpClient
     {
         private string BaseURI = "";
+
+        public static string RequestInfo(HttpResponseMessageWrapper response)
+        {
+            string parameters = "";
+            response?.Request.Properties.ToList().ForEach(p => parameters += $"{p.Key}: {p.Value}\r\n");
+            string headers = "";
+            response?.Request.Headers.ToList().ForEach(h => headers += $"{h.Key}: {h.Value.ElementAt(0)}\r\n");
+            var info = $"\r\nrequestInfo: {response?.Request?.Method}\r\n{headers}resource: {response?.Request?.RequestUri}\r\n{response?.Request.ContentJson}";
+            return info;
+        }
+
+        public static string ResponseInfo(HttpResponseMessageWrapper response)
+        {
+            string headers = "";
+            response?.Headers.ToList().ForEach(h => headers += $"{h.Key}: {h.Value.ElementAt(0)}\r\n");
+            var info = $"\r\nresponseInfo\r\nStatusCode: {response?.StatusCode}\r\n{headers}Content: \r\n{response?.ContentJson}";
+            return info;
+        }
 
         public new HttpResponseMessageWrapper GetAsync(string requestUri)
         {
@@ -48,8 +65,8 @@ namespace LykkeAutomation.Api
 
         private void AddToLog(HttpResponseMessageWrapper response)
         {
-            TestLog.WriteLine(BaseTest.RequestInfo(response));
-            TestLog.WriteLine(BaseTest.ResponseInfo(response));
+            TestLog.WriteLine(RequestInfo(response));
+            TestLog.WriteLine(ResponseInfo(response));
         }
 
         public HttpClientWrapper()

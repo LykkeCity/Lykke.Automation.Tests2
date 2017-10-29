@@ -1,5 +1,6 @@
 ﻿using LykkeAutomation.ApiModels;
 using LykkeAutomation.ApiModels.PersonalDataModels;
+using LykkeAutomation.TestsCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LykkeAutomation.Api.PersonalDataResource
 {
-    class PersonalData : Api
+    class PersonalData : LykkeAutomation.TestsCore.Api
     {
         private const string resource = "/PersonalData";
 
