@@ -7,6 +7,7 @@ using AllureCSharpCommons;
 using AllureCSharpCommons.AllureModel;
 using AllureCSharpCommons.Events;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework;
 
 namespace LykkeAutomation.TestsCore
 {
@@ -18,6 +19,7 @@ namespace LykkeAutomation.TestsCore
         private object debugLock = new object();
         private static string resultDir;
         private static object myLock = new object();
+        protected Exception result;
 
         private AllureReport()
         {
@@ -85,10 +87,12 @@ namespace LykkeAutomation.TestsCore
 
                 if (result == TestStatus.Failed)
                 {
+                    AssertionException ex = new AssertionException(TestContext.CurrentContext.Result.Message);
+  
                     _caseStorage[fullName].Add(new TestCaseFailureEvent()
                     {
-                        Throwable = exception,
-                        StackTrace = exception.StackTrace
+                        Throwable = ex,
+                        StackTrace = TestContext.CurrentContext.Result.Assertions.ToList()[0].StackTrace
                     });
                 }
                 if (result == TestStatus.Skipped)

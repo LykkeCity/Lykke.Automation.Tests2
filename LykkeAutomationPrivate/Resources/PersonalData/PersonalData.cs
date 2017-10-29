@@ -34,13 +34,34 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
             client.SetBaseURI(ExternalServiceUri + "/api");
         }
 
-        public HttpResponseMessageWrapper GetPersonalDataResponse(string email)
+        public HttpResponseMessageWrapper GetPersonalDataResponseByEmail(string email)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
             var response = client.GetAsync(resource + $"?email={WebUtility.UrlEncode(email)}");
             return response;
         }
 
-        public PersonalDataModel GetPersonalDataModel(string email) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponse(email)?.ContentJson);
+        public PersonalDataModel GetPersonalDataModel(string email) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponseByEmail(email)?.ContentJson);
+
+
+        //list
+        public HttpResponseMessageWrapper GetPersonalDataListResponse()
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.GetAsync(resource + "/public/list");
+            return response;
+        }
+
+        public List<PersonalDataModel> GetPersonalDataListModel() => JsonConvert.DeserializeObject<List<PersonalDataModel>>(GetPersonalDataListResponse()?.ContentJson);
+
+        //personal data by id
+        public HttpResponseMessageWrapper GetPersonalDataById(string id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.GetAsync(resource + $"/{id}");
+            return response;
+        }
+
+        public PersonalDataModel GetPersonalDataModelById(string id) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataById(id)?.ContentJson);
     }
 }
