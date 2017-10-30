@@ -40,8 +40,71 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 Assert.That(first.Email, Is.EqualTo(finded.Email), "Finded email for personal data is  not equal");
                 Assert.That(first.Id, Is.EqualTo(finded.Id), "Finded ID for personal data is  not equal");
                 Assert.That(first.FirstName, Is.EqualTo(finded.FirstName), "Finded First Name for personal data is  not equal");
+                Assert.That(first.FullName, Is.Null, "Finded First Name for personal data is  not equal");
                 Assert.That(first.Country, Is.EqualTo(finded.Country), "Finded Country for personal data is  not equal");
                 //Assert.That(first.Regitered, Is.EqualTo(finded.Regitered), "Finded Registered for personal data is  not equal");
+            }
+        }
+
+        public class GetFullPersonalDataById : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            public void GetFullPersonalDataByIdTest()
+            {
+                var first = lykkeApi.PersonalData.GetPersonalDataListModel()[0];
+                var finded = lykkeApi.PersonalData.GetFullPersonalDataModelById(first.Id);
+                Assert.That(first.Email, Is.EqualTo(finded.Email), "Finded email for personal data is  not equal");
+                Assert.That(first.Id, Is.EqualTo(finded.Id), "Finded ID for personal data is  not equal");
+                Assert.That(first.FirstName, Is.EqualTo(finded.FirstName), "Finded First Name for personal data is  not equal");
+                Assert.That(finded.FullName, Is.Not.Null, "Finded Full Name for personal data is  not equal");
+                Assert.That(first.Country, Is.EqualTo(finded.Country), "Finded Country for personal data is  not equal");
+                //Assert.That(first.Regitered, Is.EqualTo(finded.Regitered), "Finded Registered for personal data is  not equal");
+            }
+        }
+
+        public class GetProfilePersonalDataById : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            public void GetProfilePersonalDataByIdTest()
+            {
+                var first = lykkeApi.PersonalData.GetPersonalDataListModel()[0];
+                var finded = lykkeApi.PersonalData.GetProfilePersonalDataModelById(first.Id);
+                Assert.That(first.Email, Is.EqualTo(finded.Email), "Finded email for personal data is  not equal");
+                Assert.That(first.Address, Is.EqualTo(finded.Address), "Finded ID for personal data is  not equal");
+                Assert.That(first.FirstName, Is.EqualTo(finded.FirstName), "Finded First Name for personal data is  not equal");
+            }
+        }
+
+        public class SearchPersonalDataModel : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Search client by part of full name, email or contact phone")]
+            public void SearchPersonalDataModelTest()
+            {
+                var first = lykkeApi.PersonalData.GetPersonalDataListModel().Find(data =>  (data.Email?.Length > 0) );
+                var findedByFullName = lykkeApi.PersonalData.GetSearchPersonalDataModel(first.Email.Substring(0, first.Email.Length-2));
+                Assert.That(first.Id, Is.EqualTo(findedByFullName.Id), "Id are not equals");
+
+                //search by FullName
+                //search by contact phone
+                //create a uniq personal data
+            }
+        }
+
+        public class GetDocumentById : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Get document scan by id")]
+            public void GetDocumentByIdTest()
+            {
+                // create pd with document as precondition
+                var first = lykkeApi.PersonalData.GetPersonalDataListModel().Find(data => (data.Email?.Length > 0));
+                var document = lykkeApi.PersonalData.GetDocumentByIdModel("b92353fd-51ce-4698-8f90-78b3eeaef224");
+                //Assert.That(document, Is.Not.Null, "Document is null");
             }
         }
     }

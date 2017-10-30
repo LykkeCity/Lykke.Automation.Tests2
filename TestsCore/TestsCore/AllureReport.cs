@@ -88,11 +88,13 @@ namespace LykkeAutomation.TestsCore
                 if (result == TestStatus.Failed)
                 {
                     AssertionException ex = new AssertionException(TestContext.CurrentContext.Result.Message);
-  
+                    string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ? 
+                        "" : 
+                        TestContext.CurrentContext.Result.Assertions.ToList()?[0].StackTrace;
                     _caseStorage[fullName].Add(new TestCaseFailureEvent()
                     {
                         Throwable = ex,
-                        StackTrace = TestContext.CurrentContext.Result.Assertions.ToList()[0].StackTrace
+                        StackTrace = st
                     });
                 }
                 if (result == TestStatus.Skipped)

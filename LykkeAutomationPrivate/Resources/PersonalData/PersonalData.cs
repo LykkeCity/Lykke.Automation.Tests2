@@ -63,5 +63,45 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         }
 
         public PersonalDataModel GetPersonalDataModelById(string id) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataById(id)?.ContentJson);
+
+        //full personal
+        public HttpResponseMessageWrapper GetFullPersonalDataById(string id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.GetAsync(resource + $"/full/{id}");
+            return response;
+        }
+
+        public PersonalDataModel GetFullPersonalDataModelById(string id) => JsonConvert.DeserializeObject<PersonalDataModel>(GetFullPersonalDataById(id)?.ContentJson);
+
+        //profile data
+        public HttpResponseMessageWrapper GetProfilePersonalDataById(string id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.GetAsync(resource + $"/profile/{id}");
+            return response;
+        }
+
+        public ProfilePersonalData GetProfilePersonalDataModelById(string id) => JsonConvert.DeserializeObject<ProfilePersonalData>(GetProfilePersonalDataById(id)?.ContentJson);
+
+        //search
+        public HttpResponseMessageWrapper GetSearchPersonalData(string querry)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.GetAsync(resource + $"/search?phrase={querry}");
+            return response;
+        }
+
+        public SearchPersonalDataModel GetSearchPersonalDataModel(string id) => JsonConvert.DeserializeObject<SearchPersonalDataModel>(GetSearchPersonalData(id)?.ContentJson);
+
+        //get document by id
+        public HttpResponseMessageWrapper GetDocumentById(string id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.GetAsync(resource + $"/documentscan/{id}");
+            return response;
+        }
+
+        public SearchPersonalDataModel GetDocumentByIdModel(string id) => JsonConvert.DeserializeObject<SearchPersonalDataModel>(GetDocumentById(id)?.ContentJson);
     }
 }
