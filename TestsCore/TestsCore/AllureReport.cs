@@ -112,7 +112,7 @@ namespace LykkeAutomation.TestsCore
                     });
                 }
 
-                AddAttachment(fullName, Encoding.UTF8.GetBytes(TestLog.GetLog()), "TestLog", "text/plain");
+                AddAttachment(fullName, Encoding.UTF8.GetBytes(TestLog.GetLog()), "TestLog", "application/json");
 
                 var ev = _caseStorage[fullName].First(e => e is TestCaseStartedEvent) as TestCaseStartedEvent;
                 var newLabels = ev.Labels?.ToList();
