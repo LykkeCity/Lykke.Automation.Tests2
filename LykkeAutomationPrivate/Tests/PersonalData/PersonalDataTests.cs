@@ -107,5 +107,69 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 //Assert.That(document, Is.Not.Null, "Document is null");
             }
         }
+
+        #region Post
+        public class PostPersonalDataList : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Get Personal data list by ids")]
+            public void PostPersonalDataListTest()
+            {
+                
+                var list = lykkeApi.PersonalData.GetPersonalDataListModel();
+                Random r = new Random();
+                int size = r.Next(1, 15);
+                string[] array = new string[size];
+                for (int i = 0; i < size; i++)
+                    array[i] = list[i].Id;
+                
+                var postList = lykkeApi.PersonalData.PostPersonalDataListByIdModel(array);
+                Assert.That(postList.Count, Is.EqualTo(size), "Personal Data list size is not as expected");
+            }
+        }
+
+        public class FullPostPersonalDataList : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Get Personal Full data list by ids")]
+            public void FullPostPersonalDataListTest()
+            {
+
+                var list = lykkeApi.PersonalData.GetPersonalDataListModel();
+                Random r = new Random();
+                int size = r.Next(1, 15);
+                string[] array = new string[size];
+                for (int i = 0; i < size; i++)
+                    array[i] = list[i].Id;
+
+                var postList = lykkeApi.PersonalData.PostFullPersonalDataListByIdModel(array);
+                Assert.That(postList.Count, Is.EqualTo(size), "Personal Data list size is not as expected");
+            }
+        }
+
+        public class PostListExcludedPage : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Get Personal Full data list by ids")]
+            public void PostListExcludedPageTest()
+            {
+                // get test scenario
+            }
+        }
+
+        public class PostListPage : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Get Personal Full data list by ids")]
+            public void PostListPageTest()
+            {
+                // get test scenario
+            }
+        }
+        #endregion
     }
 }

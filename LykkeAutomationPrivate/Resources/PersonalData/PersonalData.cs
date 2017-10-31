@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Lykke.Client.AutorestClient.Models;
 using System.Net;
 using TestsCore.ServiceSettings.SettingsModels;
+using System.Net.Http;
 
 namespace LykkeAutomationPrivate.Api.PersonalDataResource
 {
@@ -34,6 +35,7 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
             client.SetBaseURI(ExternalServiceUri + "/api");
         }
 
+#region GET requests
         public HttpResponseMessageWrapper GetPersonalDataResponseByEmail(string email)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
@@ -103,5 +105,52 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         }
 
         public SearchPersonalDataModel GetDocumentByIdModel(string id) => JsonConvert.DeserializeObject<SearchPersonalDataModel>(GetDocumentById(id)?.ContentJson);
+        #endregion
+
+        #region Post Requests
+        public HttpResponseMessageWrapper PostPersonalDataListById(params string[] id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(id));
+            var response = client.PostAsync(resource + $"/list", content);
+            return response;
+        }
+
+        public List<PersonalDataModel> PostPersonalDataListByIdModel(params string[] id) => JArray.Parse(PostPersonalDataListById(id)?.ContentJson).ToObject<List<PersonalDataModel>>();
+
+        //post full list
+        public HttpResponseMessageWrapper PostFullPersonalDataListById(params string[] id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(id));
+            var response = client.PostAsync(resource + $"/list", content);
+            return response;
+        }
+
+        public List<FullPersonalDataModel> PostFullPersonalDataListByIdModel(params string[] id) => JArray.Parse(PostFullPersonalDataListById(id)?.ContentJson).ToObject<List<FullPersonalDataModel>>();
+
+        //post paged Exclude
+        public HttpResponseMessageWrapper PostPageExclude(PagingInfoModel pageInfo)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(pageInfo));
+            var response = client.PostAsync(resource + $"/list/pagedExclude", content);
+            return response;
+        }
+
+        public PagedRequestModel PostPageExcludeModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedRequestModel>(PostPageExclude(pageInfo)?.ContentJson);
+
+        //POST /api/PersonalData/list/paged
+        public HttpResponseMessageWrapper PostPage(PagingInfoModel pageInfo)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(pageInfo));
+            var response = client.PostAsync(resource + $"/list/paged", content);
+            return response;
+        }
+
+        public PagedRequestModel PostPageModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedRequestModel>(PostPage(pageInfo)?.ContentJson);
+
+        #endregion
     }
 }
