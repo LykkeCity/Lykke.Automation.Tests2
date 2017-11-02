@@ -12,6 +12,7 @@ using Lykke.Client.AutorestClient.Models;
 using System.Net;
 using TestsCore.ServiceSettings.SettingsModels;
 using System.Net.Http;
+using LykkeAutomationPrivate.Models;
 
 namespace LykkeAutomationPrivate.Api.PersonalDataResource
 {
@@ -149,7 +150,74 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
             return response;
         }
 
-        public PagedRequestModel PostPageModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedRequestModel>(PostPage(pageInfo)?.ContentJson);
+        public PagedResultModelPersonalDataModel PostPageModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedResultModelPersonalDataModel>(PostPage(pageInfo)?.ContentJson);
+
+        //POST /api/PersonalData/list/pagedIncludeOnly
+        public HttpResponseMessageWrapper PostPagedIncludedOnly(PagingInfoModel pageInfo)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(pageInfo));
+            var response = client.PostAsync(resource + $"/list/pagedIncludeOnly", content);
+            return response;
+        }
+
+        public PagedResultModelPersonalDataModel PostPagedIncludedOnlyModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedResultModelPersonalDataModel>(PostPagedIncludedOnly(pageInfo)?.ContentJson);
+
+        //POST /api/PersonalData/list/byRegistrationDate
+        public HttpResponseMessageWrapper PostListbyRegistrationDate(RegistrationDatesModel registrationDates)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(registrationDates));
+            var response = client.PostAsync(resource + $"/list/pagedIncludeOnly", content);
+            return response;
+        }
+
+        public List<FullPersonalDataModel> PostListbyRegistrationDateModel(RegistrationDatesModel registrationDates) => JArray.Parse(PostListbyRegistrationDate(registrationDates)?.ContentJson).ToObject<List<FullPersonalDataModel>>();
+
+        //POST /api/PersonalData  Save personal info
+        //no result model
+        public HttpResponseMessageWrapper PostPersonalData(FullPersonalDataModel fullPersonalDataModel)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(fullPersonalDataModel));
+            var response = client.PostAsync(resource + $"/list/pagedIncludeOnly", content);
+            return response;
+        }
+
+        //POST /api/PersonalData/{id}/archive Delete item with id provided
+        //no result model
+        public HttpResponseMessageWrapper PostPersonalDataArchive(ArchiveRequest archiveRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(archiveRequest));
+            var response = client.PostAsync(resource + $"/{archiveRequest.ClientId}/archive", content);
+            return response;
+        }
+
+        //POST /api/PersonalData/{id}/email  Changing email
+        public HttpResponseMessageWrapper PostPersonalDataChangeEmail(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PostAsync(resource + $"/{changeFieldRequest.ClientId}/email", content);
+            return response;
+        }
+
+        public ChangeFieldResponseModel PostPersonalDataChangeEmailModel(ChangeFieldRequest changeFieldRequest) => JsonConvert.DeserializeObject<ChangeFieldResponseModel>(PostPersonalDataChangeEmail(changeFieldRequest)?.ContentJson);
+
+        //POST /api/PersonalData/avatar/{id}  Add avatar
+        public HttpResponseMessageWrapper PostAddAvatar(string id, string filePath)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(filePath);
+            var response = client.PostAsync(resource + $"/avatar/{id}", content);
+            return response;
+        }
+        #endregion
+
+        #region PUT
+
+
 
         #endregion
     }

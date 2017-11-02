@@ -11,6 +11,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
+            [Parallelizable]
             public void GetPersonalDataByEmailTest()
             {
                 var test = lykkeApi.PersonalData.GetPersonalDataModel("test_6f78f87f06@gmail.com");
@@ -22,6 +23,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
+            [Parallelizable]
             public void GetPersonalDataListTest()
             {
                 var list = lykkeApi.PersonalData.GetPersonalDataListModel();
@@ -33,6 +35,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
+            [Parallelizable]
             public void GetPersonalDataByIdTest()
             {
                 var first = lykkeApi.PersonalData.GetPersonalDataListModel()[0];
@@ -50,6 +53,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
+            [Parallelizable]
             public void GetFullPersonalDataByIdTest()
             {
                 var first = lykkeApi.PersonalData.GetPersonalDataListModel()[0];
@@ -67,6 +71,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
+            [Parallelizable]
             public void GetProfilePersonalDataByIdTest()
             {
                 var first = lykkeApi.PersonalData.GetPersonalDataListModel()[0];
@@ -82,6 +87,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
             [Description("Search client by part of full name, email or contact phone")]
+            [Parallelizable]
             public void SearchPersonalDataModelTest()
             {
                 var first = lykkeApi.PersonalData.GetPersonalDataListModel().Find(data =>  (data.Email?.Length > 0) );
@@ -99,6 +105,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
             [Description("Get document scan by id")]
+            [Parallelizable]
             public void GetDocumentByIdTest()
             {
                 // create pd with document as precondition
@@ -114,6 +121,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
             [Description("Post request. Get Personal data list by ids")]
+            [Parallelizable]
             public void PostPersonalDataListTest()
             {
                 
@@ -134,6 +142,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
             [Description("Post request. Get Personal Full data list by ids")]
+            [Parallelizable]
             public void FullPostPersonalDataListTest()
             {
 
@@ -170,6 +179,73 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 // get test scenario
             }
         }
+
+        public class PostPagedIncludedOnly : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Get Personal Full data list by ids")]
+            public void PostPagedIncludedOnlyTest()
+            {
+                // get test scenario
+            }
+        }
+
+        public class PostListbyRegistrationDate : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Get Personal Full data list by ids")]
+            public void PostListbyRegistrationDateTest()
+            {
+                // get test scenario
+            }
+        }
+
+        public class PostPersonalData : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Save personal data")]
+            public void PostPersonalDataTest()
+            {
+                // get test scenario
+            }
+        }
+
+        public class PostPersonalDataArchive : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Archive personal data")]
+            public void PostPersonalDataArchiveTest()
+            {
+                // get test scenario
+            }
+        }
+
+        public class PostPersonalDataChangeEmail : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Change email of personal data")]
+            public void PostPersonalDataChangeEmailTest()
+            {
+                // get test scenario
+            }
+        }
+
+        public class PostAddAvatar : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. Change email of personal data")]
+            public void PostAddAvatarTest()
+            {
+                // get test scenario
+            }
+        }
+
         #endregion
     }
 }
