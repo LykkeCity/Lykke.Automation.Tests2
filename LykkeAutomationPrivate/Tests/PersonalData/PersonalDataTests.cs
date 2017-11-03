@@ -1,6 +1,8 @@
-﻿using NUnit.Framework;
+﻿using Lykke.Client.AutorestClient.Models;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace LykkeAutomationPrivate.Tests.PersonalData
@@ -245,6 +247,25 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 // get test scenario
             }
         }
+
+
+        public class PostPersonalDataCreate : BaseTest
+        {
+            [Test]
+            [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Post request. save personal data")]
+            public void PostPersonalDataCreateTest()
+            {
+                var client = new FullPersonalDataModel().Init();
+                var response = lykkeApi.PersonalData.PostPersonalData(client);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "UnExpected status code");
+
+                var actual = lykkeApi.PersonalData.GetFullPersonalDataModelById(client.Id);
+
+                AreEqualByJson(client, actual);
+            }
+        }
+        
 
         #endregion
     }

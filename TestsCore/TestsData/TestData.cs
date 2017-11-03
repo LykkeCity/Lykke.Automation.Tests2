@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LykkeAutomation.TestsData
+namespace TestsCore.TestsData
 {
     public class TestData
     {
@@ -33,6 +33,6 @@ namespace LykkeAutomation.TestsData
 
         public static string GenerateString(int length) => Guid.NewGuid().ToString("n").Substring(0, length);
 
-        public static string GenerateEmail() => $"test_{GenerateString(10)}@gmail.com";
+        public static string GenerateEmail() => $"lykke_autotest_{GenerateString(10)}@lykke.com";
     }
 }

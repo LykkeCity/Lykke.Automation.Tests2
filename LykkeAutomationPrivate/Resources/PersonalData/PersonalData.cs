@@ -36,7 +36,7 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
             client.SetBaseURI(ExternalServiceUri + "/api");
         }
 
-#region GET requests
+        #region GET requests
         public HttpResponseMessageWrapper GetPersonalDataResponseByEmail(string email)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
@@ -75,7 +75,7 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
             return response;
         }
 
-        public PersonalDataModel GetFullPersonalDataModelById(string id) => JsonConvert.DeserializeObject<PersonalDataModel>(GetFullPersonalDataById(id)?.ContentJson);
+        public FullPersonalDataModel GetFullPersonalDataModelById(string id) => JsonConvert.DeserializeObject<FullPersonalDataModel>(GetFullPersonalDataById(id)?.ContentJson);
 
         //profile data
         public HttpResponseMessageWrapper GetProfilePersonalDataById(string id)
@@ -405,7 +405,6 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
             return response;
         }
         #endregion
-
 
         #region DELETE
 

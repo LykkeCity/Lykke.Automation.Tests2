@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LykkeAutomationPrivate.Tests
 {
@@ -30,7 +31,15 @@ namespace LykkeAutomationPrivate.Tests
             }
         }
 
-#endregion
+        public static void AreEqualByJson(object expected, object actual)
+        {
+
+            var expectedJson = JsonConvert.SerializeObject(expected);
+            var actualJson = JsonConvert.SerializeObject(actual);
+            Assert.That(expectedJson, Is.EqualTo(actualJson),  "Objects are not equals");
+        }
+
+        #endregion
 
         #region before after
         [SetUp]

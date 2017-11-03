@@ -1,6 +1,6 @@
 ﻿using LykkeAutomation.Api.ApiModels.AccountExistModels;
 using LykkeAutomation.TestsCore;
-using LykkeAutomation.TestsData;
+using TestsCore.TestsData;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using NUnit.Framework;

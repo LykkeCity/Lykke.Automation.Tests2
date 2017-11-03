@@ -7,7 +7,9 @@
 namespace Lykke.Client.AutorestClient.Models
 {
     using Newtonsoft.Json;
+    using System;
     using System.Linq;
+    using TestsCore.TestsData;
 
     public partial class FullPersonalDataModel
     {
@@ -53,6 +55,75 @@ namespace Lykke.Client.AutorestClient.Models
             Twitter = twitter;
             Github = github;
             CustomInit();
+        }
+
+        public FullPersonalDataModel Init()
+        {   
+            PasswordHint = TestData.GenerateString(5);
+            Regitered = DateTime.Now.AddDays(-3);
+            Id = TestData.GenerateString(20);
+            Email = TestData.GenerateEmail();
+            FullName = TestData.FullName();
+            FirstName = FullName.Split(' ')[0];
+            LastName = FullName.Split(' ')[1];
+            DateOfBirth = Regitered.Value.AddYears(-30).AddMonths(-5).AddDays(-3);
+            DateOfExpiryOfID = Regitered.Value.AddYears(+3);
+            CountryFromID = "USA";
+            Country = "USA";
+            CountryFromPOA = "USA";
+            Zip = "12345";
+            City = "LA";
+            Address = "1A Avenuu";
+            ContactPhone = "+951827364";
+            ReferralCode = "15987423";
+            SpotRegulator = "Autotest Spot Regulator";
+            MarginRegulator = "Autotest Margin Regulator";
+            PaymentSystem = "PayPal";
+            Isp = "Autotest ISP";
+            DateOfPoaDocument = Regitered.Value.AddDays(+2);
+            Avatar = null;
+            Website = "https://lykke.com";
+            ShortBio = "Autotest Short bio";
+            Facebook = "Autotest Facebook bio";
+            Twitter = "Autotest twitter";
+            Github = "Autotest github";
+            return this;
+        }
+
+        public PersonalDataModel PersonalDataModel()
+        {
+            var pdm = new PersonalDataModel()
+            {
+                Regitered = Regitered,
+                Id = Id,
+                Email = Email,
+                FullName = FullName,
+                FirstName = FirstName,
+                LastName = LastName,
+                DateOfBirth = DateOfBirth,
+                DateOfExpiryOfID = DateOfExpiryOfID,
+                CountryFromID = CountryFromID,
+                Country = Country,
+                CountryFromPOA = CountryFromPOA,
+                Zip = Zip,
+                City = City,
+                Address = Address,
+                ContactPhone = ContactPhone,
+                ReferralCode = ReferralCode,
+                SpotRegulator = SpotRegulator,
+                MarginRegulator = MarginRegulator,
+                PaymentSystem = PaymentSystem,
+                Isp = Isp,
+                DateOfPoaDocument = DateOfPoaDocument,
+                Avatar = Avatar,
+                Website = Website,
+                ShortBio = ShortBio,
+                Facebook = Facebook,
+                Twitter = Twitter,
+                Github = Github
+            };
+
+            return pdm;
         }
 
         /// <summary>
