@@ -180,7 +180,7 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
             StringContent content = new StringContent(JsonConvert.SerializeObject(fullPersonalDataModel));
-            var response = client.PostAsync(resource + $"/list/pagedIncludeOnly", content);
+            var response = client.PostAsync(resource, content);
             return response;
         }
 
@@ -216,9 +216,214 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         #endregion
 
         #region PUT
+        //PUT /api/PersonalData Update personal info
+        public HttpResponseMessageWrapper PutPersonalData(PersonalDataModel personalDataModel)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(personalDataModel));
+            var response = client.PutAsync(resource, content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/fullname
+        public HttpResponseMessageWrapper PutPersonalDataFullName(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/fullname", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/firstName
+        public HttpResponseMessageWrapper PutPersonalDataFirstName(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/firstName", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/lastName
+        public HttpResponseMessageWrapper PutPersonalDataLastName(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/lastName", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/dateOfBirth  Change date of birth (MM/DD/YYYY)
+        public HttpResponseMessageWrapper PutPersonalDataDateOfBirth(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/dateOfBirth", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/DateOfExpiryOfID  Change date of expiry of ID birth (MM/DD/YYYY)
+        public HttpResponseMessageWrapper PutPersonalDataDateOfExpiryOfId(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/DateOfExpiryOfID", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/country  Change country
+        public HttpResponseMessageWrapper PutPersonalDataCountry(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/country", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/countryFromID  Change country from ID
+        public HttpResponseMessageWrapper PutPersonalDataCountryFromId(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/countryFromID", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/countryFromPOA  Change country from IP
+        public HttpResponseMessageWrapper PutPersonalDataCountryFromPOA(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/countryFromPOA", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/city  Change city
+        public HttpResponseMessageWrapper PutPersonalDataCity(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/city", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/zip  Change zip
+        public HttpResponseMessageWrapper PutPersonalDataZip(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/zip", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/address  Change address
+        public HttpResponseMessageWrapper PutPersonalDataAddress(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/address", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/phoneNumber  Change contact phone number
+        public HttpResponseMessageWrapper PutPersonalDataPhoneNumber(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/phoneNumber", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/geolocation  Change geolocation data
+        public HttpResponseMessageWrapper PutPersonalDataGeolocation(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/geolocation", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/passwordHint  Change password hint
+        public HttpResponseMessageWrapper PutPersonalDataPasswordHint(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/passwordHint", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/refCode  Set referral code
+        public HttpResponseMessageWrapper PutPersonalDataRefCode(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/refCode", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/spotRegulator  Change spot regulator
+        public HttpResponseMessageWrapper PutPersonalDataSpotRegulator(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/spotRegulator", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/marginRegulator  Change margin regulator
+        public HttpResponseMessageWrapper PutPersonalDataMarginRegulator(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/marginRegulator", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/{id}/paymentSystem  Change payment system
+        public HttpResponseMessageWrapper PutPersonalDataPaymentSystem(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/paymentSystem", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/profile  Update profile info
+        public HttpResponseMessageWrapper PutPersonalDataProfile(UpdateProfileInfoRequest updateProfileInfoRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(updateProfileInfoRequest));
+            var response = client.PutAsync(resource + $"/profile", content);
+            return response;
+        }
+
+        //PUT /api/PersonalData/documentscan/{id}  Add document scan
+        public HttpResponseMessageWrapper PutPersonalDataDocumentScan(ChangeFieldRequest changeFieldRequest)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/documentscan/{changeFieldRequest.ClientId}", content);
+            return response;
+        }
+        #endregion
 
 
+        #region DELETE
 
+        //DELETE /api/PersonalData/avatar/{id}  Delete avatar
+        public HttpResponseMessageWrapper DELETEPersonalDataAvatar(string id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.DeleteAsync(resource + $"/documentscan/{id}");
+            return response;
+        }
+
+        //DELETE /api/PersonalData/cache  Clears cache
+        public HttpResponseMessageWrapper DELETEPersonalDataCache(string id)
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var response = client.DeleteAsync(resource + $"/cache");
+            return response;
+        }
         #endregion
     }
 }
