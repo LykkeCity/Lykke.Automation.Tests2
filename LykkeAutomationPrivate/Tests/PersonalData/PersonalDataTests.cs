@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using TestsCore.TestsData;
 
 namespace LykkeAutomationPrivate.Tests.PersonalData
 {
@@ -233,7 +234,16 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             [Description("Post request. Change email of personal data")]
             public void PostPersonalDataChangeEmailTest()
             {
-                // get test scenario
+                var client = new FullPersonalDataModel().Init();
+                var response = lykkeApi.PersonalData.PostPersonalData(client);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "UnExpected status code");
+                client.Email = TestData.GenerateEmail();
+                var cfr = new ChangeFieldRequest(client.Email, client.Id);
+                var actualResponse = lykkeApi.PersonalData.PostPersonalDataChangeEmailModel(cfr);
+                Assert.That(actualResponse.ErrorMessage, Is.Null, "Unexpected Error message");
+
+                var actual = lykkeApi.PersonalData.GetFullPersonalDataModelById(client.Id);
+                Assert.That(client.Email, Is.EqualTo(actual.Email), "Email has not been changed");
             }
         }
 
@@ -247,7 +257,6 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 // get test scenario
             }
         }
-
 
         public class PostPersonalDataCreate : BaseTest
         {
@@ -265,8 +274,6 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 AreEqualByJson(client, actual);
             }
         }
-        
-
         #endregion
     }
 }
