@@ -258,8 +258,10 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
                 var archiveResponse = lykkeApi.PersonalData.PostPersonalDataArchive(archive);
                 Assert.That(archiveResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
 
+                System.Threading.Thread.Sleep(TimeSpan.FromSeconds(2));//temp, discover After issue
                 var actualArchive = lykkeApi.PersonalData.GetFullPersonalDataById(client.Id);
-                Assert.That(actualArchive.StatusCode, Is.EqualTo(HttpStatusCode.NoContent), "Unexpected status code");
+                
+                Assert.That(() => actualArchive.StatusCode, Is.EqualTo(HttpStatusCode.NoContent).After(5*1000, 1*1000), "Unexpected status code");
             }
         }
 
