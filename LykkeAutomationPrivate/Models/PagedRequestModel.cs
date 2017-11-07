@@ -31,6 +31,13 @@ namespace Lykke.Client.AutorestClient.Models
             CustomInit();
         }
 
+        public PagedRequestModel(IList<string> ids, int pages)
+        {
+            Ids = ids;
+            PagingInfoModel = new PagingInfoModel(pages);
+            CustomInit();
+        }
+
         /// <summary>
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>

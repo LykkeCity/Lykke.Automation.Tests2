@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,5 +35,11 @@ namespace TestsCore.TestsData
         public static string GenerateString(int length) => Guid.NewGuid().ToString("n").Substring(0, length);
 
         public static string GenerateEmail() => $"lykke_autotest_{GenerateString(10)}@lykke.com";
+
+        public static string GeneratePhone(int length = 12) => GenerateString(length).GetHashCode().ToString().Replace('-', '+');
+
+        public static string AVATAR { get { return TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "../TestsCore/TestsData/Images/lykke_avatar.png"; } }
+
+        public static string DOCUMENT_PDF { get { return TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "../TestsCore/TestsData/Images/lykke_document.pdf"; } }
     }
 }

@@ -60,7 +60,7 @@ namespace Lykke.Client.AutorestClient.Models
         public FullPersonalDataModel Init()
         {   
             PasswordHint = TestData.GenerateString(5);
-            Regitered = DateTime.Now.AddDays(-3);
+            Regitered = DateTime.Now.AddDays(-3).ToUniversalTime();
             Id = TestData.GenerateString(20);
             Email = TestData.GenerateEmail();
             FullName = TestData.FullName();
@@ -74,7 +74,7 @@ namespace Lykke.Client.AutorestClient.Models
             Zip = "12345";
             City = "LA";
             Address = "1A Avenuu";
-            ContactPhone = "+951827364";
+            ContactPhone = TestData.GeneratePhone();
             ReferralCode = "15987423";
             SpotRegulator = "Autotest Spot Regulator";
             MarginRegulator = "Autotest Margin Regulator";

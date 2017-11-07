@@ -8,6 +8,7 @@ namespace Lykke.Client.AutorestClient.Models
 {
     using Newtonsoft.Json;
     using System.Linq;
+    using TestsCore.TestsData;
 
     public partial class UpdateProfileInfoRequest
     {
@@ -32,6 +33,19 @@ namespace Lykke.Client.AutorestClient.Models
             Facebook = facebook;
             Twitter = twitter;
             Github = github;
+            CustomInit();
+        }
+
+        public UpdateProfileInfoRequest(string clientId)
+        {
+            ClientId = clientId;
+            Email = TestData.GenerateEmail();
+            Address = TestData.GenerateString(8);
+            Website = TestData.GenerateString(8);
+            ShortBio = TestData.GenerateString(8);
+            Facebook = TestData.GenerateString(8);
+            Twitter = TestData.GenerateString(8);
+            Github = TestData.GenerateString(8);
             CustomInit();
         }
 

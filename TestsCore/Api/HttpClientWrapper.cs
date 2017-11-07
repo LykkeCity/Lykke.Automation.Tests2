@@ -32,30 +32,34 @@ namespace LykkeAutomation.TestsCore
             return info;
         }
 
-        public new HttpResponseMessageWrapper GetAsync(string requestUri)
+        public HttpResponseMessageWrapper GetAsync(string requestUri, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
         {
+            TestLog.WriteStep($"Execute request name: {memberName}");
             var response = new HttpResponseMessageWrapper(base.GetAsync(BaseURI + requestUri));
             AddToLog(response);
             return response;
         }
 
-        public new HttpResponseMessageWrapper PostAsync(string requestUri, HttpContent content)
+        public HttpResponseMessageWrapper PostAsync(string requestUri, HttpContent content, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
         {
+            TestLog.WriteStep($"Execute request name: {memberName}");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var response = new HttpResponseMessageWrapper(base.PostAsync(BaseURI + requestUri, content));
             AddToLog(response);
             return response;
         }
 
-        public new HttpResponseMessageWrapper DeleteAsync(string requestUri)
+        public HttpResponseMessageWrapper DeleteAsync(string requestUri, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
         {
+            TestLog.WriteStep($"Execute request name: {memberName}");
             var response = new HttpResponseMessageWrapper(base.DeleteAsync(BaseURI + requestUri));
             AddToLog(response);
             return response;
         }
 
-        public new HttpResponseMessageWrapper PutAsync(string requestUri, HttpContent content)
+        public HttpResponseMessageWrapper PutAsync(string requestUri, HttpContent content, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
         {
+            TestLog.WriteStep($"Execute request name: {memberName}");
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var response = new HttpResponseMessageWrapper(base.PutAsync(BaseURI + requestUri, content));
             AddToLog(response);

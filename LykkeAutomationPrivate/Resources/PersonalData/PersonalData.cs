@@ -13,6 +13,7 @@ using System.Net;
 using TestsCore.ServiceSettings.SettingsModels;
 using System.Net.Http;
 using LykkeAutomationPrivate.Models;
+using System.IO;
 
 namespace LykkeAutomationPrivate.Api.PersonalDataResource
 {
@@ -98,14 +99,14 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         public SearchPersonalDataModel GetSearchPersonalDataModel(string id) => JsonConvert.DeserializeObject<SearchPersonalDataModel>(GetSearchPersonalData(id)?.ContentJson);
 
         //get document by id
-        public HttpResponseMessageWrapper GetDocumentById(string id)
+        public HttpResponseMessageWrapper GetDocumentScanById(string id)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
             var response = client.GetAsync(resource + $"/documentscan/{id}");
             return response;
         }
 
-        public SearchPersonalDataModel GetDocumentByIdModel(string id) => JsonConvert.DeserializeObject<SearchPersonalDataModel>(GetDocumentById(id)?.ContentJson);
+        public string GetDocumentScanByIdModel(string id) => GetDocumentScanById(id)?.ContentJson;
         #endregion
 
         #region Post Requests
@@ -131,15 +132,15 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         public List<FullPersonalDataModel> PostFullPersonalDataListByIdModel(params string[] id) => JArray.Parse(PostFullPersonalDataListById(id)?.ContentJson).ToObject<List<FullPersonalDataModel>>();
 
         //post paged Exclude
-        public HttpResponseMessageWrapper PostPageExclude(PagingInfoModel pageInfo)
+        public HttpResponseMessageWrapper PostPageExclude(PagedRequestModel pagedRequest)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
-            StringContent content = new StringContent(JsonConvert.SerializeObject(pageInfo));
+            StringContent content = new StringContent(JsonConvert.SerializeObject(pagedRequest));
             var response = client.PostAsync(resource + $"/list/pagedExclude", content);
             return response;
         }
 
-        public PagedRequestModel PostPageExcludeModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedRequestModel>(PostPageExclude(pageInfo)?.ContentJson);
+        public PagedResultModelPersonalDataModel PostPageExcludeModel(PagedRequestModel pagedRequest) => JsonConvert.DeserializeObject<PagedResultModelPersonalDataModel>(PostPageExclude(pagedRequest)?.ContentJson);
 
         //POST /api/PersonalData/list/paged
         public HttpResponseMessageWrapper PostPage(PagingInfoModel pageInfo)
@@ -153,22 +154,22 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         public PagedResultModelPersonalDataModel PostPageModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedResultModelPersonalDataModel>(PostPage(pageInfo)?.ContentJson);
 
         //POST /api/PersonalData/list/pagedIncludeOnly
-        public HttpResponseMessageWrapper PostPagedIncludedOnly(PagingInfoModel pageInfo)
+        public HttpResponseMessageWrapper PostPagedIncludedOnly(PagedRequestModel pagedRequest)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
-            StringContent content = new StringContent(JsonConvert.SerializeObject(pageInfo));
+            StringContent content = new StringContent(JsonConvert.SerializeObject(pagedRequest));
             var response = client.PostAsync(resource + $"/list/pagedIncludeOnly", content);
             return response;
         }
 
-        public PagedResultModelPersonalDataModel PostPagedIncludedOnlyModel(PagingInfoModel pageInfo) => JsonConvert.DeserializeObject<PagedResultModelPersonalDataModel>(PostPagedIncludedOnly(pageInfo)?.ContentJson);
+        public PagedResultModelPersonalDataModel PostPagedIncludedOnlyModel(PagedRequestModel pagedRequest) => JsonConvert.DeserializeObject<PagedResultModelPersonalDataModel>(PostPagedIncludedOnly(pagedRequest)?.ContentJson);
 
         //POST /api/PersonalData/list/byRegistrationDate
         public HttpResponseMessageWrapper PostListbyRegistrationDate(RegistrationDatesModel registrationDates)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
             StringContent content = new StringContent(JsonConvert.SerializeObject(registrationDates));
-            var response = client.PostAsync(resource + $"/list/pagedIncludeOnly", content);
+            var response = client.PostAsync(resource + $"/list/byRegistrationDate", content);
             return response;
         }
 
@@ -209,7 +210,9 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         public HttpResponseMessageWrapper PostAddAvatar(string id, string filePath)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
-            StringContent content = new StringContent(filePath);
+            byte[] x = File.ReadAllBytesAsync(filePath).Result;
+            var content = new ByteArrayContent(x);
+            
             var response = client.PostAsync(resource + $"/avatar/{id}", content);
             return response;
         }
@@ -334,11 +337,11 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         }
 
         //PUT /api/PersonalData/{id}/geolocation  Change geolocation data
-        public HttpResponseMessageWrapper PutPersonalDataGeolocation(ChangeFieldRequest changeFieldRequest)
+        public HttpResponseMessageWrapper PutPersonalDataGeolocation(string id, ChangeGeolocationRequest changeFieldRequest)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
             StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
-            var response = client.PutAsync(resource + $"/{changeFieldRequest.ClientId}/geolocation", content);
+            var response = client.PutAsync(resource + $"/{id}/geolocation", content);
             return response;
         }
 
@@ -397,11 +400,14 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         }
 
         //PUT /api/PersonalData/documentscan/{id}  Add document scan
-        public HttpResponseMessageWrapper PutPersonalDataDocumentScan(ChangeFieldRequest changeFieldRequest)
+        public HttpResponseMessageWrapper PutPersonalDataDocumentScan(string id, string filePath)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
-            StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
-            var response = client.PutAsync(resource + $"/documentscan/{changeFieldRequest.ClientId}", content);
+            byte[] x = File.ReadAllBytesAsync(filePath).Result;
+            var content = new ByteArrayContent(x);
+
+            //StringContent content = new StringContent(JsonConvert.SerializeObject(changeFieldRequest));
+            var response = client.PutAsync(resource + $"/documentscan/{id}", content);
             return response;
         }
         #endregion
@@ -412,7 +418,7 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         public HttpResponseMessageWrapper DELETEPersonalDataAvatar(string id)
         {
             client.DefaultRequestHeaders.Add("api-key", apiKey);
-            var response = client.DeleteAsync(resource + $"/documentscan/{id}");
+            var response = client.DeleteAsync(resource + $"/avatar/{id}");
             return response;
         }
 

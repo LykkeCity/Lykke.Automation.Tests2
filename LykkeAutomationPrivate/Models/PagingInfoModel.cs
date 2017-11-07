@@ -34,6 +34,15 @@ namespace Lykke.Client.AutorestClient.Models
             CustomInit();
         }
 
+        public PagingInfoModel(int elementCount)
+        {
+            ElementCount = elementCount;
+            NextPage = "";
+            PreviousPages = new List<string>();
+            CurrentPage = 0;
+            NavigateToPageIndex = 0;
+        }
+
         /// <summary>
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
