@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkeAutomation", "LykkeAutomation\LykkeAutomation.csproj", "{64DA89F8-8C11-46A1-980C-10D237D8EE90}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,6 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LykkeAutomationPrivate", "L
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestsCore", "TestsCore\TestsCore.csproj", "{86261EE1-5708-45C8-ADB1-C732D4140BFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LykkePay", "LykkePay\LykkePay.csproj", "{F66E999A-D200-45EF-B0D3-8EF6C3CDC182}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86261EE1-5708-45C8-ADB1-C732D4140BFF} = {86261EE1-5708-45C8-ADB1-C732D4140BFF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +38,10 @@ Global
 		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86261EE1-5708-45C8-ADB1-C732D4140BFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F66E999A-D200-45EF-B0D3-8EF6C3CDC182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F66E999A-D200-45EF-B0D3-8EF6C3CDC182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F66E999A-D200-45EF-B0D3-8EF6C3CDC182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F66E999A-D200-45EF-B0D3-8EF6C3CDC182}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
