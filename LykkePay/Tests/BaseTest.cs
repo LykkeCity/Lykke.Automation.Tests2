@@ -1,5 +1,4 @@
-﻿using LykkeAutomation.Api;
-using LykkeAutomation.TestsCore;
+﻿using LykkeAutomation.TestsCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,16 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using LykkePay.Api;
 
-namespace LykkeAutomation.Tests
+namespace LykkePay.Tests
 {
-   public class BaseTest
+    public class BaseTest
     {
-        public LykkeApi lykkeApi;
-        public ApiSchemes apiSchemes;
-        public IList<string> schemesError;
-
-        public static Dictionary<string, List<HttpResponseMessageWrapper>> responses ;
+        public LykkePayApi lykkePayApi;
 
         #region response info
        
@@ -30,7 +27,15 @@ namespace LykkeAutomation.Tests
             }
         }
 
-#endregion
+        public static void AreEqualByJson(object expected, object actual)
+        {
+
+            var expectedJson = JsonConvert.SerializeObject(expected);
+            var actualJson = JsonConvert.SerializeObject(actual);
+            Assert.That(expectedJson, Is.EqualTo(actualJson),  "Objects are not equals");
+        }
+
+        #endregion
 
         #region before after
         [SetUp]
@@ -38,10 +43,9 @@ namespace LykkeAutomation.Tests
         {
             AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
                 TestContext.CurrentContext.Test.Name, "");
-            responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
-            lykkeApi = new LykkeApi();
-            apiSchemes = new ApiSchemes();
-            schemesError = new List<string>();
+
+            lykkePayApi = new LykkePayApi();
+
             TestContext.WriteLine("SetUp");
         }
 
@@ -52,7 +56,7 @@ namespace LykkeAutomation.Tests
             Console.WriteLine("TearDown");
           
             AllureReport.GetInstance().CaseFinished(TestContext.CurrentContext.Test.FullName,
-                TestContext.CurrentContext.Result.Outcome.Status, null);
+                TestContext.CurrentContext.Result.Outcome.Status,null);
         }
 
         [OneTimeSetUp]

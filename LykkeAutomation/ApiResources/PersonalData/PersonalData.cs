@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LykkeAutomation.Api.PersonalDataResource
 {
-    class PersonalData : LykkeAutomation.TestsCore.Api
+   public class PersonalData : LykkeAutomation.TestsCore.Api
     {
         private const string resource = "/PersonalData";
 

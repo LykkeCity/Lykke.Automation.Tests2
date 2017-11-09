@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using RestSharp;
 
 namespace LykkeAutomation.Tests
 {
@@ -37,6 +38,6 @@ namespace LykkeAutomation.Tests
                 Assert.That(model.Result.IsEmailRegistered, Is.False, "Email is registered");
                 Assert.That(model.Error, Is.Null, "Error is not null");
             }
-        }
+        }   
     }
 }

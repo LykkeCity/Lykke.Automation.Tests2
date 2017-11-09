@@ -29,9 +29,7 @@ namespace LykkeAutomation.Api.ApiResources.AccountExist
             JsonConvert.DeserializeObject<AccountExistModel>(GetAccountExistResponseOld(email)?.Content);
             */
         public HttpResponseMessageWrapper GetAccountExistResponse(string email)
-        {
-            var client = new HttpClientWrapper();
-            client.DefaultRequestHeaders.Accept.Clear(); 
+        { 
             return client.GetAsync(resource + $"?email={email}"); 
         }
 

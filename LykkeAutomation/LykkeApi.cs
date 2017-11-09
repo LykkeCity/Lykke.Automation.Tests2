@@ -11,7 +11,7 @@ using LykkeAutomation.Api.ApiResources.AccountExist;
 
 namespace LykkeAutomation.Api
 {
-    class LykkeApi
+   public class LykkeApi
     {
         public PersonalData PersonalData => new PersonalData();
         public Registration Registration => new Registration();
