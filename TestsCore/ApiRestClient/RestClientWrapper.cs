@@ -12,8 +12,9 @@ namespace LykkeAutomation.TestsCore
     public class RestClientWrapper : RestClient
     {
 
-        public new IRestResponse Execute(IRestRequest request)
+        public IRestResponse Execute(IRestRequest request, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
         {
+            TestLog.WriteStep($"Execute request name: {memberName}");
             var response = base.Execute(request);
 
             AddToLog(response);
