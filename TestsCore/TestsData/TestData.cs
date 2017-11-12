@@ -36,7 +36,9 @@ namespace TestsCore.TestsData
 
         public static string GenerateEmail() => $"lykke_autotest_{GenerateString(10)}@lykke.com";
 
-        public static string GeneratePhone(int length = 12) => GenerateString(length).GetHashCode().ToString().Replace('-', '+');
+        public static string GeneratePhone(int length = 12) => "+" + GenerateNumbers(length);
+
+        public static string GenerateNumbers(int length = 12) => GenerateString(length).GetHashCode().ToString().Replace("-", "");
 
         public static string AVATAR { get { return TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "../TestsCore/TestsData/Images/lykke_avatar.png"; } }
 

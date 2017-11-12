@@ -37,7 +37,7 @@ namespace LykkeAutomation.TestsCore
         {
             try
             {
-                TestContext.Out?.WriteLine(GetTimeStamp() + value);
+                TestContext.Out?.WriteLine(GetTimeStamp() + "\r\n" + value);
                 SaveLogToDictionary(value + '\n');
             }
             catch { }

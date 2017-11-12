@@ -22,16 +22,16 @@ namespace LykkeAutomation.TestsCore
 
         private void AddToLog(IRestResponse response)
         {
-            TestLog.WriteLine(ResponseInfo(response.Request));
+            TestLog.WriteLine(ResponseInfo(response.ResponseUri.AbsoluteUri, response.Request));
             TestLog.WriteLine(ResponseInfo(response));
         }
 
-        private string ResponseInfo(IRestRequest request)
+        private string ResponseInfo(string URL, IRestRequest request)
         {
             string result = "";
             result += request.Method + "\r\n";
-            result += request.Resource + "\r\n";
-            request.Parameters.ForEach(p => result += p.Name + ": " + p.Value + "\r\n");
+            result += URL + "\r\n";
+            request.Parameters.FindAll(p => p.Type != ParameterType.RequestBody).ForEach(p => result += p.Name + ": " + p.Value + "\r\n");
             result += request.Parameters?.Find(p => p.Type == ParameterType.RequestBody)?.Value + "\r\n";
             return result;
         }

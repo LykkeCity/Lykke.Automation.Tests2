@@ -20,7 +20,7 @@ namespace LykkePay.Tests
             {
                 RestClientWrapper client = new RestClientWrapper("https://api-test.lykkex.net/api");
                 RestRequest request = new RestRequest("/AccountExist" + $"?email=test@gmail.com", Method.GET);
-
+                client.Proxy = new WebProxy("127.0.0.1",8888);
                 var response = client.Execute(request);
             }
         }
