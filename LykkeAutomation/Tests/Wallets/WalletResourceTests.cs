@@ -14,6 +14,7 @@ namespace LykkeAutomation.Tests.Wallets
         readonly string devBaseUrl = "https://api-dev.lykkex.net";
 
         [Test]
+        [Category("Wallet")]
         public void WaletTest1()
         {
             var registered = Request.For(devBaseUrl).Post("/api/Registration")
