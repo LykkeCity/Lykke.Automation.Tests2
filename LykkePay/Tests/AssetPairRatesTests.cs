@@ -13,8 +13,7 @@ namespace LykkePay.Tests
 {
     public class AssetPairRatesTests
     {
-        
-
+        #region GET Tests
         public class GetAssetPairEmptyPair : BaseTest
         {
             [Test]
@@ -49,7 +48,6 @@ namespace LykkePay.Tests
                 var response = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
                 Assert.That(response, Is.Not.Null, "Unexpected response model for valid assetPair");
                 Assert.That(assetPair, Is.EqualTo(response.assetPair), "Unexpected asset Pair");
-               
             }
         }
 
@@ -59,7 +57,7 @@ namespace LykkePay.Tests
             [Category("LykkePay")]
             public void GetAssetPairTextPairTest()
             {
-                var text = TestData.GenerateString(8);
+                var text = TestData.GenerateLetterString(8);
                 
                 var response = lykkePayApi.assetPairRates.GetAssetPairRates(text);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound), "Unexpected status code for text assetPair");
@@ -80,6 +78,7 @@ namespace LykkePay.Tests
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
             }
         }
+        #endregion
 
         #region Post Tests
         public class PostAssetPairEmptyParametersBody : BaseTest
@@ -94,7 +93,7 @@ namespace LykkePay.Tests
                 var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
             }
         }
@@ -143,7 +142,7 @@ namespace LykkePay.Tests
                 var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
             }
         }
@@ -160,8 +159,10 @@ namespace LykkePay.Tests
 
                 var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+                Assert.That(postModel, Is.Not.Null, "PostAssetsPairRatesModel is null");
+                Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");//present in headers
             }
         }
 
@@ -176,7 +177,7 @@ namespace LykkePay.Tests
                 string markUp = "{\"markup\": { \"percent\":20 , \"pips\":}}";
                 var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
             }
         }
@@ -193,60 +194,127 @@ namespace LykkePay.Tests
                 var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+                Assert.That(postModel.accuracy, Is.Not.Null, "accuracy is null");
+                Assert.That(postModel.ask, Is.Not.Null, "ask is null");
+                Assert.That(postModel.assetPair, Is.Not.Null, "assetPair is null");
+                Assert.That(postModel.bid, Is.Not.Null, "bid is null");             
             }
         }
 
-        public class PostAssetPairPercentDiffValues : BaseTest
+        public class PostAssetPairPercentDiffValuesPositive : BaseTest
         {
-            [TestCase(0)]
+            [TestCase("0")]
             [TestCase("0.0")]
-            [TestCase(1f)]
-            [TestCase(50f)]
-            [TestCase(100f)]
-            [TestCase(500f)]
-            [TestCase(-1f)]
-            [TestCase(25.5f)]
-            [TestCase("testtest")]
-            [TestCase("25%")]
+            [TestCase("1")]
+            [TestCase("50.0")]
+            [TestCase("100.0")]
+            [TestCase("500.0")]            
             [Category("LykkePay")]
-            public void PostAssetPairPercentDiffValuesTest(object percent)
+            public void PostAssetPairPercentDiffValuesPositiveTest(object percent)
             {
                 object p = percent;
                 var assetPair = "BTCUSD";
                 
-                string markUp = $"{{\"markup\": {{ \"percent\":{p} , \"pips\": 0}}";
+               string markUp = $"{{\"markup\": {{\"percent\":{p}, \"pips\": 0}}}}";
+
                 var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+                Assert.That(postModel.accuracy, Is.Not.Null, "accuracy is null");
+                Assert.That(postModel.ask, Is.Not.Null, "ask is null");
+                Assert.That(postModel.assetPair, Is.Not.Null, "assetPair is null");
+                Assert.That(postModel.bid, Is.Not.Null, "bid is null");
             }
         }
 
-        public class PostAssetPairPipsDiffValues : BaseTest
+        public class PostAssetPairPercentDiffValuesNegative : BaseTest
         {
-            [TestCase(0)]
-            [TestCase(1)]
-            [TestCase(50)]
-            [TestCase(100)]
-            [TestCase(500)]
-            [TestCase(-1f)]
-            [TestCase(3.5)]
+            [TestCase("-1.0")]
+            [TestCase("25.5")]
             [TestCase("testtest")]
-            [TestCase("3 pip")]
+            [TestCase("25%")]
             [Category("LykkePay")]
-            public void PostAssetPairPipsDiffValuesTest(object pips)
+            public void PostAssetPairPercentDiffValuesNegativeTest(object percent)
+            {
+                object p = percent;
+                var assetPair = "BTCUSD";
+
+                string markUp = $"{{\"markup\": {{\"percent\":{p}, \"pips\": 0}}}}";
+
+                var merchant = new MerchantModel(markUp);
+
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");              
+            }
+        }
+
+        public class PostAssetPairPipsDiffValuesPositive : BaseTest
+        {
+            [TestCase("0")]
+            [TestCase("1")]
+            [TestCase("50")]
+            [TestCase("100")]
+            [TestCase("500")]           
+            [Category("LykkePay")]
+            public void PostAssetPairPipsDiffValuesPositiveTest(object pips)
             {
                 object p = pips;
                 var assetPair = "BTCUSD";
                 
-                string markUp = $"{{\"markup\": {{ \"percent\":0 , \"pips\": {p}}}";
+                string markUp = $"{{\"markup\": {{\"percent\":0.0,\"pips\":{p}}}}}";
+                var merchant = new MerchantModel(markUp);
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+                Assert.That(postModel.accuracy, Is.Not.Null, "accuracy is null");
+                Assert.That(postModel.ask, Is.Not.Null, "ask is null");
+                Assert.That(postModel.assetPair, Is.Not.Null, "assetPair is null");
+                Assert.That(postModel.bid, Is.Not.Null, "bid is null");
+            }
+        }
+
+        public class PostAssetPairPipsDiffValuesNegative : BaseTest
+        {
+            [TestCase("-1")]
+            [TestCase("3.5")]
+            [TestCase("testtest")]
+            [TestCase("3 pip")]
+            [Category("LykkePay")]
+            public void PostAssetPairPipsDiffValuesNegativeTest(object pips)
+            {
+                object p = pips;
+                var assetPair = "BTCUSD";
+
+                string markUp = $"{{\"markup\": {{\"percent\":0.0,\"pips\":{p}}}}}";
                 var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
+            }
+        }
+
+        public class PostAssetPairPips300CharsNegative : BaseTest
+        {
+            [TestCase("5.0;300+")]
+            [TestCase("300+;3.5")]
+            [Category("LykkePay")]
+            public void PostAssetPairPips300CharsNegativeTest(object parameters)
+            {
+                string pc = parameters.ToString().Split(";")[0];
+                string pips = parameters.ToString().Split(";")[1];
+                if (pc.Contains("300+"))
+                    pc = TestData.GenerateNumbers(301);
+                else
+                    pips = TestData.GenerateNumbers(301);
+                var assetPair = "BTCUSD";
+
+                string markUp = $"{{\"markup\": {{\"percent\":{pc}.0,\"pips\":{pips}}}}}";
+                var merchant = new MerchantModel(markUp);
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
             }
         }
 
@@ -257,17 +325,19 @@ namespace LykkePay.Tests
             public void PostAssetPairValidValuesTest()
             {
                 var assetPair = "BTCUSD";
-                
+
                 MarkupModel markUp = new MarkupModel(50, 30);
-                
+
                 var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRates(assetPair, merchant, markUp);
 
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
-                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+                Assert.That(postModel.accuracy, Is.Not.Null, "accuracy is null");
+                Assert.That(postModel.ask, Is.Not.Null, "ask is null");
+                Assert.That(postModel.assetPair, Is.Not.Null, "assetPair is null");
+                Assert.That(postModel.bid, Is.Not.Null, "bid is null");
             }
-
-            
         }
         #endregion
     }

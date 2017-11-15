@@ -124,8 +124,8 @@ namespace LykkePay.Models
                       "3Ru/0PAiokj1F8bo93bWKzNaTkKtCN+r16LgNw42uZ2a2dhlAf+hRl8xVLXOoUuQ\n" +
                       "AAvqH9uKk0lUMI6lvnmIHvKMBbl47mZ+2FwIcH5fAWWmnlVZhGAN\n" +
                       "-----END RSA PRIVATE KEY-----";
-
-            string strToSign = apiKey + JsonConvert.SerializeObject(objectToSign, Formatting.Indented);
+            var jsonString = objectToSign is string? objectToSign : JsonConvert.SerializeObject(objectToSign, Formatting.Indented);
+            string strToSign = apiKey + jsonString;
             var csp = CreateRsaFromPrivateKey(key);
             var sign = Convert.ToBase64String(csp.SignData(Encoding.UTF8.GetBytes(strToSign), HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
             return sign;

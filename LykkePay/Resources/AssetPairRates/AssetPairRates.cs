@@ -33,8 +33,7 @@ namespace LykkePay.Resources.AssetPairRates
                 var body = JsonConvert.SerializeObject(markup, Formatting.Indented);
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
             }
-                
-            
+   
             var respose = client.Execute(request);
             return respose;
         }

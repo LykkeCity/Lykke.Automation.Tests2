@@ -34,11 +34,27 @@ namespace TestsCore.TestsData
 
         public static string GenerateString(int length) => Guid.NewGuid().ToString("n").Substring(0, length);
 
+        public static string GenerateLetterString(int length)
+        {
+            Random random = new Random();
+
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         public static string GenerateEmail() => $"lykke_autotest_{GenerateString(10)}@lykke.com";
 
         public static string GeneratePhone(int length = 12) => "+" + GenerateNumbers(length);
 
-        public static string GenerateNumbers(int length = 12) => GenerateString(length).GetHashCode().ToString().Replace("-", "");
+        public static string GenerateNumbers(int length = 12)
+        {
+            Random random = new Random();
+
+            const string chars = "0123456789";
+
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
         public static string AVATAR { get { return TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "../TestsCore/TestsData/Images/lykke_avatar.png"; } }
 
