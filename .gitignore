@@ -3,6 +3,7 @@
 
 # Allure results
 LykkeAutomation/TestReportHelpers/allure-results/
+LykkeAutomationPrivate/TestReportHelpers/allure-results/
 
 # User-specific files
 *.suo
