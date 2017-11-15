@@ -33,7 +33,6 @@ namespace LykkeAutomation.TestsCore
             client = new HttpClientWrapper(BaseUri);
             client.DefaultRequestHeaders.Accept
             .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-        
+        }  
     }
 }
