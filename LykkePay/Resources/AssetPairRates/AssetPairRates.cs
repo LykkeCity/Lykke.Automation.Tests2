@@ -28,8 +28,12 @@ namespace LykkePay.Resources.AssetPairRates
             IRestRequest request = new RestRequest($"{resource}/{assetPair}", Method.POST);
             request.AddHeader("Lykke-Merchant-Id", merchant.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
-            if(markup != null)
-                request.AddJsonBody(markup);
+            if (markup != null)
+            {
+                var body = JsonConvert.SerializeObject(markup, Formatting.Indented);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+            }
+                
             
             var respose = client.Execute(request);
             return respose;

@@ -1,8 +1,11 @@
 ﻿using LykkePay.Models;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using TestsCore.TestsData;
 
@@ -10,8 +13,7 @@ namespace LykkePay.Tests
 {
     public class AssetPairRatesTests
     {
-        private const string MerchantId = "bitteller.test.1";
-        private static string MerchantSign = Environment.GetEnvironmentVariable("MerchantSign");
+        
 
         public class GetAssetPairEmptyPair : BaseTest
         {
@@ -87,8 +89,9 @@ namespace LykkePay.Tests
             public void PostAssetPairEmptyParametersBodyTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = "{\"markup\": { \"percent\":, \"pips\":}}";
+                var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
@@ -103,9 +106,9 @@ namespace LykkePay.Tests
             public void PostAssetPairSpacesBodyTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = "{\"markup\": { \"percent\": , \"pips\": }}";
-
+                var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
@@ -119,9 +122,9 @@ namespace LykkePay.Tests
             public void PostAssetPairSpacesEmptyTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 MarkupModel markUp = null;
-
+                var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRates(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
@@ -135,8 +138,9 @@ namespace LykkePay.Tests
             public void PostAssetPairPercentEmptyTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = "{\"markup\": { \"percent\": , \"pips\": 20 }}";
+                var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
@@ -151,9 +155,10 @@ namespace LykkePay.Tests
             public void PostAssetPairWithoutPercentTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = "{\"markup\": {\"pips\": 20 }}";
 
+                var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
@@ -167,9 +172,9 @@ namespace LykkePay.Tests
             public void PostAssetPairPipsEmptyTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = "{\"markup\": { \"percent\":20 , \"pips\":}}";
-
+                var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
@@ -183,8 +188,9 @@ namespace LykkePay.Tests
             public void PostAssetPairWithoutPipsTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = "{\"markup\": {\"pips\": 20 }}";
+                var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
@@ -209,8 +215,9 @@ namespace LykkePay.Tests
             {
                 object p = percent;
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = $"{{\"markup\": {{ \"percent\":{p} , \"pips\": 0}}";
+                var merchant = new MerchantModel(markUp);
 
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
@@ -234,9 +241,9 @@ namespace LykkePay.Tests
             {
                 object p = pips;
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 string markUp = $"{{\"markup\": {{ \"percent\":0 , \"pips\": {p}}}";
-
+                var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
@@ -250,13 +257,17 @@ namespace LykkePay.Tests
             public void PostAssetPairValidValuesTest()
             {
                 var assetPair = "BTCUSD";
-                var merchant = new MerchantModel(MerchantId, MerchantSign);
+                
                 MarkupModel markUp = new MarkupModel(50, 30);
-
+                
+                var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRates(assetPair, merchant, markUp);
+
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
                 Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Unexpected response content");
             }
+
+            
         }
         #endregion
     }
