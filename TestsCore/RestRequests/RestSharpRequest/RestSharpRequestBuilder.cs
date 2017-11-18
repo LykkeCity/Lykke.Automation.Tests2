@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using TestsCore.RestRequests.Interfaces;
+using Newtonsoft.Json;
 
 namespace TestsCore.RestRequests.RestSharpRequest
 {
@@ -15,6 +16,9 @@ namespace TestsCore.RestRequests.RestSharpRequest
         public RestSharpRequestBuilder(string baseUrl)
         {
             client = new RestClient(baseUrl);
+#if DEBUG
+            client.Proxy = new WebProxy("127.0.0.1", 8888);
+#endif
         }
 
         #region Methods
@@ -67,7 +71,9 @@ namespace TestsCore.RestRequests.RestSharpRequest
 
         public IRequestBuilder AddJsonBody(object json)
         {
-            request.AddJsonBody(json);
+            string jsonStr = JsonConvert.SerializeObject(json);
+            request.RequestFormat = DataFormat.Json;
+            request.AddParameter("application/json", jsonStr, "application/json", ParameterType.RequestBody);
             return this;
         }
 
