@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using AllureCSharpCommons;
-using AllureCSharpCommons.AllureModel;
-using AllureCSharpCommons.Events;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework;
+using Allure.Commons;
 
 namespace LykkeAutomation.TestsCore
 {
     public class AllureReport
     {
         private static AllureReport allureReport;
-        private static Allure _lifecycle;
+        private static AllureLifecycle _lifecycle;
         private static Dictionary<string, List<dynamic>> _caseStorage = new Dictionary<string, List<dynamic>>();
         private object debugLock = new object();
         private static string resultDir;
@@ -40,10 +38,7 @@ namespace LykkeAutomation.TestsCore
 
         public void RunStarted(string workDirectory)
         {
-            resultDir = workDirectory + "allure-results/";
-            AllureConfig.ResultsPath = resultDir;
-            Directory.CreateDirectory(AllureConfig.ResultsPath);
-            _lifecycle = Allure.Lifecycle;
+            _lifecycle = AllureLifecycle.Instance;
         }
 
         public void RunFinished()
@@ -54,28 +49,10 @@ namespace LykkeAutomation.TestsCore
 
         public void CaseStarted(string fullName, string name, string description)
         {
+            string fixtureName = GetFixtureName(fullName);
             lock (_caseStorage)
             {
-                string fixtureName = GetFixtureName(fullName);
-
-                _caseStorage.Add(fullName, new List<dynamic>());
-
-                _caseStorage[fullName].Add(new TestSuiteStartedEvent(fixtureName, fixtureName));
-
-                label[] labels =
-                {
-                    new label("label1", "value1"?? ""),
-                    new label("host", "Local machine")
-                };
-
-                string displayedCaseName = name;
-
-                _caseStorage[fullName].Add(new TestCaseStartedEvent(fixtureName, displayedCaseName, DateTime.Now)
-                {
-                    Labels = labels,
-                    Description = new description(descriptiontype.html, description),
-                    Title = displayedCaseName
-                });
+                _lifecycle.StartTestCase(new TestResult() { uuid = fixtureName, name = name, description = description });
             }
         }
 
@@ -85,49 +62,34 @@ namespace LykkeAutomation.TestsCore
             {
                 string fixtureName = GetFixtureName(fullName);
 
+                List<Attachment> attaches = new List<Attachment>();
+                var testLogPath = TestContext.CurrentContext.WorkDirectory + $"/allure-results/{Guid.NewGuid()}.log";
+                var log = TestLog.GetLog();
+                File.WriteAllText(testLogPath, log);
+                attaches.Add(new Attachment() { name = "TestLog", source = testLogPath, type = "application/json" });
+
+
                 if (result == TestStatus.Failed)
                 {
+
                     AssertionException ex = new AssertionException(TestContext.CurrentContext.Result.Message);
-                    string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ? 
-                        "" : 
+                    string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ?
+                        "" :
                         TestContext.CurrentContext.Result.Assertions.ToList()?[0].StackTrace;
-                    _caseStorage[fullName].Add(new TestCaseFailureEvent()
-                    {
-                        Throwable = ex,
-                        StackTrace = st
-                    });
+
+                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.failed; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = ex.Message, trace = st }; });
+                    _lifecycle.WriteTestCase(fixtureName);
+                   
                 }
-                if (result == TestStatus.Skipped)
+                else
                 {
-                    _caseStorage[fullName].Add(new TestCaseCanceledEvent()
-                    {
-                        Throwable = exception
-                    });
+                    string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ?
+                        "" :
+                        TestContext.CurrentContext.Result.Assertions.ToList()?[0].StackTrace;
+
+                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.passed; x.attachments = attaches; });
+                    _lifecycle.WriteTestCase(fixtureName);
                 }
-                if (result == TestStatus.Inconclusive)
-                {
-                    _caseStorage[fullName].Add(new TestCasePendingEvent()
-                    {
-                        Throwable = exception
-                    });
-                }
-
-                AddAttachment(fullName, Encoding.UTF8.GetBytes(TestLog.GetLog()), "TestLog", "application/json");
-
-                var ev = _caseStorage[fullName].First(e => e is TestCaseStartedEvent) as TestCaseStartedEvent;
-                var newLabels = ev.Labels?.ToList();
-                newLabels.Add(new label("feature", result.ToString()));
-                newLabels.Add(new label("story", result.ToString()));
-                ev.Labels = newLabels.ToArray();
-
-                _caseStorage[fullName].Add(new TestCaseFinishedEvent(DateTime.Now));
-                _caseStorage[fullName].Add(new TestSuiteFinishedEvent(fixtureName, DateTime.Now));
-
-                foreach (var evt in _caseStorage[fullName])
-                {
-                    _lifecycle.Fire(evt);
-                }
-                _caseStorage.Remove(fullName);
             }
         }
 
@@ -135,7 +97,7 @@ namespace LykkeAutomation.TestsCore
         {
             lock (_caseStorage)
             {
-                _caseStorage[fullName].Add(new StepStartedEvent(stepName, DateTime.Now) { Title = stepName });
+                _lifecycle.StartStep(fullName, new StepResult() {name = stepName });;
             }
         }
 
@@ -143,56 +105,10 @@ namespace LykkeAutomation.TestsCore
         {
             lock (_caseStorage)
             {
-                if (!_caseStorage.ContainsKey(fullName))
-                    throw new Exception("Not existed step " + fullName);
-                if (result == TestStatus.Failed || result == TestStatus.Inconclusive)
-                {
-                    _caseStorage[fullName].Add(new StepFailureEvent()
-                    {
-                        Throwable = exception
-                    });
-                }
-                if (result == TestStatus.Skipped)
-                {
-                    _caseStorage[fullName].Add(new StepCanceledEvent()
-                    {
-                        Throwable = exception
-                    });
-                }
-
-                var log = TestLog.GetStepLog();
-                if (log != null && log.ToString() != "")
-                {
-                    AddAttachment(fullName, Encoding.UTF8.GetBytes(log.ToString()), "StepLog", "text/plain");
-                }
-                _caseStorage[fullName].Add(new StepFinishedEvent(DateTime.Now));
+                _lifecycle.StopStep(fullName);
             }
         }
-
-        public void AddAttachment(string fullName, byte[] attach, string title, string type)
-        {
-            lock (_caseStorage)
-            {
-                try
-                {
-                    _caseStorage[fullName].Add(new MakeAttachEvent(attach, title, type));
-                }
-                catch
-                {
-                    TestLog.WriteLine($"Cannot attach {title} into report");
-                }
-            }
-        }
-
-        public void CreateMinimumReport(string message)
-        {
-            _lifecycle.Fire(new TestSuiteStartedEvent("", "Before run"));
-            _lifecycle.Fire(new TestCaseStartedEvent("minId", "TestCase"));
-            _lifecycle.Fire(new TestCaseFailureEvent() { Throwable = new Exception(message) });
-            _lifecycle.Fire(new TestCaseFinishedEvent());
-            _lifecycle.Fire(new TestSuiteFinishedEvent("minId"));
-        }
-
+       
         private void CreateEnvFile()
         {
             string environmetFilePath = Path.Combine(resultDir, "environment.properties");

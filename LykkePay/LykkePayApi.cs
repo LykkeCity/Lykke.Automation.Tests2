@@ -1,4 +1,5 @@
 ﻿using LykkePay.Resources.AssetPairRates;
+using LykkePay.Resources.Purchase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace LykkePay.Api
         public ServiceSettingsApi settings => new ServiceSettingsApi();
 
         public AssetPairRates assetPairRates => new AssetPairRates();
+
+        public Purchase purchase => new Purchase();
     }
 }

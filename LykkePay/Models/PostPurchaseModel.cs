@@ -15,6 +15,20 @@ namespace LykkePay.Models
         public string progressUrl { get; set; }
         public string orderId { get; set; }
         public PostMarkup markup { get; set; }
+
+
+        public PostPurchaseModel(PostMarkup markup, string assetPair)
+        {
+            this.markup = markup;
+            destinationAddress = "mnosddsjcchkwjfnnjcdodsc=";
+            this.assetPair = assetPair;
+            baseAsset = "USD";
+            amount = "10";
+            successUrl = "http://yandex.ru";
+            errorUrl = "http://yandex.ru";
+            progressUrl = "http://yandex.ru";
+            orderId = "";
+        }
     }
 
     public class PostMarkup
@@ -29,6 +43,14 @@ namespace LykkePay.Models
             this.pips = pips;
             this.fixedFee = fixedFee;
         }
+
+        public PostMarkup(MarkupModel markupModel, float fixedFee)
+        {
+            this.percent = markupModel.markup.percent;
+            this.pips = markupModel.markup.pips;
+            this.fixedFee = fixedFee;
+        }
+
     }
 
     public class PostMerchantModel

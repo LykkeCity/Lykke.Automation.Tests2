@@ -86,8 +86,8 @@ namespace TestsCore.RestRequests.RestSharpRequest
             attachContext.AppendLine($"Response: {response.StatusCode}");
             attachContext.AppendLine(response.Content);
 
-            AllureReport.GetInstance().AddAttachment(TestContext.CurrentContext.Test.FullName,
-                Encoding.UTF8.GetBytes(attachContext.ToString()), attachName, "application/json");
+           // AllureReport.GetInstance().AddAttachment(TestContext.CurrentContext.Test.FullName,
+              //  Encoding.UTF8.GetBytes(attachContext.ToString()), attachName, "application/json");
         }
     }
 }
