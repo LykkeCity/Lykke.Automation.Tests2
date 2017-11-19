@@ -13,53 +13,31 @@ namespace TestsCore.RestRequests.RestSharpRequest
 {
     public class RestSharpRequestBuilder : IRequestBuilder
     {
-        private IRestClient client;
-        private IRestRequest request;
+        private RestSharpRequest request;
 
         public RestSharpRequestBuilder(string baseUrl)
         {
-            client = new RestClient(baseUrl);
-#if DEBUG
-            client.Proxy = new WebProxy("127.0.0.1", 8888);
-#endif
+            request = new RestSharpRequest(baseUrl);
+        }
+
+        public IRequest Build()
+        {
+            return request;
         }
 
         #region Methods
         public IRequestBuilder Post(string resourse)
         {
-            request = new RestRequest(resourse, Method.POST);
+            request.Method = Method.POST;
+            request.Resource = resourse;
             return this;
         }
 
         public IRequestBuilder Get(string resourse)
         {
-            request = new RestRequest(resourse, Method.GET);
+            request.Method = Method.GET;
+            request.Resource = resourse;
             return this;
-        }
-        #endregion
-
-        #region Client
-        public IResponse Execute()
-        {
-            var response = client.Execute(request);
-            Log(response);
-            return new Response { StatusCode = response.StatusCode, Content = response.Content };
-        }
-
-        public T Execute<T>() where T : new()
-        {
-            var response = client.Execute<T>(request);
-            Log(response);
-            return response.Data;
-        }
-
-        public IRequestBuilder WithProxy
-        {
-            get
-            {
-                client.Proxy = new WebProxy("127.0.0.1", 8888);
-                return this;
-            }
         }
         #endregion
 
@@ -77,16 +55,14 @@ namespace TestsCore.RestRequests.RestSharpRequest
 
         public IRequestBuilder AddJsonBody(object json)
         {
-            string jsonStr = JsonConvert.SerializeObject(json);
-            request.RequestFormat = DataFormat.Json;
-            request.AddParameter("application/json", jsonStr, "application/json", ParameterType.RequestBody);
+            request.JsonBody = json;
             return this;
         }
 
         public IRequestBuilder AddQueryParameter(string name, object value)
         {
-            request.AddParameter(name, value, ParameterType.QueryString);
-            return this;
+            throw new NotImplementedException();
+            //request2.AddParameter(name, value, ParameterType.QueryString);
         }
 
         public IRequestBuilder ContentType(string contentType)
@@ -99,27 +75,6 @@ namespace TestsCore.RestRequests.RestSharpRequest
         {
             request.AddHeader("Accept", mediaType);
             return this;
-        }
-        #endregion
-        #region Private methods
-        private void Log(IRestResponse response)
-        {
-            var requestBody = response.Request.Parameters.FirstOrDefault(p => p.Type == ParameterType.RequestBody);
-
-            string attachName = $"{response.Request.Method} {response.Request.Resource}";
-            var attachContext = new StringBuilder();
-            attachContext.AppendLine($"Executing {response.Request.Method} {response.ResponseUri}");
-            if (requestBody != null)
-            {
-                attachContext.AppendLine($"Content-Type: {requestBody.ContentType}").AppendLine();
-                attachContext.AppendLine(requestBody.Value.ToString());
-            }
-            attachContext.AppendLine().AppendLine();
-            attachContext.AppendLine($"Response: {response.StatusCode}");
-            attachContext.AppendLine(response.Content);
-
-            AllureReport.GetInstance().AddAttachment(TestContext.CurrentContext.Test.FullName,
-                Encoding.UTF8.GetBytes(attachContext.ToString()), attachName, "application/json");
         }
         #endregion
     }

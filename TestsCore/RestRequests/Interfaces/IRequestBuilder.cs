@@ -13,11 +13,10 @@ namespace TestsCore.RestRequests.Interfaces
         IRequestBuilder AddJsonBody(object json);
         IRequestBuilder AddQueryParameter(string paramName, object paramValue);
         IRequestBuilder WithBearerToken(string token);
-        IRequestBuilder WithProxy { get; }
+        //IRequestBuilder WithProxy { get; }
         IRequestBuilder Accept(string mediaType);
         IRequestBuilder ContentType(string contentType);
 
-        IResponse Execute();
-        T Execute<T>() where T : new();
+        IRequest Build();
     }
 }

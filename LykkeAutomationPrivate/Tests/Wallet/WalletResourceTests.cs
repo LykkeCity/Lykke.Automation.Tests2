@@ -26,7 +26,7 @@ namespace LykkeAutomation.Tests.Wallets
             var client = new FullPersonalDataModel().Init();
             var registered = Requests.For(registrationUrl).Post("/api/Registration")
                 .AddJsonBody(client)
-                .Execute().GetJObject();
+                .Build().Execute().GetJObject();
 
 
             string bearerToken = (string)registered["Token"];
@@ -34,7 +34,7 @@ namespace LykkeAutomation.Tests.Wallets
 
             Requests.For(devBaseUrl).Post("api/PinSecurity")
                 .AddJsonBody(new { Pin = "1111" })
-                .WithBearerToken(bearerToken).WithProxy.Execute();
+                .WithBearerToken(bearerToken).Build().Execute();
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace LykkeAutomation.Tests.Wallets
                     Type = walletType,
                     Description = walletDescription
                 })
-                .Execute<WalletDto>();
+                .Build().Execute<WalletDto>();
 
             Assert.That(wallet.Id, Is.Not.Null);
             Assert.That(wallet.Type, Is.EqualTo(walletType.ToSerializedValue()));
@@ -73,7 +73,7 @@ namespace LykkeAutomation.Tests.Wallets
                     Type = walletType,
                     Description = walletDescription
                 })
-                .Execute();
+                .Build().Execute();
 
             Assert.That(walletResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -99,7 +99,7 @@ namespace LykkeAutomation.Tests.Wallets
                     Type = _walletType,
                     Description = walletDescription
                 })
-                .Execute();
+                .Build().Execute();
 
             return walletResponse.StatusCode;
         }
@@ -119,7 +119,7 @@ namespace LykkeAutomation.Tests.Wallets
                     Type = walletType,
                     Description = walletDescription
                 })
-                .Execute();
+                .Build().Execute();
 
             return walletResponse.StatusCode;
         }
@@ -137,7 +137,7 @@ namespace LykkeAutomation.Tests.Wallets
                     Type = walletType,
                     Description = _walletDescription
                 })
-                .Execute();
+                .Build().Execute();
 
             return walletResponse.StatusCode;
         }
