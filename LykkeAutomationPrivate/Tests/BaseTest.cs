@@ -44,9 +44,12 @@ namespace LykkeAutomationPrivate.Tests
         #region before after
         [SetUp]
         public void SetUp()
-        { 
+        {
+            var testDescription = TestContext.CurrentContext.Test.Properties["Description"];
+            var textDescription = testDescription.Count>0 ? testDescription[0].ToString() : "No Description";
+            
             AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
-                TestContext.CurrentContext.Test.Name, TestContext.CurrentContext.Test.Properties["Description"][0].ToString());
+                TestContext.CurrentContext.Test.Name, textDescription);
             responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
             lykkeApi = new LykkeApi();
             apiSchemes = new ApiSchemes();
