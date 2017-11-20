@@ -52,9 +52,9 @@ namespace TestsCore.RestRequests.RestSharpRequest
         private void CreateRestSharp()
         {
             client = new RestClient(BaseUrl);
-#if DEBUG
-            client.Proxy = new WebProxy("127.0.0.1", 8888);
-#endif
+//#if DEBUG
+//            client.Proxy = new WebProxy("127.0.0.1", 8888);
+//#endif
             request = new RestRequest(Resource, Method);
 
             if (JsonBody != null)
