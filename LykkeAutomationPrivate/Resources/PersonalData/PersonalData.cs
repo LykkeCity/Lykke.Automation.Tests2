@@ -24,7 +24,7 @@ namespace LykkeAutomationPrivate.Api.PersonalDataResource
         private static PersonalDataSettings Settings()
         {
             if(_settings == null)
-            _settings = new LykkeApi().settings.PersonalDataSettings().PersonalDataSettings;
+                _settings = new LykkeApi().settings.PersonalDataSettings().PersonalDataSettings;
             return _settings;
         }
 

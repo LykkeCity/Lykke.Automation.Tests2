@@ -44,15 +44,25 @@ namespace LykkeAutomation.TestsCore
         public void RunFinished()
         {
             CreateEnvFile();
-            CreateCategoryFile();
+           // CreateCategoryFile();
         }
 
         public void CaseStarted(string fullName, string name, string description)
         {
             string fixtureName = GetFixtureName(fullName);
+
+            var cats = TestContext.CurrentContext.Test.Properties["Category"];
+
+            var parameters = new List<Parameter>();
+            foreach(var cat in cats)
+            {
+                parameters.Add(new Parameter() {name = "Category", value = cat.ToString()});
+            }
+
+           // var labels = new List<Label> { Label.Thread(), Label.Feature("some feature label"), Label.Host(), Label.Epic("label epic"), Label.Severity(SeverityLevel.critical), Label.Story("label story"), Label.Tag("label tag") };
             lock (_caseStorage)
             {
-                _lifecycle.StartTestCase(new TestResult() { uuid = fixtureName, name = name, description = description });
+                _lifecycle.StartTestCase(new TestResult() { uuid = fixtureName, name = name, description = description, parameters = parameters/*, labels = labels*/ });
             }
         }
 
@@ -68,10 +78,8 @@ namespace LykkeAutomation.TestsCore
                 File.WriteAllText(testLogPath, log);
                 attaches.Add(new Attachment() { name = "TestLog", source = testLogPath, type = "application/json" });
 
-
                 if (result == TestStatus.Failed)
                 {
-
                     AssertionException ex = new AssertionException(TestContext.CurrentContext.Result.Message);
                     string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ?
                         "" :
@@ -83,11 +91,9 @@ namespace LykkeAutomation.TestsCore
                 }
                 else
                 {
-                    string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ?
-                        "" :
-                        TestContext.CurrentContext.Result.Assertions.ToList()?[0].StackTrace;
+                    var st = TestContext.CurrentContext.Result;
 
-                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.passed; x.attachments = attaches; });
+                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.passed; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = st.Outcome.Status.ToString() }; });
                     _lifecycle.WriteTestCase(fixtureName);
                 }
             }
@@ -108,13 +114,26 @@ namespace LykkeAutomation.TestsCore
                 _lifecycle.StopStep(fullName);
             }
         }
+
+        public void StartTestContainer()
+        {
+            lock (_caseStorage)
+            {
+                _lifecycle.StartTestContainer(new TestResultContainer() { });
+            }
+        }
        
         private void CreateEnvFile()
         {
-            string environmetFilePath = Path.Combine(resultDir, "environment.properties");
+            string environmetFilePath = Path.Combine(_lifecycle.ResultsDirectory, "environment.properties");
+            var cats = TestContext.CurrentContext.Test.Properties["Category"]; // does not contain any test property after tests finished
+            string ServiceName = "";// what is the best way to obtain service name/url?
+            
             string[] lines = new[]
             {
-                String.Format("{0}={1}", "TestCategory", "Sample category" ?? ""), // work with categories here
+                $"ServiceName = {ServiceName}",
+                $"Service Version namber = <<Number>>", //IsAliveVersion
+                $"Date =  {DateTime.Now.ToString()}"
             };
             File.WriteAllLines(environmetFilePath, lines);
         }

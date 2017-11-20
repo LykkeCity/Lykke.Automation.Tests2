@@ -17,6 +17,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
+            [Description("Get PersonalData By Email")]
             [Parallelizable]
             public void GetPersonalDataByEmailTest()
             {
