@@ -13,7 +13,7 @@ namespace LykkeAutomationPrivate.Tests
 {
     class BaseTest
     {
-        public LykkeApi lykkeApi;
+        public LykkeApi lykkeApi = new LykkeApi();
         public ApiSchemes apiSchemes;
         public IList<string> schemesError;
 
@@ -51,7 +51,6 @@ namespace LykkeAutomationPrivate.Tests
             AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
                 TestContext.CurrentContext.Test.Name, textDescription);
             responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
-            lykkeApi = new LykkeApi();
             apiSchemes = new ApiSchemes();
             schemesError = new List<string>();
             TestContext.WriteLine("SetUp");

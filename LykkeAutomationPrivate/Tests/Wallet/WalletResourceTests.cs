@@ -6,14 +6,13 @@ using NUnit.Framework;
 using LykkeAutomationPrivate.Tests;
 using Lykke.Client.AutorestClient.Models;
 using System.Net;
+using LykkeAutomationPrivate.TestData2;
 
 namespace LykkeAutomation.Tests.Wallets
 {
     class WalletResourceTests : BaseTest
     {
         readonly string clientAccountUrl = "http://client-account.lykke-service.svc.cluster.local";
-        readonly string registrationUrl = "http://registration.lykke-service.svc.cluster.local";
-        readonly string devBaseUrl = "https://api-dev.lykkex.net";
 
         string userId;
         string walletName = "Some wallet name";
@@ -23,18 +22,10 @@ namespace LykkeAutomation.Tests.Wallets
         [OneTimeSetUp]
         public void CreateUser()
         {
-            var client = new FullPersonalDataModel().Init();
-            var registered = Requests.For(registrationUrl).Post("/api/Registration")
-                .AddJsonBody(client)
-                .Build().Execute().GetJObject();
-
-
-            string bearerToken = (string)registered["Token"];
-            userId = (string)registered["Account"]["Id"];
-
-            Requests.For(devBaseUrl).Post("api/PinSecurity")
-                .AddJsonBody(new { Pin = "1111" })
-                .WithBearerToken(bearerToken).Build().Execute();
+            var client = new Registration().GetTestAccountRegistrationModel();
+            var registeredclient = lykkeApi.Registration.PostRegistration(client);
+            userId = registeredclient.Account.Id;
+            lykkeApi.ClientAccount.PostClientAccountInformationsetPIN(userId, "1111");            
         }
 
         [Test]

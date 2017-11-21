@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestsCore.ServiceSettings;
+using LykkeAutomationPrivate.Resources.RegistrationResourse;
+using LykkeAutomationPrivate.Resources.ClientAccountResource;
 
 namespace LykkeAutomationPrivate.Api
 {
@@ -12,5 +14,7 @@ namespace LykkeAutomationPrivate.Api
     {
         public ServiceSettingsApi settings => new ServiceSettingsApi();
         public PersonalData PersonalData => new PersonalData();
+        public Registration Registration => new Registration();
+        public ClientAccount ClientAccount => new ClientAccount();
     }
 }

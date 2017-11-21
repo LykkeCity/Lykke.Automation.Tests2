@@ -53,13 +53,14 @@ namespace TestsCore.RestRequests.RestSharpRequest
         {
             client = new RestClient(BaseUrl);
 //#if DEBUG
-//            client.Proxy = new WebProxy("127.0.0.1", 8888);
+            client.Proxy = new WebProxy("127.0.0.1", 8888);
 //#endif
             request = new RestRequest(Resource, Method);
 
             if (JsonBody != null)
             {
-                string jsonStr = JsonConvert.SerializeObject(JsonBody);
+                var settings = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
+                string jsonStr = JsonConvert.SerializeObject(JsonBody, settings);
                 request.RequestFormat = DataFormat.Json;
                 request.AddParameter("application/json", jsonStr, "application/json", ParameterType.RequestBody);
             }
