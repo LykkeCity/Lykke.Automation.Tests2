@@ -39,6 +39,20 @@ namespace TestsCore.RestRequests.RestSharpRequest
             request.Resource = resourse;
             return this;
         }
+
+        public IRequestBuilder Delete(string resourse)
+        {
+            request.Method = Method.DELETE;
+            request.Resource = resourse;
+            return this;
+        }
+
+        public IRequestBuilder Put(string resourse)
+        {
+            request.Method = Method.PUT;
+            request.Resource = resourse;
+            return this;
+        }
         #endregion
 
         #region Request

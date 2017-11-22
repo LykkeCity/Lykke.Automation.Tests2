@@ -8,6 +8,8 @@ namespace TestsCore.RestRequests.Interfaces
     {
         IRequestBuilder Post(string resourse);
         IRequestBuilder Get(string resourse);
+        IRequestBuilder Delete(string resourse);
+        IRequestBuilder Put(string resourse);
 
         IRequestBuilder WithHeaders();
         IRequestBuilder AddJsonBody(object json);

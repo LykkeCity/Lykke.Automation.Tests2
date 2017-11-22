@@ -4,9 +4,11 @@ using System.Text;
 using TestsCore.RestRequests;
 using NUnit.Framework;
 using LykkeAutomationPrivate.Tests;
-using Lykke.Client.AutorestClient.Models;
+using LykkeAutomationPrivate.Models.Registration.Models;
 using System.Net;
-using LykkeAutomationPrivate.TestData2;
+using LykkeAutomationPrivate.DataGenerators;
+using LykkeAutomationPrivate.Models.ClientAccount.Models;
+using System.Linq;
 
 namespace LykkeAutomation.Tests.Wallets
 {
@@ -22,14 +24,14 @@ namespace LykkeAutomation.Tests.Wallets
         [OneTimeSetUp]
         public void CreateUser()
         {
-            var client = new Registration().GetTestAccountRegistrationModel();
+            var client = new AccountRegistrationModel().GetTestModel();
             var registeredclient = lykkeApi.Registration.PostRegistration(client);
             userId = registeredclient.Account.Id;
             lykkeApi.ClientAccount.PostClientAccountInformationsetPIN(userId, "1111");            
         }
 
         [Test]
-        [Category("Wallet")]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
         public void PostCreateWallet()
         {
 
@@ -53,7 +55,7 @@ namespace LykkeAutomation.Tests.Wallets
         [TestCase("oloasdakj jashdasdjal asdjuasdasa")]
         [TestCase("")]
         [TestCase(null)]
-        [Category("Wallet")]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
         public void PostCreateWalletClientId(string _userId)
         {
             var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
@@ -79,7 +81,7 @@ namespace LykkeAutomation.Tests.Wallets
         [TestCase("SomeType", ExpectedResult = HttpStatusCode.BadRequest)]
         [TestCase("", ExpectedResult = HttpStatusCode.BadRequest)]
         [TestCase(null, ExpectedResult = HttpStatusCode.BadRequest)]
-        [Category("Wallet")]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
         public HttpStatusCode PostCreateWalletType(object _walletType)
         {
             var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
@@ -99,7 +101,7 @@ namespace LykkeAutomation.Tests.Wallets
         [TestCase("N", ExpectedResult = HttpStatusCode.OK)]
         [TestCase("", ExpectedResult = HttpStatusCode.BadRequest)]
         [TestCase(null, ExpectedResult = HttpStatusCode.BadRequest)]
-        [Category("Wallet")]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
         public HttpStatusCode PostCreateWalletName(string _walletName)
         {
             var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
@@ -117,7 +119,7 @@ namespace LykkeAutomation.Tests.Wallets
 
         [TestCase("Some long-long-long maybe or not description", ExpectedResult = HttpStatusCode.OK)]
         [TestCase("", ExpectedResult = HttpStatusCode.OK)]
-        [Category("Wallet")]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
         public HttpStatusCode PostCreateWalletDescription(string _walletDescription)
         {
             var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
@@ -131,6 +133,87 @@ namespace LykkeAutomation.Tests.Wallets
                 .Build().Execute();
 
             return walletResponse.StatusCode;
+        }
+
+        [Test]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        public void GetWallet()
+        {
+            var walletToCreate = new CreateWalletRequest().GetTestModel(userId);
+            var createdWalet = lykkeApi.ClientAccount.PostCreateWallet(walletToCreate);
+
+            var getWalletById = lykkeApi.ClientAccount.GetWalletById(createdWalet.Id);
+
+            Assert.That(getWalletById.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var recievedWallet = getWalletById.GetJson<WalletDto>();
+            Assert.That(recievedWallet.Id, Is.EqualTo(createdWalet.Id));
+            Assert.That(recievedWallet.Name, Is.EqualTo(createdWalet.Name));
+            Assert.That(recievedWallet.Type, Is.EqualTo(createdWalet.Type));
+            Assert.That(recievedWallet.Description, Is.EqualTo(createdWalet.Description));
+        }
+
+        [Test]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        public void DeleteWallet()
+        {
+            var walletToCreate = new CreateWalletRequest().GetTestModel(userId);
+            var createdWalet = lykkeApi.ClientAccount.PostCreateWallet(walletToCreate);
+
+            var deleteWalletById = lykkeApi.ClientAccount.DeleteWalletById(createdWalet.Id);
+            Assert.That(deleteWalletById.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var getWalletById = lykkeApi.ClientAccount.GetWalletById(createdWalet.Id);
+            Assert.That(getWalletById.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
+        [Test]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        public void PutWallet()
+        {
+            var walletToCreate = new CreateWalletRequest().GetTestModel(userId);
+            var createdWalet = lykkeApi.ClientAccount.PostCreateWallet(walletToCreate);
+
+            var newWallet = new ModifyWalletRequest().GetTestModel();
+
+            var putWalletById = lykkeApi.ClientAccount.PutWalletById(createdWalet.Id, newWallet);
+            Assert.That(putWalletById.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var changedWallet = lykkeApi.ClientAccount.GetWalletById(createdWalet.Id).GetJson<WalletDto>();
+            //Have not to change
+            Assert.That(changedWallet.Id, Is.EqualTo(createdWalet.Id));
+            Assert.That(changedWallet.Type, Is.EqualTo(createdWalet.Type));
+            //Have to be changed
+            Assert.That(changedWallet.Name, Is.EqualTo(newWallet.Name));
+            Assert.That(changedWallet.Description, Is.EqualTo(newWallet.Description));
+        }
+
+        [Test]
+        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        public void GetWalletsForClient()
+        {
+            //create new client
+            var client = new AccountRegistrationModel().GetTestModel();
+            var registeredclient = lykkeApi.Registration.PostRegistration(client);
+            var userId = registeredclient.Account.Id;
+            lykkeApi.ClientAccount.PostClientAccountInformationsetPIN(userId, "1111");
+
+            //Create 3 wallets
+            var createdWalet1 = lykkeApi.ClientAccount.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId));
+            var createdWalet2 = lykkeApi.ClientAccount.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId));
+            var createdWalet3 = lykkeApi.ClientAccount.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId));
+
+            var getWalletsForClientById = lykkeApi.ClientAccount.GetWalletsForClientById(userId).GetJson<List<WalletDto>>();
+
+            Assert.That(getWalletsForClientById.Count, Is.EqualTo(4));
+            Assert.That(getWalletsForClientById.Select(w => w.Id),
+                Does.Contain(createdWalet1.Id).And.Contain(createdWalet2.Id).And.Contain(createdWalet3.Id));
+            Assert.That(getWalletsForClientById.Select(w => w.Name),
+                Does.Contain(createdWalet1.Name).And.Contain(createdWalet2.Name).And.Contain(createdWalet3.Name));
+            Assert.That(getWalletsForClientById.Select(w => w.Type),
+                Does.Contain(createdWalet1.Type).And.Contain(createdWalet2.Type).And.Contain(createdWalet3.Type));
+            Assert.That(getWalletsForClientById.Select(w => w.Description),
+                Does.Contain(createdWalet1.Description).And.Contain(createdWalet2.Description).And.Contain(createdWalet3.Description));
         }
     }
 }
