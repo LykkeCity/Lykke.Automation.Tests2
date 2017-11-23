@@ -18,8 +18,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             [SetUp]
             public void BeforeTest()
             {
-                //var expectedVersion = Environment.GetEnvironmentVariable("ApiVersion");
-                var expectedVersion = "1.0.27.0";
+                var expectedVersion = Environment.GetEnvironmentVariable("ApiVersion");
                 
                 if (expectedVersion != null)
                 {
