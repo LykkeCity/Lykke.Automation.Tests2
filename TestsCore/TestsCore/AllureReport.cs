@@ -6,6 +6,7 @@ using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework;
 using Allure.Commons;
+using TestsCore.TestsCore;
 
 namespace LykkeAutomation.TestsCore
 {
@@ -36,7 +37,7 @@ namespace LykkeAutomation.TestsCore
             return allureReport;
         }
 
-        public void RunStarted(string workDirectory)
+        public void RunStarted()
         {
             _lifecycle = AllureLifecycle.Instance;
         }
@@ -51,18 +52,10 @@ namespace LykkeAutomation.TestsCore
         {
             string fixtureName = GetFixtureName(fullName);
 
-            var cats = TestContext.CurrentContext.Test.Properties["Category"];
-
-            var parameters = new List<Parameter>();
-            foreach(var cat in cats)
-            {
-                parameters.Add(new Parameter() {name = "Category", value = cat.ToString()});
-            }
-
            // var labels = new List<Label> { Label.Thread(), Label.Feature("some feature label"), Label.Host(), Label.Epic("label epic"), Label.Severity(SeverityLevel.critical), Label.Story("label story"), Label.Tag("label tag") };
             lock (_caseStorage)
             {
-                _lifecycle.StartTestCase(new TestResult() { uuid = fixtureName, name = name, description = description, parameters = parameters/*, labels = labels*/ });
+                _lifecycle.StartTestCase(new TestResult() { uuid = fixtureName, name = name, description = description/*, labels = labels*/ });
             }
         }
 
@@ -70,6 +63,17 @@ namespace LykkeAutomation.TestsCore
         {
             lock (_caseStorage)
             {
+                var testDescription = TestContext.CurrentContext.Test.Properties["Description"];
+                var textDescription = testDescription.Count > 0 ? testDescription[0].ToString() : "No Description";
+
+                var cats = TestContext.CurrentContext.Test.Properties["Category"];
+
+                var parameters = new List<Parameter>();
+                foreach (var cat in cats)
+                {
+                    parameters.Add(new Parameter() { name = "Category", value = cat.ToString() });
+                }
+
                 string fixtureName = GetFixtureName(fullName);
 
                 List<Attachment> attaches = new List<Attachment>();
@@ -82,18 +86,23 @@ namespace LykkeAutomation.TestsCore
                 {
                     AssertionException ex = new AssertionException(TestContext.CurrentContext.Result.Message);
                     string st = TestContext.CurrentContext.Result.Assertions.ToList().Count == 0 ?
-                        "" :
-                        TestContext.CurrentContext.Result.Assertions.ToList()?[0].StackTrace;
+                        "" : TestContext.CurrentContext.Result.Assertions.ToList()?[0].StackTrace;
 
-                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.failed; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = ex.Message, trace = st }; });
+                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.failed; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = ex.Message, trace = st }; x.description = textDescription; x.parameters = parameters; });
                     _lifecycle.WriteTestCase(fixtureName);
-                   
+
+                }
+                else
+                if (result == TestStatus.Skipped)
+                {
+                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.skipped; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = TestContext.CurrentContext.Result.Message }; x.description = textDescription; x.parameters = parameters; });
+                    _lifecycle.WriteTestCase(fixtureName);
                 }
                 else
                 {
                     var st = TestContext.CurrentContext.Result;
 
-                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.passed; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = st.Outcome.Status.ToString() }; });
+                    _lifecycle.StopTestCase(x => { x.uuid = fixtureName; x.status = Status.passed; x.attachments = attaches; x.statusDetails = new StatusDetails() { message = st.Outcome.Status.ToString() }; x.description = textDescription; x.parameters = parameters; });
                     _lifecycle.WriteTestCase(fixtureName);
                 }
             }
@@ -125,17 +134,9 @@ namespace LykkeAutomation.TestsCore
        
         private void CreateEnvFile()
         {
-            string environmetFilePath = Path.Combine(_lifecycle.ResultsDirectory, "environment.properties");
-            var cats = TestContext.CurrentContext.Test.Properties["Category"]; // does not contain any test property after tests finished
-            string ServiceName = "";// what is the best way to obtain service name/url?
-            
-            string[] lines = new[]
-            {
-                $"ServiceName = {ServiceName}",
-                $"Service Version namber = <<Number>>", //IsAliveVersion
-                $"Date =  {DateTime.Now.ToString()}"
-            };
-            File.WriteAllLines(environmetFilePath, lines);
+            string propertiesPath = Path.Combine(_lifecycle.ResultsDirectory, "environment.properties");
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Date", DateTime.Now.ToString());
+            AllurePropertiesBuilder.Instance.SaveAllureProperties(propertiesPath);
         }
 
         private void CreateCategoryFile()

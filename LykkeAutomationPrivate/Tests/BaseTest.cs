@@ -17,8 +17,6 @@ namespace LykkeAutomationPrivate.Tests
         public ApiSchemes apiSchemes;
         public IList<string> schemesError;
 
-        public static Dictionary<string, List<HttpResponseMessageWrapper>> responses ;
-
         #region response info
        
 
@@ -33,7 +31,6 @@ namespace LykkeAutomationPrivate.Tests
 
         public static void AreEqualByJson(object expected, object actual)
         {
-
             var expectedJson = JsonConvert.SerializeObject(expected);
             var actualJson = JsonConvert.SerializeObject(actual);
             Assert.That(expectedJson, Is.EqualTo(actualJson),  "Objects are not equals");
@@ -48,14 +45,12 @@ namespace LykkeAutomationPrivate.Tests
             var testDescription = TestContext.CurrentContext.Test.Properties["Description"];
             var textDescription = testDescription.Count>0 ? testDescription[0].ToString() : "No Description";
             
-            AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
-                TestContext.CurrentContext.Test.Name, textDescription);
-            responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
+           AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
+               TestContext.CurrentContext.Test.Name, textDescription);
             apiSchemes = new ApiSchemes();
             schemesError = new List<string>();
             TestContext.WriteLine("SetUp");
         }
-
 
         [TearDown]
         public void TearDown()
@@ -69,8 +64,13 @@ namespace LykkeAutomationPrivate.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var path = TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "TestReportHelpers/";
-            AllureReport.GetInstance().RunStarted(path);
+            var testDescription = TestContext.CurrentContext.Test.Properties["Description"];
+            var textDescription = testDescription.Count > 0 ? testDescription[0].ToString() : "No Description";
+
+            AllureReport.GetInstance().RunStarted();
+            AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
+                TestContext.CurrentContext.Test.Name, textDescription);
+
         }
 
 

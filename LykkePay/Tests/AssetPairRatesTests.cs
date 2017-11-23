@@ -14,8 +14,24 @@ namespace LykkePay.Tests
 {
     public class AssetPairRatesTests
     {
+        public class AssetPairRatesBaseTest : BaseTest
+        {
+            [SetUp]
+            public void BeforeTest()
+            {
+                var expectedVersion = Environment.GetEnvironmentVariable("ApiVersion");
+
+                if (expectedVersion != null)
+                {
+                    var actual = lykkePayApi.assetPairRates.GetIsAlive();
+                    if (actual.Version != expectedVersion)
+                        Assert.Ignore($"actual service version:{actual.Version}  is not as expected: {expectedVersion}");
+                }
+            }
+        }
+
         #region GET Tests
-        public class GetAssetPairEmptyPair : BaseTest
+        public class GetAssetPairEmptyPair : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -27,7 +43,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class GetAssetPairUSDBTCPair : BaseTest
+        public class GetAssetPairUSDBTCPair : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -39,7 +55,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class GetAssetPairValidIdPair : BaseTest
+        public class GetAssetPairValidIdPair : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -52,7 +68,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class GetAssetPairTextPair : BaseTest
+        public class GetAssetPairTextPair : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -66,7 +82,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class GetAssetPairNumbersPair : BaseTest
+        public class GetAssetPairNumbersPair : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -83,7 +99,7 @@ namespace LykkePay.Tests
 
         #region Post Tests
 
-        public class PostAssetPairEmptyParametersBody : BaseTest
+        public class PostAssetPairEmptyParametersBody : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -119,7 +135,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairSpacesBody : BaseTest
+        public class PostAssetPairSpacesBody : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -135,7 +151,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairEmptyBody : BaseTest
+        public class PostAssetPairEmptyBody : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -151,7 +167,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPercentEmpty : BaseTest
+        public class PostAssetPairPercentEmpty : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -189,7 +205,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairWithoutPercent : BaseTest
+        public class PostAssetPairWithoutPercent : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -227,7 +243,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPipsEmpty : BaseTest
+        public class PostAssetPairPipsEmpty : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -266,7 +282,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairWithoutPips : BaseTest
+        public class PostAssetPairWithoutPips : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]
@@ -304,7 +320,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPercentDiffValuesPositive : BaseTest
+        public class PostAssetPairPercentDiffValuesPositive : AssetPairRatesBaseTest
         {
             [TestCase("0")]
             [TestCase("0.0")]
@@ -348,7 +364,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPercentDiffValuesNegative : BaseTest
+        public class PostAssetPairPercentDiffValuesNegative : AssetPairRatesBaseTest
         {
             [TestCase("-1.0")]
             [TestCase("testtest")]
@@ -368,7 +384,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPipsDiffValuesPositive : BaseTest
+        public class PostAssetPairPipsDiffValuesPositive : AssetPairRatesBaseTest
         {
             [TestCase("0")]
             [TestCase("1")]
@@ -408,7 +424,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPipsDiffValuesNegative : BaseTest
+        public class PostAssetPairPipsDiffValuesNegative : AssetPairRatesBaseTest
         {
             [TestCase("-1")]
             [TestCase("3.5")]
@@ -427,7 +443,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairPips300CharsNegative : BaseTest
+        public class PostAssetPairPips300CharsNegative : AssetPairRatesBaseTest
         {
             [TestCase("5.0;300+")]
             [TestCase("300+;3.5")]
@@ -449,7 +465,7 @@ namespace LykkePay.Tests
             }
         }
 
-        public class PostAssetPairValidValues : BaseTest
+        public class PostAssetPairValidValues : AssetPairRatesBaseTest
         {
             [Test]
             [Category("LykkePay")]

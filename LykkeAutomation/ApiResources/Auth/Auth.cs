@@ -1,4 +1,5 @@
-﻿using LykkeAutomation.Api.ApiModels.AuthModels;
+﻿using Lykke.Client.AutorestClient.Models;
+using LykkeAutomation.Api.ApiModels.AuthModels;
 using LykkeAutomation.TestsCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,31 +10,52 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TestsCore.ApiRestClient;
+using TestsCore.TestsCore;
 using static LykkeAutomation.Api.ApiModels.AuthModels.AuthModels;
 
 namespace LykkeAutomation.Api.AuthResource
 {
-    public class Auth : TestsCore.Api
+    public class Auth : RestApi
     {
         private const string resource = "/Auth";
         private const string resourceLogOut = "/Auth/LogOut";
 
-        public HttpResponseMessageWrapper PostAuthResponse(AuthenticateModel auth)
+        public IRestResponse PostAuthResponse(AuthenticateModel auth)
         {
-            StringContent content = new StringContent(JsonConvert.SerializeObject(auth));
-            var response = client.PostAsync(resource, content);
+            var request = new RestRequest(resource, Method.POST);
+            request.AddJsonBody(auth);
+            var response = client.Execute(request);
             return response;
         }
 
         public AuthModelResponse PostAuthResponseModel(AuthenticateModel auth)
         {
-            return JsonConvert.DeserializeObject<AuthModelResponse>(PostAuthResponse(auth)?.ContentJson);
+            return JsonConvert.DeserializeObject<AuthModelResponse>(PostAuthResponse(auth)?.Content);
         }
 
-        public HttpResponseMessageWrapper PostAuthLogOutResponse(AuthenticateModel auth)
+        public IRestResponse PostAuthLogOutResponse(AuthenticateModel auth)
         {
-            var response = client.PostAsync(resourceLogOut, new StringContent(JsonConvert.SerializeObject(auth)));
+            var request = new RestRequest(resourceLogOut, Method.POST);
+            request.AddJsonBody(auth);
+            var response = client.Execute(request);
             return response;
+        }
+
+        public override void SetAllureProperties()
+        {
+            var isAlive = GetIsAlive();
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Service", client.BaseUrl.AbsoluteUri + "/api" + resource);
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Environment", isAlive.Env);
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Version", isAlive.Version);
+        }
+
+        public IsAliveResponse GetIsAlive()
+        {
+            var request = new RestRequest("/IsAlive", Method.GET);
+            var response = client.Execute(request);
+            var isAlive = JsonConvert.DeserializeObject<IsAliveResponse>(response.Content);
+            return isAlive;
         }
     }
 }

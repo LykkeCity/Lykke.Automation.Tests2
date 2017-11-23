@@ -62,8 +62,7 @@ namespace LykkePay.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var path = TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "TestReportHelpers/";
-            AllureReport.GetInstance().RunStarted(path);
+            AllureReport.GetInstance().RunStarted();
         }
 
 

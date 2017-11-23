@@ -1,4 +1,5 @@
-﻿using LykkeAutomation.ApiModels;
+﻿using Lykke.Client.AutorestClient.Models;
+using LykkeAutomation.ApiModels;
 using LykkeAutomation.ApiModels.PersonalDataModels;
 using LykkeAutomation.TestsCore;
 using Newtonsoft.Json;
@@ -10,20 +11,40 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TestsCore.ApiRestClient;
+using TestsCore.TestsCore;
 
 namespace LykkeAutomation.Api.PersonalDataResource
 {
-   public class PersonalData : LykkeAutomation.TestsCore.Api
+   public class PersonalData : RestApi
     {
         private const string resource = "/PersonalData";
 
-        public HttpResponseMessageWrapper GetPersonalDataResponse(string token)
+        public IRestResponse GetPersonalDataResponse(string token)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = client.GetAsync(resource);
+            var request = new RestRequest(resource, Method.GET);
+            request.AddHeader("Authorization", $"Bearer {token}");
+            var response = client.Execute(request);
             return response;
         }
 
-        public PersonalDataModel GetPersonalDataModel(string token) => JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponse(token)?.ContentJson);
+        public PersonalDataModel GetPersonalDataModel(string token) => 
+            JsonConvert.DeserializeObject<PersonalDataModel>(GetPersonalDataResponse(token)?.Content);
+
+        public override void SetAllureProperties()
+        {
+            var isAlive = GetIsAlive();
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Service", client.BaseUrl.AbsoluteUri + "/api" + resource);
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Environment", isAlive.Env);
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Version", isAlive.Version);
+        }
+
+        public IsAliveResponse GetIsAlive()
+        {
+            var request = new RestRequest("/IsAlive", Method.GET);
+            var response = client.Execute(request);
+            var isAlive = JsonConvert.DeserializeObject<IsAliveResponse>(response.Content);
+            return isAlive;
+        }
     }
 }

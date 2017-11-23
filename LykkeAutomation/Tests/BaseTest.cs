@@ -16,8 +16,6 @@ namespace LykkeAutomation.Tests
         public ApiSchemes apiSchemes;
         public IList<string> schemesError;
 
-        public static Dictionary<string, List<HttpResponseMessageWrapper>> responses ;
-
         #region response info
        
 
@@ -38,7 +36,6 @@ namespace LykkeAutomation.Tests
         {
             AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
                 TestContext.CurrentContext.Test.Name, "");
-            responses = new Dictionary<string, List<HttpResponseMessageWrapper>>();
             lykkeApi = new LykkeApi();
             apiSchemes = new ApiSchemes();
             schemesError = new List<string>();
@@ -58,8 +55,7 @@ namespace LykkeAutomation.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var path = TestContext.CurrentContext.WorkDirectory.Remove(TestContext.CurrentContext.WorkDirectory.IndexOf("bin")) + "TestReportHelpers/";
-            AllureReport.GetInstance().RunStarted(path);
+            AllureReport.GetInstance().RunStarted();
         }
 
 

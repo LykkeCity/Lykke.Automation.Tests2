@@ -30,11 +30,11 @@ namespace LykkeAutomation.Tests
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
 
                 TestLog.WriteStep("ValidateScheme");
-                var obj = JObject.Parse(response.ContentJson);
+                var obj = JObject.Parse(response.Content);
                 ValidateScheme(obj.IsValid(apiSchemes.AccountExistSchemes.AuthResponseScheme, out schemesError), schemesError);
 
                 TestLog.WriteStep("ValidateModel");
-                var model = AccountExistModel.ConvertToAccountExistModel(response.ContentJson);
+                var model = AccountExistModel.ConvertToAccountExistModel(response.Content);
                 Assert.That(model.Result.IsEmailRegistered, Is.False, "Email is registered");
                 Assert.That(model.Error, Is.Null, "Error is not null");
             }

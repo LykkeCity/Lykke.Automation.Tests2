@@ -1,4 +1,5 @@
-﻿using LykkeAutomation.ApiModels;
+﻿using Lykke.Client.AutorestClient.Models;
+using LykkeAutomation.ApiModels;
 using LykkeAutomation.ApiModels.RegistrationModels;
 using LykkeAutomation.TestsCore;
 using Newtonsoft.Json;
@@ -10,25 +11,46 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using TestsCore.ApiRestClient;
+using TestsCore.TestsCore;
 
 namespace LykkeAutomation.Api.RegistrationResource
 {
-    public class Registration : LykkeAutomation.TestsCore.Api
+    public class Registration : RestApi
     {
 
         private const string resource = "/Registration";
 
-        public HttpResponseMessageWrapper GetRegistrationResponse(string token)
+        public IRestResponse GetRegistrationResponse(string token)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = client.GetAsync(resource);
+            var request = new RestRequest(resource, Method.GET);
+            request.AddHeader("Authorization", $"Bearer {token}");
+            var response = client.Execute(request);
             return response;
         }
 
         public ResultRegistrationResponseModel PostRegistrationResponse(AccountRegistrationModel user)
         {
-            var response = client.PostAsync(resource, new StringContent(JsonConvert.SerializeObject(user)));
-            return JsonConvert.DeserializeObject<ResultRegistrationResponseModel>(response?.ContentJson);
+            var request = new RestRequest(resource, Method.POST);
+            request.AddJsonBody(user);
+            var response = client.Execute(request);
+            return JsonConvert.DeserializeObject<ResultRegistrationResponseModel>(response?.Content);
+        }
+
+        public override void SetAllureProperties()
+        {
+            var isAlive = GetIsAlive();
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Service", client.BaseUrl.AbsoluteUri + "/api" + resource);
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Environment", isAlive.Env);
+            AllurePropertiesBuilder.Instance.AddPropertyPair("Version", isAlive.Version);
+        }
+
+        public IsAliveResponse GetIsAlive()
+        {
+            var request = new RestRequest("/IsAlive", Method.GET);
+            var response = client.Execute(request);
+            var isAlive = JsonConvert.DeserializeObject<IsAliveResponse>(response.Content);
+            return isAlive;
         }
     }
 }

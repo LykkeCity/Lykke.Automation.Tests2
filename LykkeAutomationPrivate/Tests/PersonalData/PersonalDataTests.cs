@@ -12,8 +12,30 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
 {
     class PersonalDataTests
     {
+
+        public class PersonalDataBaseTest : BaseTest
+        {
+            [SetUp]
+            public void BeforeTest()
+            {
+                //var expectedVersion = Environment.GetEnvironmentVariable("ApiVersion");
+                var expectedVersion = "1.0.27.0";
+                
+                if (expectedVersion != null)
+                {
+                    var actual = lykkeApi.PersonalData.GetIsAlive();
+                    if (actual.Version != expectedVersion)
+                    {
+                        Assert.Ignore($"actual service version:{actual.Version}  is not as expected: {expectedVersion}");
+                        var oo = TestContext.CurrentContext;
+                    }
+                        
+                }
+            }
+        }
+
         #region GET
-        public class GetPersonalDataByEmail : BaseTest
+        public class GetPersonalDataByEmail : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -30,7 +52,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class GetPersonalDataList: BaseTest
+        public class GetPersonalDataList: PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -42,7 +64,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class GetPersonalDataById : BaseTest
+        public class GetPersonalDataById : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -63,7 +85,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class GetFullPersonalDataById : BaseTest
+        public class GetFullPersonalDataById : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -81,7 +103,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class GetProfilePersonalDataById : BaseTest
+        public class GetProfilePersonalDataById : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -99,7 +121,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class SearchPersonalDataModel : BaseTest
+        public class SearchPersonalDataModel : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -122,7 +144,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         #endregion
 
         #region Post
-        public class PostPersonalDataList : BaseTest
+        public class PostPersonalDataList : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -143,7 +165,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class FullPostPersonalDataList : BaseTest
+        public class FullPostPersonalDataList : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -164,7 +186,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostListExcludedPage : BaseTest
+        public class PostListExcludedPage : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -185,7 +207,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostListPage : BaseTest
+        public class PostListPage : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -203,7 +225,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostPagedIncludedOnly : BaseTest
+        public class PostPagedIncludedOnly : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -225,7 +247,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostListbyRegistrationDate : BaseTest
+        public class PostListbyRegistrationDate : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -242,7 +264,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostPersonalDataArchive : BaseTest
+        public class PostPersonalDataArchive : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -266,7 +288,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostPersonalDataChangeEmail : BaseTest
+        public class PostPersonalDataChangeEmail : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -288,7 +310,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostAddAvatar : BaseTest
+        public class PostAddAvatar : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -310,7 +332,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PostPersonalDataCreate : BaseTest
+        public class PostPersonalDataCreate : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -331,7 +353,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
 
         #region PUT
         //put
-        public class PutPersonalData : BaseTest
+        public class PutPersonalData : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -352,7 +374,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataFullName : BaseTest
+        public class PutPersonalDataFullName : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -374,7 +396,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataFirstName : BaseTest
+        public class PutPersonalDataFirstName : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -396,7 +418,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataLastName : BaseTest
+        public class PutPersonalDataLastName : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -418,7 +440,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataDateOfBirth : BaseTest
+        public class PutPersonalDataDateOfBirth : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -442,7 +464,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataDateOfExpiryOfId : BaseTest
+        public class PutPersonalDataDateOfExpiryOfId : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -464,7 +486,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataCountry : BaseTest
+        public class PutPersonalDataCountry : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -486,7 +508,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataCountryFromId : BaseTest
+        public class PutPersonalDataCountryFromId : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -508,7 +530,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataCountryFromPOA : BaseTest
+        public class PutPersonalDataCountryFromPOA : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -530,7 +552,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataCity : BaseTest
+        public class PutPersonalDataCity : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -552,7 +574,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataZip : BaseTest
+        public class PutPersonalDataZip : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -574,7 +596,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataAddress : BaseTest
+        public class PutPersonalDataAddress : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -596,7 +618,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataPhoneNumber : BaseTest
+        public class PutPersonalDataPhoneNumber : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -618,7 +640,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataGeolocation : BaseTest
+        public class PutPersonalDataGeolocation : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -643,7 +665,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataPasswordHint : BaseTest
+        public class PutPersonalDataPasswordHint : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -664,7 +686,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataRefCode : BaseTest
+        public class PutPersonalDataRefCode : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -685,7 +707,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataSpotRegulator : BaseTest
+        public class PutPersonalDataSpotRegulator : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -706,7 +728,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataMarginRegulator : BaseTest
+        public class PutPersonalDataMarginRegulator : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -727,7 +749,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataPaymentSystem : BaseTest
+        public class PutPersonalDataPaymentSystem : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -748,7 +770,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataProfile : BaseTest
+        public class PutPersonalDataProfile : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -775,7 +797,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
             }
         }
 
-        public class PutPersonalDataDocumentScan : BaseTest
+        public class PutPersonalDataDocumentScan : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]
@@ -796,7 +818,7 @@ namespace LykkeAutomationPrivate.Tests.PersonalData
         #endregion
 
         #region DELETE
-        public class DELETEPersonalDataAvatar : BaseTest
+        public class DELETEPersonalDataAvatar : PersonalDataBaseTest
         {
             [Test]
             [Category("PersonalDataService"), Category("ServiceAll")]

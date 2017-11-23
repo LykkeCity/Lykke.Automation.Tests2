@@ -28,7 +28,7 @@ namespace LykkeAutomation.Tests.PersonalData
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(invalidToken);
 
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), $"Invalid status code");
-                Assert.That(string.IsNullOrEmpty(response.ContentJson), Is.True, $"Invalid response content ");
+                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, $"Invalid response content ");
             }
         }
 
@@ -43,7 +43,7 @@ namespace LykkeAutomation.Tests.PersonalData
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(emptyToken);
 
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized), "Invalid status code");
-                Assert.That(string.IsNullOrEmpty(response.ContentJson), Is.True, "Invalid response content");
+                Assert.That(string.IsNullOrEmpty(response.Content), Is.True, "Invalid response content");
             }
         }
 
@@ -60,9 +60,9 @@ namespace LykkeAutomation.Tests.PersonalData
 
                 var response = lykkeApi.PersonalData.GetPersonalDataResponse(registationResponse.Result.Token);
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Invalid status code");
-                Assert.That(string.IsNullOrEmpty(response.ContentJson), Is.False, "Invalid response content");
+                Assert.That(string.IsNullOrEmpty(response.Content), Is.False, "Invalid response content");
 
-                JObject responseObject = JObject.Parse(response.ContentJson);
+                JObject responseObject = JObject.Parse(response.Content);
                 bool valid = responseObject.IsValid(apiSchemes.PersonalDataSheme.PersonalDataResponseSchema, out schemesError);
                 ValidateScheme(valid, schemesError);
 
