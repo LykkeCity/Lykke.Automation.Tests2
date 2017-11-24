@@ -14,34 +14,9 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
             EnvConfig.Env == Env.Dev ? "http://client-account.lykke-service.svc.cluster.local" : 
             throw new Exception("Undefined env");
 
-        public void PostClientAccountInformationsetPIN(string clientId, string pin)
-        {
-            Requests.For(serviseUrl).Post($"/api/ClientAccountInformation/setPIN/{clientId}/{pin}").Build().Execute();
-        }
+        protected IRequestBuilder Request => Requests.For(serviseUrl);
 
-        public WalletDto PostCreateWallet(CreateWalletRequest wallet)
-        {
-            return Requests.For(serviseUrl).Post("api/Wallets").AddJsonBody(wallet).Build().Execute<WalletDto>();
-        }
-
-        public IResponse GetWalletById(string id)
-        {
-            return Requests.For(serviseUrl).Get($"/api/Wallets/{id}").Build().Execute();
-        }
-
-        public IResponse DeleteWalletById(string id)
-        {
-            return Requests.For(serviseUrl).Delete($"/api/Wallets/{id}").Build().Execute();
-        }
-
-        public IResponse PutWalletById(string id, ModifyWalletRequest modifyWallet)
-        {
-            return Requests.For(serviseUrl).Put($"/api/Wallets/{id}").AddJsonBody(modifyWallet).Build().Execute();
-        }
-
-        public IResponse GetWalletsForClientById(string id)
-        {
-            return Requests.For(serviseUrl).Get($"api/Wallets/client/{id}").Build().Execute();
-        }
+        public Wallets Wallets => new Wallets();
+        public AccountExist AccountExist => new AccountExist();
     }
 }

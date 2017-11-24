@@ -13,11 +13,12 @@ namespace TestsCore.RestRequests.RestSharpRequest
 {
     public class RestSharpRequestBuilder : IRequestBuilder
     {
+        private string baseUrl;
         private RestSharpRequest request;
 
         public RestSharpRequestBuilder(string baseUrl)
         {
-            request = new RestSharpRequest(baseUrl);
+            this.baseUrl = baseUrl;
         }
 
         public IRequest Build()
@@ -28,29 +29,25 @@ namespace TestsCore.RestRequests.RestSharpRequest
         #region Methods
         public IRequestBuilder Post(string resourse)
         {
-            request.Method = Method.POST;
-            request.Resource = resourse;
+            request = new RestSharpRequest(Method.POST, baseUrl, resourse);
             return this;
         }
 
         public IRequestBuilder Get(string resourse)
         {
-            request.Method = Method.GET;
-            request.Resource = resourse;
+            request = new RestSharpRequest(Method.GET, baseUrl, resourse);
             return this;
         }
 
         public IRequestBuilder Delete(string resourse)
         {
-            request.Method = Method.DELETE;
-            request.Resource = resourse;
+            request = new RestSharpRequest(Method.DELETE, baseUrl, resourse);
             return this;
         }
 
         public IRequestBuilder Put(string resourse)
         {
-            request.Method = Method.PUT;
-            request.Resource = resourse;
+            request = new RestSharpRequest(Method.PUT, baseUrl, resourse);
             return this;
         }
         #endregion
@@ -69,14 +66,14 @@ namespace TestsCore.RestRequests.RestSharpRequest
 
         public IRequestBuilder AddJsonBody(object json)
         {
-            request.JsonBody = json;
+            request.AddJsonBody(json);
             return this;
         }
 
         public IRequestBuilder AddQueryParameter(string name, object value)
         {
-            throw new NotImplementedException();
-            //request2.AddParameter(name, value, ParameterType.QueryString);
+            request.AddQueryParameter(name, value);
+            return this;
         }
 
         public IRequestBuilder ContentType(string contentType)

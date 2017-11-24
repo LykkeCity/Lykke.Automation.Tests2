@@ -13,24 +13,34 @@ namespace TestsCore.RestRequests.RestSharpRequest
 {
     public class RestSharpRequest : IRequest
     {
-        public string BaseUrl { get; set; }
-        public string Resource { get; set; }
-        public Method Method { get; set; }
+        public string BaseUrl { get; }
+        public string Resource { get; }
+        public Method Method { get; }
+        public object JsonBody { get; private set; }
         public Dictionary<string, string> Headers { get; set; }
-        public object JsonBody { get; set; }
+        public Dictionary<string, object> QueryParams { get; set; }
 
         private IRestClient client;
         private IRestRequest request;
 
-        public RestSharpRequest(string baseUrl)
+        public RestSharpRequest(Method method, string baseUrl, string resource)
         {
+            Method = method;
             BaseUrl = baseUrl;
+            Resource = resource;
+
+            client = new RestClient(BaseUrl);
+            request = new RestRequest(Resource, Method);
+
+            if (Environment.OSVersion.ToString().ToLower().Contains("windows"))
+                client.Proxy = new WebProxy("127.0.0.1", 8888);
+
             Headers = new Dictionary<string, string>();
+            QueryParams = new Dictionary<string, object>();
         }
 
         public IResponse Execute()
         {
-            CreateRestSharp();
             var response = client.Execute(request);
             Log(response);
             return new Response() { StatusCode = response.StatusCode, Content = response.Content };
@@ -38,7 +48,6 @@ namespace TestsCore.RestRequests.RestSharpRequest
 
         public T Execute<T>() where T : new()
         {
-            CreateRestSharp();
             var response = client.Execute<T>(request);
             Log(response);
             return response.Data;
@@ -47,15 +56,18 @@ namespace TestsCore.RestRequests.RestSharpRequest
         public void AddHeader(string name, string value)
         {
             Headers.Add(name, value);
+            request.AddHeader(name, value);
         }
 
-        private void CreateRestSharp()
+        public void AddQueryParameter(string name, object value)
         {
-            client = new RestClient(BaseUrl);
-            if (Environment.OSVersion.ToString().ToLower().Contains("windows"))
-                client.Proxy = new WebProxy("127.0.0.1", 8888);
+            QueryParams.Add(name, value);
+            request.AddParameter(name, value, ParameterType.QueryString);
+        }
 
-            request = new RestRequest(Resource, Method);
+        public void AddJsonBody(object json)
+        {
+            JsonBody = json;
 
             if (JsonBody != null)
             {
@@ -63,11 +75,6 @@ namespace TestsCore.RestRequests.RestSharpRequest
                 string jsonStr = JsonConvert.SerializeObject(JsonBody, settings);
                 request.RequestFormat = DataFormat.Json;
                 request.AddParameter("application/json", jsonStr, "application/json", ParameterType.RequestBody);
-            }
-
-            foreach (KeyValuePair<string, string> header in Headers)
-            {
-                request.AddHeader(header.Key, header.Value);
             }
         }
 

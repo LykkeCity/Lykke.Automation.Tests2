@@ -13,7 +13,7 @@ namespace TestsCore.RestRequests.Interfaces
 
         IRequestBuilder WithHeaders();
         IRequestBuilder AddJsonBody(object json);
-        IRequestBuilder AddQueryParameter(string paramName, object paramValue);
+        IRequestBuilder AddQueryParameter(string name, object value);
         IRequestBuilder WithBearerToken(string token);
         //IRequestBuilder WithProxy { get; }
         IRequestBuilder Accept(string mediaType);

@@ -6,13 +6,18 @@ namespace TestsCore.RestRequests.Interfaces
 {
     public interface IRequest
     {
-        string BaseUrl { get; set; }
-        string Resource { get; set; }
-        RestSharp.Method Method { get; set; }
+        RestSharp.Method Method { get; }
+        string BaseUrl { get; }
+        string Resource { get; }
+        object JsonBody { get; }
+
         Dictionary<string, string> Headers { get; }
-        object JsonBody { get; set; }
+        Dictionary<string, object> QueryParams { get; }
+        
 
         void AddHeader(string name, string value);
+        void AddQueryParameter(string name, object value);
+        void AddJsonBody(object json);
 
         IResponse Execute();
         T Execute<T>() where T : new();
