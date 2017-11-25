@@ -18,5 +18,6 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 
         public Wallets Wallets => new Wallets();
         public AccountExist AccountExist => new AccountExist();
+        public BannedClients BannedClients => new BannedClients();
     }
 }
