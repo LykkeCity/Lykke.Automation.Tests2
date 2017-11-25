@@ -9,6 +9,7 @@ using System.Net;
 using LykkeAutomationPrivate.DataGenerators;
 using LykkeAutomationPrivate.Models.ClientAccount.Models;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace LykkeAutomation.Tests.ClientAccount
 {
@@ -158,33 +159,79 @@ namespace LykkeAutomation.Tests.ClientAccount
             Assert.That(changedWallet.Name, Is.EqualTo(newWallet.Name));
             Assert.That(changedWallet.Description, Is.EqualTo(newWallet.Description));
         }
+    }
+}
 
-        [Test]
-        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
-        public void GetWalletsForClient()
-        {
-            //create new client
-            var client = new AccountRegistrationModel().GetTestModel();
-            var registeredclient = lykkeApi.Registration.PostRegistration(client);
-            var userId = registeredclient.Account.Id;
-            lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(userId, "1111");
+class GetWalletsForClient : BaseTest
+{
+    [Test]
+    [Description("Get all existing wallets for client.")]
+    [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
+    public void GetWalletsForClientTest()
+    {
+        //create new client
+        var client = new AccountRegistrationModel().GetTestModel();
+        var registeredclient = lykkeApi.Registration.PostRegistration(client);
+        var userId = registeredclient.Account.Id;
+        lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(userId, "1111");
 
-            //Create 3 wallets
-            var createdWalet1 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
-            var createdWalet2 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
-            var createdWalet3 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
+        //Create 3 wallets
+        var createdWalet1 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
+        var createdWalet2 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
+        var createdWalet3 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
 
-            var getWalletsForClientById = lykkeApi.ClientAccount.Wallets.GetWalletsForClientById(userId).GetJson<List<WalletDto>>();
+        var getWalletsForClientById = lykkeApi.ClientAccount.Wallets.GetWalletsForClientById(userId).GetJson<List<WalletDto>>();
 
-            Assert.That(getWalletsForClientById.Count, Is.EqualTo(4));
-            Assert.That(getWalletsForClientById.Select(w => w.Id),
-                Does.Contain(createdWalet1.Id).And.Contain(createdWalet2.Id).And.Contain(createdWalet3.Id));
-            Assert.That(getWalletsForClientById.Select(w => w.Name),
-                Does.Contain(createdWalet1.Name).And.Contain(createdWalet2.Name).And.Contain(createdWalet3.Name));
-            Assert.That(getWalletsForClientById.Select(w => w.Type),
-                Does.Contain(createdWalet1.Type).And.Contain(createdWalet2.Type).And.Contain(createdWalet3.Type));
-            Assert.That(getWalletsForClientById.Select(w => w.Description),
-                Does.Contain(createdWalet1.Description).And.Contain(createdWalet2.Description).And.Contain(createdWalet3.Description));
-        }
+        Assert.That(getWalletsForClientById.Count, Is.EqualTo(4));
+        Assert.That(getWalletsForClientById.Select(w => w.Id),
+            Does.Contain(createdWalet1.Id).And.Contain(createdWalet2.Id).And.Contain(createdWalet3.Id));
+        Assert.That(getWalletsForClientById.Select(w => w.Name),
+            Does.Contain(createdWalet1.Name).And.Contain(createdWalet2.Name).And.Contain(createdWalet3.Name));
+        Assert.That(getWalletsForClientById.Select(w => w.Type),
+            Does.Contain(createdWalet1.Type).And.Contain(createdWalet2.Type).And.Contain(createdWalet3.Type));
+        Assert.That(getWalletsForClientById.Select(w => w.Description),
+            Does.Contain(createdWalet1.Description).And.Contain(createdWalet2.Description).And.Contain(createdWalet3.Description));
+    }
+}
+
+class GetWalletsOfTypeForClient : BaseTest
+{
+    [Test]
+    [Description("Get client wallets of provided type.")]
+    [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
+    public void GetWalletsOfTypeForClientTest()
+    {
+        //create new client
+        var client = new AccountRegistrationModel().GetTestModel();
+        var registeredclient = lykkeApi.Registration.PostRegistration(client);
+        var clientId = registeredclient.Account.Id;
+        lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(clientId, "1111");
+
+        //Create 3 wallets
+        var tradingWallet1 = new CreateWalletRequest().GetTestModel(clientId);
+        tradingWallet1.Type = WalletType.Trading;
+        var trustedWallet2 = new CreateWalletRequest().GetTestModel(clientId);
+        trustedWallet2.Type = WalletType.Trusted;
+        var trustedWallet3 = new CreateWalletRequest().GetTestModel(clientId);
+        trustedWallet3.Type = WalletType.Trusted;
+
+        var createdTradingWallet1 = lykkeApi.ClientAccount.Wallets
+            .PostCreateWallet(tradingWallet1).GetJson<WalletDto>();
+        var createdTrustedWalet2 = lykkeApi.ClientAccount.Wallets
+            .PostCreateWallet(trustedWallet2).GetJson<WalletDto>();
+        var createdTrustedWalet3 = lykkeApi.ClientAccount.Wallets
+            .PostCreateWallet(trustedWallet3).GetJson<WalletDto>();
+
+        var tradingWallets = lykkeApi.ClientAccount.Wallets
+            .GetWalletsForClientByType(clientId, WalletType.Trading).GetJson<List<WalletDto>>();
+
+        var trustedWallets = lykkeApi.ClientAccount.Wallets
+            .GetWalletsForClientByType(clientId, WalletType.Trusted).GetJson<List<WalletDto>>();
+
+        Assert.That(tradingWallets.Select(w => w.Id),
+            Does.Contain(createdTradingWallet1.Id));
+
+        Assert.That(trustedWallets.Select(w => w.Id),
+            Does.Contain(createdTrustedWalet2.Id).And.Contain(createdTrustedWalet3.Id));
     }
 }

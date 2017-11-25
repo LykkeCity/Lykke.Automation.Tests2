@@ -37,5 +37,10 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
         {
             return Request.Get($"api/Wallets/client/{id}").Build().Execute();
         }
+
+        public IResponse GetWalletsForClientByType(string id, WalletType walletType)
+        {
+            return Request.Get($"api/Wallets/client/{id}/type/{walletType}").Build().Execute();
+        }
     }
 }
