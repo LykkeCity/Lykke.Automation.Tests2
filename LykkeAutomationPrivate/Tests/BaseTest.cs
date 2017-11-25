@@ -14,21 +14,10 @@ namespace LykkeAutomationPrivate.Tests
     class BaseTest
     {
         public LykkeApi lykkeApi = new LykkeApi();
-        public ApiSchemes apiSchemes;
-        public IList<string> schemesError;
 
         #region response info
        
-
-        public static void ValidateScheme(bool valid, IList<string> errors)
-        {
-            if (!valid)
-            {
-                errors.ToList().ForEach(e => Console.WriteLine(e));
-                Assert.Fail("Scheme not valid");
-            }
-        }
-
+        //TODO: Move out from BaseTest
         public static void AreEqualByJson(object expected, object actual)
         {
             var expectedJson = JsonConvert.SerializeObject(expected);
@@ -47,8 +36,6 @@ namespace LykkeAutomationPrivate.Tests
             
            AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
                TestContext.CurrentContext.Test.Name, textDescription);
-            apiSchemes = new ApiSchemes();
-            schemesError = new List<string>();
             TestContext.WriteLine("SetUp");
         }
 
