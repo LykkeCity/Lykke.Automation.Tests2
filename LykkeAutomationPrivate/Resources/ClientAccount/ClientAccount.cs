@@ -9,12 +9,12 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
     public class ClientAccount
     {
-        private string serviseUrl =
+        public string ServiseUrl =
             EnvConfig.Env == Env.Test ? "http://client-account.service.svc.cluster.local" :
             EnvConfig.Env == Env.Dev ? "http://client-account.lykke-service.svc.cluster.local" : 
             throw new Exception("Undefined env");
 
-        protected IRequestBuilder Request => Requests.For(serviseUrl);
+        protected IRequestBuilder Request => Requests.For(ServiseUrl);
 
         public Wallets Wallets => new Wallets();
         public AccountExist AccountExist => new AccountExist();

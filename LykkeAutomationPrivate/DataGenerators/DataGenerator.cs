@@ -28,13 +28,13 @@ namespace LykkeAutomationPrivate.DataGenerators
             };
         }
 
-        public static CreateWalletRequest GetTestModel(this CreateWalletRequest wallet, string clientId)
+        public static CreateWalletRequest GetTestModel(this CreateWalletRequest wallet, string clientId, WalletType walletType = WalletType.Trusted)
         {
             return new CreateWalletRequest()
             {
                 ClientId = clientId,
                 Name = TestData.GenerateString(10),
-                Type = WalletType.Trusted,
+                Type = walletType,
                 Description = TestData.GenerateString(15)
             };
         }

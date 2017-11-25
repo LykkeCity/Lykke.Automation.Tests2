@@ -13,9 +13,9 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
             Request.Post($"/api/ClientAccountInformation/setPIN/{clientId}/{pin}").Build().Execute();
         }
 
-        public WalletDto PostCreateWallet(CreateWalletRequest wallet)
+        public IResponse PostCreateWallet(CreateWalletRequest wallet)
         {
-            return Request.Post("api/Wallets").AddJsonBody(wallet).Build().Execute<WalletDto>();
+            return Request.Post("api/Wallets").AddJsonBody(wallet).Build().Execute();
         }
 
         public IResponse GetWalletById(string id)

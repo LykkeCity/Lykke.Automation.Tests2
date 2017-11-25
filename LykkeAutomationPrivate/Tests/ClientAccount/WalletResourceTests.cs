@@ -14,12 +14,7 @@ namespace LykkeAutomation.Tests.ClientAccount
 {
     class WalletResourceTests : BaseTest
     {
-        readonly string clientAccountUrl = "http://client-account.lykke-service.svc.cluster.local";
-
         string userId;
-        string walletName = "Some wallet name";
-        string walletDescription = "Some wallet description";
-        WalletType walletType = WalletType.Trusted;
 
         [OneTimeSetUp]
         public void CreateUser()
@@ -31,44 +26,30 @@ namespace LykkeAutomation.Tests.ClientAccount
         }
 
         [Test]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public void PostCreateWallet()
         {
-
-            var wallet = Requests.For(clientAccountUrl).Post("/api/Wallets")
-                .AddJsonBody(new CreateWalletRequest
-                {
-                    ClientId = userId,
-                    Name = walletName,
-                    Type = walletType,
-                    Description = walletDescription
-                })
-                .Build().Execute<WalletDto>();
+            CreateWalletRequest createWalletRequest = new CreateWalletRequest().GetTestModel(userId);
+            var postWalletPesp = lykkeApi.ClientAccount.Wallets.PostCreateWallet(createWalletRequest);
+            var wallet = postWalletPesp.GetJson<WalletDto>();
 
             Assert.That(wallet.Id, Is.Not.Null);
-            Assert.That(wallet.Type, Is.EqualTo(walletType.ToSerializedValue()));
-            Assert.That(wallet.Name, Is.EqualTo(walletName));
-            Assert.That(wallet.Description, Is.EqualTo(walletDescription));
+            Assert.That(wallet.Type, Is.EqualTo(createWalletRequest.Type.ToSerializedValue()));
+            Assert.That(wallet.Name, Is.EqualTo(createWalletRequest.Name));
+            Assert.That(wallet.Description, Is.EqualTo(createWalletRequest.Description));
         }
 
         [TestCase("5000000-aaaa-bbbb-cccc-5555aaa111000")]
         [TestCase("oloasdakj jashdasdjal asdjuasdasa")]
         [TestCase("")]
         [TestCase(null)]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public void PostCreateWalletClientId(string _userId)
         {
-            var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
-                .AddJsonBody(new CreateWalletRequest
-                {
-                    ClientId = _userId,
-                    Name = walletName,
-                    Type = walletType,
-                    Description = walletDescription
-                })
-                .Build().Execute();
+            CreateWalletRequest createWalletRequest = new CreateWalletRequest().GetTestModel(_userId);
+            var postWalletPesp = lykkeApi.ClientAccount.Wallets.PostCreateWallet(createWalletRequest);
 
-            Assert.That(walletResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+            Assert.That(postWalletPesp.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
         public class CreateWalletRequestMock : CreateWalletRequest
@@ -81,16 +62,17 @@ namespace LykkeAutomation.Tests.ClientAccount
         [TestCase("SomeType", ExpectedResult = HttpStatusCode.BadRequest)]
         [TestCase("", ExpectedResult = HttpStatusCode.BadRequest)]
         [TestCase(null, ExpectedResult = HttpStatusCode.BadRequest)]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public HttpStatusCode PostCreateWalletType(object _walletType)
         {
+            var clientAccountUrl = lykkeApi.ClientAccount.ServiseUrl;
             var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
                 .AddJsonBody(new CreateWalletRequestMock
                 {
                     ClientId = userId,
-                    Name = walletName,
+                    Name = "Some test name",
                     Type = _walletType,
-                    Description = walletDescription
+                    Description = "Some test description"
                 })
                 .Build().Execute();
 
@@ -101,46 +83,35 @@ namespace LykkeAutomation.Tests.ClientAccount
         [TestCase("N", ExpectedResult = HttpStatusCode.OK)]
         [TestCase("", ExpectedResult = HttpStatusCode.BadRequest)]
         [TestCase(null, ExpectedResult = HttpStatusCode.BadRequest)]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public HttpStatusCode PostCreateWalletName(string _walletName)
         {
-            var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
-                .AddJsonBody(new CreateWalletRequest
-                {
-                    ClientId = userId,
-                    Name = _walletName,
-                    Type = walletType,
-                    Description = walletDescription
-                })
-                .Build().Execute();
+            CreateWalletRequest createWalletRequest = new CreateWalletRequest().GetTestModel(userId);
+            createWalletRequest.Name = _walletName;
+            var postWalletPesp = lykkeApi.ClientAccount.Wallets.PostCreateWallet(createWalletRequest);
 
-            return walletResponse.StatusCode;
+            return postWalletPesp.StatusCode;
         }
 
         [TestCase("Some long-long-long maybe or not description", ExpectedResult = HttpStatusCode.OK)]
         [TestCase("", ExpectedResult = HttpStatusCode.OK)]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public HttpStatusCode PostCreateWalletDescription(string _walletDescription)
         {
-            var walletResponse = Requests.For(clientAccountUrl).Post("/api/Wallets")
-                .AddJsonBody(new CreateWalletRequest
-                {
-                    ClientId = userId,
-                    Name = walletName,
-                    Type = walletType,
-                    Description = _walletDescription
-                })
-                .Build().Execute();
+            CreateWalletRequest createWalletRequest = new CreateWalletRequest().GetTestModel(userId);
+            createWalletRequest.Description = _walletDescription;
+            
+            var postWalletPesp = lykkeApi.ClientAccount.Wallets.PostCreateWallet(createWalletRequest);
 
-            return walletResponse.StatusCode;
+            return postWalletPesp.StatusCode;
         }
 
         [Test]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public void GetWallet()
         {
             var walletToCreate = new CreateWalletRequest().GetTestModel(userId);
-            var createdWalet = lykkeApi.ClientAccount.Wallets.PostCreateWallet(walletToCreate);
+            var createdWalet = lykkeApi.ClientAccount.Wallets.PostCreateWallet(walletToCreate).GetJson<WalletDto>();
 
             var getWalletById = lykkeApi.ClientAccount.Wallets.GetWalletById(createdWalet.Id);
 
@@ -154,11 +125,11 @@ namespace LykkeAutomation.Tests.ClientAccount
         }
 
         [Test]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public void DeleteWallet()
         {
             var walletToCreate = new CreateWalletRequest().GetTestModel(userId);
-            var createdWalet = lykkeApi.ClientAccount.Wallets.PostCreateWallet(walletToCreate);
+            var createdWalet = lykkeApi.ClientAccount.Wallets.PostCreateWallet(walletToCreate).GetJson<WalletDto>();
 
             var deleteWalletById = lykkeApi.ClientAccount.Wallets.DeleteWalletById(createdWalet.Id);
             Assert.That(deleteWalletById.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -168,11 +139,11 @@ namespace LykkeAutomation.Tests.ClientAccount
         }
 
         [Test]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public void PutWallet()
         {
             var walletToCreate = new CreateWalletRequest().GetTestModel(userId);
-            var createdWalet = lykkeApi.ClientAccount.Wallets.PostCreateWallet(walletToCreate);
+            var createdWalet = lykkeApi.ClientAccount.Wallets.PostCreateWallet(walletToCreate).GetJson<WalletDto>();
 
             var newWallet = new ModifyWalletRequest().GetTestModel();
 
@@ -189,7 +160,7 @@ namespace LykkeAutomation.Tests.ClientAccount
         }
 
         [Test]
-        [Category("Wallet"), Category("ClientAccount"), Category("ServiceAll")]
+        [Category("Wallets"), Category("ClientAccount"), Category("ServiceAll")]
         public void GetWalletsForClient()
         {
             //create new client
@@ -199,9 +170,9 @@ namespace LykkeAutomation.Tests.ClientAccount
             lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(userId, "1111");
 
             //Create 3 wallets
-            var createdWalet1 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId));
-            var createdWalet2 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId));
-            var createdWalet3 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId));
+            var createdWalet1 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
+            var createdWalet2 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
+            var createdWalet3 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetJson<WalletDto>();
 
             var getWalletsForClientById = lykkeApi.ClientAccount.Wallets.GetWalletsForClientById(userId).GetJson<List<WalletDto>>();
 

@@ -22,12 +22,13 @@ namespace LykkeAutomationPrivate.Models.ClientAccount.Models
         /// <summary>
         /// Initializes a new instance of the WalletDto class.
         /// </summary>
-        public WalletDto(string id = default(string), string name = default(string), string type = default(string), string description = default(string))
+        public WalletDto(string id = default(string), string name = default(string), string type = default(string), string description = default(string), string clientId = default(string))
         {
             Id = id;
             Name = name;
             Type = type;
             Description = description;
+            ClientId = clientId;
             CustomInit();
         }
 
@@ -55,6 +56,11 @@ namespace LykkeAutomationPrivate.Models.ClientAccount.Models
         /// </summary>
         [JsonProperty(PropertyName = "Description")]
         public string Description { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ClientId")]
+        public string ClientId { get; set; }
 
     }
 }
