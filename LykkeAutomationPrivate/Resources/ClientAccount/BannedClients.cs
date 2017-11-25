@@ -24,6 +24,8 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
             var request = Request.Post("/api/BannedClients/list");
             if (clients != null && clients.Any())
                 request.AddJsonBody(clients);
+            else
+                request.AddJsonBody(new object());
 
             return request.Build().Execute<List<string>>();
         }
