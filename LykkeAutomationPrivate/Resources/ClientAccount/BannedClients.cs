@@ -19,18 +19,18 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
             return Request.Put($"/api/BannedClients/unban/{clientId}").Build().Execute();
         }
 
-        public IResponse PostBannedClientsList(IList<string> clients)
+        public IResponse<List<string>> PostBannedClientsList(IList<string> clients)
         {
             var request = Request.Post("/api/BannedClients/list");
             if (clients != null && clients.Any())
                 request.AddJsonBody(clients);
 
-            return request.Build().Execute();
+            return request.Build().Execute<List<string>>();
         }
 
-        public IResponse GetBannedClientsIsBanned(string clientId)
+        public IResponse<bool> GetBannedClientsIsBanned(string clientId)
         {
-            return Request.Get($"/api/BannedClients/isBanned/{clientId}").Build().Execute();
+            return Request.Get($"/api/BannedClients/isBanned/{clientId}").Build().Execute<bool>();
         }
     }
 }

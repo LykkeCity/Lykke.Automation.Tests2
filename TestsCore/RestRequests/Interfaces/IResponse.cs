@@ -10,7 +10,10 @@ namespace TestsCore.RestRequests.Interfaces
     {
         HttpStatusCode StatusCode { get; set; }
         string Content { get; set; }
-        T GetJson<T>();
-        JObject GetJObject();
+    }
+
+    public interface IResponse<T> : IResponse
+    {
+        T GetResponseObject();
     }
 }

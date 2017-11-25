@@ -16,7 +16,7 @@ namespace LykkeAutomationPrivate.Resources.RegistrationResourse
         public AccountsRegistrationResponseModel PostRegistration(AccountRegistrationModel account)
         {
             return Requests.For(serviseUrl).Post("api/Registration")
-                .AddJsonBody(account).Build().Execute<AccountsRegistrationResponseModel>();
+                .AddJsonBody(account).Build().Execute<AccountsRegistrationResponseModel>().GetResponseObject();
         }
     }
 }

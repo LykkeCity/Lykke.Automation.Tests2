@@ -13,13 +13,12 @@ namespace TestsCore.RestRequests
         public HttpStatusCode StatusCode { get; set; }
 
         public string Content { get; set; }
+    }
 
-        public JObject GetJObject()
-        {
-            return JObject.Parse(Content);
-        }
 
-        public T GetJson<T>()
+    public class Response<T> : Response, IResponse<T>
+    {
+        public T GetResponseObject()
         {
             return JsonConvert.DeserializeObject<T>(Content);
         }

@@ -13,14 +13,14 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
             Request.Post($"/api/ClientAccountInformation/setPIN/{clientId}/{pin}").Build().Execute();
         }
 
-        public IResponse PostCreateWallet(CreateWalletRequest wallet)
+        public IResponse<WalletDto> PostCreateWallet(CreateWalletRequest wallet)
         {
-            return Request.Post("api/Wallets").AddJsonBody(wallet).Build().Execute();
+            return Request.Post("api/Wallets").AddJsonBody(wallet).Build().Execute<WalletDto>();
         }
 
-        public IResponse GetWalletById(string id)
+        public IResponse<WalletDto> GetWalletById(string id)
         {
-            return Request.Get($"/api/Wallets/{id}").Build().Execute();
+            return Request.Get($"/api/Wallets/{id}").Build().Execute<WalletDto>();
         }
 
         public IResponse DeleteWalletById(string id)
@@ -28,19 +28,19 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
              return Request.Delete($"/api/Wallets/{id}").Build().Execute();
         }
 
-        public IResponse PutWalletById(string id, ModifyWalletRequest modifyWallet)
+        public IResponse<WalletDto> PutWalletById(string id, ModifyWalletRequest modifyWallet)
         {
-            return Request.Put($"/api/Wallets/{id}").AddJsonBody(modifyWallet).Build().Execute();
+            return Request.Put($"/api/Wallets/{id}").AddJsonBody(modifyWallet).Build().Execute<WalletDto>();
         }
 
-        public IResponse GetWalletsForClientById(string id)
+        public IResponse<List<WalletDto>> GetWalletsForClientById(string id)
         {
-            return Request.Get($"api/Wallets/client/{id}").Build().Execute();
+            return Request.Get($"api/Wallets/client/{id}").Build().Execute<List<WalletDto>>();
         }
 
-        public IResponse GetWalletsForClientByType(string id, WalletType walletType)
+        public IResponse<List<WalletDto>> GetWalletsForClientByType(string id, WalletType walletType)
         {
-            return Request.Get($"api/Wallets/client/{id}/type/{walletType}").Build().Execute();
+            return Request.Get($"api/Wallets/client/{id}/type/{walletType}").Build().Execute<List<WalletDto>>();
         }
     }
 }

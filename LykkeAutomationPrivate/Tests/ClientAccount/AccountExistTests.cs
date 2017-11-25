@@ -26,7 +26,7 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
         public void GetAccountForExistedClient()
         {
             var accountExistResponceModel = lykkeApi.ClientAccount.AccountExist
-                .GetAccountExist(existedClient.Email).GetJson<AccountExistResponceModel>();
+                .GetAccountExist(existedClient.Email).GetResponseObject();
 
             Assert.That(accountExistResponceModel.IsClientAccountExisting, Is.True);
         }
@@ -36,7 +36,7 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
         public void GetAccountForNonExistedClient()
         {
             var accountExistResponceModel = lykkeApi.ClientAccount.AccountExist
-                .GetAccountExist(nonExistedClient.Email).GetJson<AccountExistResponceModel>();
+                .GetAccountExist(nonExistedClient.Email).GetResponseObject();
 
             Assert.That(accountExistResponceModel.IsClientAccountExisting, Is.False);
         }

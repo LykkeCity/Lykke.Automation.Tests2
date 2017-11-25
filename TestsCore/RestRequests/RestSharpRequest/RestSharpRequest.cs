@@ -46,11 +46,11 @@ namespace TestsCore.RestRequests.RestSharpRequest
             return new Response() { StatusCode = response.StatusCode, Content = response.Content };
         }
 
-        public T Execute<T>() where T : new()
+        public IResponse<T> Execute<T>() where T : new()
         {
-            var response = client.Execute<T>(request);
+            var response = client.Execute(request);
             Log(response);
-            return response.Data;
+            return new Response<T>() { StatusCode = response.StatusCode, Content = response.Content };
         }
 
         public void AddHeader(string name, string value)
