@@ -15,6 +15,6 @@ namespace LykkeAutomationPrivate.Api
         public ServiceSettingsApi settings => new ServiceSettingsApi();
         public PersonalData PersonalData => new PersonalData();
         public Registration Registration => new Registration();
-        public ClientAccount ClientAccount => new ClientAccount();
+        public ClientAccountBase ClientAccount => new ClientAccountBase();
     }
 }

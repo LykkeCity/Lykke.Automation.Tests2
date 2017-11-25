@@ -7,7 +7,7 @@ using TestsCore.RestRequests.Interfaces;
 
 namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
-    public class ClientAccount
+    public class ClientAccountBase
     {
         public string ServiseUrl =
             EnvConfig.Env == Env.Test ? "http://client-account.service.svc.cluster.local" :

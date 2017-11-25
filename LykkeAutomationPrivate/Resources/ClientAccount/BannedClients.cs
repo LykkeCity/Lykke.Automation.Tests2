@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
-    public class BannedClients : ClientAccount
+    public class BannedClients : ClientAccountBase
     {
         public IResponse PutBannedClientsBan(string clientId)
         {

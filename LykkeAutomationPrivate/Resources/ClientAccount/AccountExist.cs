@@ -6,7 +6,7 @@ using TestsCore.RestRequests.Interfaces;
 
 namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
-    public class AccountExist : ClientAccount
+    public class AccountExist : ClientAccountBase
     {
         public IResponse<AccountExistResponceModel> GetAccountExist(string email)
         {

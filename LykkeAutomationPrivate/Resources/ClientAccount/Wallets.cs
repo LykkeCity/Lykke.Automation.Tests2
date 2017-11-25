@@ -6,7 +6,7 @@ using TestsCore.RestRequests.Interfaces;
 
 namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
-    public class Wallets: ClientAccount
+    public class Wallets: ClientAccountBase
     {
         public void PostClientAccountInformationsetPIN(string clientId, string pin)
         {
