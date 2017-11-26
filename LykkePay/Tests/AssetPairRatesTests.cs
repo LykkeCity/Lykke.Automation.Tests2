@@ -505,18 +505,13 @@ namespace LykkePay.Tests
         #region rounding
         public class PostAssetPairPipsDiffValuesAskRounding : AssetPairRatesBaseTest
         {
-            [TestCase(arg1: "98.6712492846915", arg2: 91.000)]
-            [TestCase(arg1: "98.5398342343697", arg2: 100.000)]
-            [TestCase(arg1: "99.0134409342243", arg2: 67.565)]
-            [TestCase(arg1: "99.3265212297765", arg2: 46.124)]
+            [TestCase(arg1: 9999.999, arg2: 100.00)]
+            [TestCase(arg1: 8888.5648, arg2: 8888.565)]
             [Category("LykkePay")]
-            public void PostAssetPairPipsDiffValuesAskRoundingTest(object percent, object expectedAsk)
+            public void PostAssetPairPipsDiffValuesAskRoundingTest(object expectedAsk, object roundedAsk)
             {
-                object p = percent;
                 var assetPair = "BTCUSD";
-
-                string markUp = $"{{\"markup\": {{\"percent\":{p}, \"pips\": 0}}}}";
-
+ 
                 var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
 
                 var ask = assetPairRates.ask;
@@ -525,6 +520,11 @@ namespace LykkePay.Tests
                     .GetCloudTable("Merchants")
                     .GetSearchResult("ApiKey", "BILETTERTESTKEY")
                     .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
+
+                var newAsk = assetPairRates.ask + assetPairRates.ask * deltaSpread / 100;
+                var percent = ((double)(expectedAsk) - newAsk + newAsk*0.2/*lykkays percent*/ + newAsk * 0 /*lykkays pips*/)*100/newAsk;
+
+                string markUp = $"{{\"markup\": {{\"percent\":{percent}, \"pips\": 0}}}}";
 
                 var merchant = new MerchantModel(markUp);
 
@@ -535,33 +535,32 @@ namespace LykkePay.Tests
                 Assert.Multiple(() =>
                 {
                     Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
-                    Assert.That(postModel.ask, Is.EqualTo(expectedAsk), "Actual ask is not equal to expected");
+                    Assert.That(postModel.ask, Is.EqualTo(roundedAsk), "Actual ask is not equal to expected");
                 });
             }
         }
 
         public class PostAssetPairPipsDiffValuesBidRounding : AssetPairRatesBaseTest
         {
-            [TestCase(arg1: "98.6104327194624", arg2: 90.999)]
-            [TestCase(arg1: "98.5398342343697", arg2: 99.999)]
-            [TestCase(arg1: "99.0134409342243", arg2: 67.564)]
-            [TestCase(arg1: "99.3265212297765", arg2: 46.123)]
+            [TestCase(arg1: 999.9999, arg2: 999.999)]
+            [TestCase(arg1: 8888.5648, arg2: 8888.564)]
             [Category("LykkePay")]
-            public void PostAssetPairPipsDiffValuesBidRoundingTest(object percent, object expectedBid)
+            public void PostAssetPairPipsDiffValuesBidRoundingTest(object expectedBid, object roundedBid)
             {
-                object p = percent;
                 var assetPair = "BTCUSD";
-
-                string markUp = $"{{\"markup\": {{\"percent\":{p}, \"pips\": 0}}}}";
 
                 var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
 
-                var ask = assetPairRates.ask;
                 var bid = assetPairRates.bid;
                 var deltaSpread = new AzureUtils(Environment.GetEnvironmentVariable("AzureDeltaSpread"))
                     .GetCloudTable("Merchants")
                     .GetSearchResult("ApiKey", "BILETTERTESTKEY")
                     .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
+
+                var newBid = assetPairRates.bid - assetPairRates.bid * deltaSpread / 100;
+                var percent = (-(double)(expectedBid) + newBid - newBid * 0.2/*lykkays percent*/ - newBid * 0 /*lykkays pips*/) * 100 / newBid;
+
+                string markUp = $"{{\"markup\": {{\"percent\":{percent}, \"pips\": 0}}}}";
 
                 var merchant = new MerchantModel(markUp);
 
@@ -572,7 +571,7 @@ namespace LykkePay.Tests
                 Assert.Multiple(() =>
                 {
                     Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
-                    Assert.That(postModel.bid, Is.EqualTo(expectedBid), "Actual bid is not equal to expected");
+                    Assert.That(postModel.bid, Is.EqualTo(roundedBid), "Actual bid is not equal to expected");
                 });
             }
         }
