@@ -501,5 +501,81 @@ namespace LykkePay.Tests
             }
         }
         #endregion
+
+        #region rounding
+        public class PostAssetPairPipsDiffValuesAskRounding : AssetPairRatesBaseTest
+        {
+            [TestCase(arg1: "98.6712492846915", arg2: 91.000)]
+            [TestCase(arg1: "98.5398342343697", arg2: 100.000)]
+            [TestCase(arg1: "99.0134409342243", arg2: 67.565)]
+            [TestCase(arg1: "99.3265212297765", arg2: 46.124)]
+            [Category("LykkePay")]
+            public void PostAssetPairPipsDiffValuesAskRoundingTest(object percent, object expectedAsk)
+            {
+                object p = percent;
+                var assetPair = "BTCUSD";
+
+                string markUp = $"{{\"markup\": {{\"percent\":{p}, \"pips\": 0}}}}";
+
+                var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
+
+                var ask = assetPairRates.ask;
+                var bid = assetPairRates.bid;
+                var deltaSpread = new AzureUtils(Environment.GetEnvironmentVariable("AzureDeltaSpread"))
+                    .GetCloudTable("Merchants")
+                    .GetSearchResult("ApiKey", "BILETTERTESTKEY")
+                    .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
+
+                var merchant = new MerchantModel(markUp);
+
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
+                    Assert.That(postModel.ask, Is.EqualTo(expectedAsk), "Actual ask is not equal to expected");
+                });
+            }
+        }
+
+        public class PostAssetPairPipsDiffValuesBidRounding : AssetPairRatesBaseTest
+        {
+            [TestCase(arg1: "98.6104327194624", arg2: 90.999)]
+            [TestCase(arg1: "98.5398342343697", arg2: 99.999)]
+            [TestCase(arg1: "99.0134409342243", arg2: 67.564)]
+            [TestCase(arg1: "99.3265212297765", arg2: 46.123)]
+            [Category("LykkePay")]
+            public void PostAssetPairPipsDiffValuesBidRoundingTest(object percent, object expectedBid)
+            {
+                object p = percent;
+                var assetPair = "BTCUSD";
+
+                string markUp = $"{{\"markup\": {{\"percent\":{p}, \"pips\": 0}}}}";
+
+                var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
+
+                var ask = assetPairRates.ask;
+                var bid = assetPairRates.bid;
+                var deltaSpread = new AzureUtils(Environment.GetEnvironmentVariable("AzureDeltaSpread"))
+                    .GetCloudTable("Merchants")
+                    .GetSearchResult("ApiKey", "BILETTERTESTKEY")
+                    .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
+
+                var merchant = new MerchantModel(markUp);
+
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
+                    Assert.That(postModel.bid, Is.EqualTo(expectedBid), "Actual bid is not equal to expected");
+                });
+            }
+        }
+        #endregion
     }
 }

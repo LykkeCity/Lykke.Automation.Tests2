@@ -1,6 +1,7 @@
 ﻿using Lykke.Client.AutorestClient.Models;
 using LykkeAutomation.TestsCore;
 using LykkeAutomationPrivate.Models;
+using LykkeAutomationPrivate.Tests;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using TestsCore.TestsData;
 
 namespace LykkeAutomationPrivate.Tests.PersonalData
 {
-    class PersonalDataTests
+    public class PersonalDataTests
     {
 
         public class PersonalDataBaseTest : BaseTest

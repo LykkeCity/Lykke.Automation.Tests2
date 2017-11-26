@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace LykkeAutomationPrivate.Tests
 {
-    class BaseTest
+    public class BaseTest
     {
         public LykkeApi lykkeApi = new LykkeApi();
 

@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,6 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.6.0" />
-    <PackageReference Include="XunitXml.TestLogger" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
