@@ -501,5 +501,80 @@ namespace LykkePay.Tests
             }
         }
         #endregion
+
+        #region rounding
+        public class PostAssetPairPipsDiffValuesAskRounding : AssetPairRatesBaseTest
+        {
+            [TestCase(arg1: 9999.999, arg2: 100.00)]
+            [TestCase(arg1: 8888.5648, arg2: 8888.565)]
+            [Category("LykkePay")]
+            public void PostAssetPairPipsDiffValuesAskRoundingTest(object expectedAsk, object roundedAsk)
+            {
+                var assetPair = "BTCUSD";
+ 
+                var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
+
+                var ask = assetPairRates.ask;
+                var bid = assetPairRates.bid;
+                var deltaSpread = new AzureUtils(Environment.GetEnvironmentVariable("AzureDeltaSpread"))
+                    .GetCloudTable("Merchants")
+                    .GetSearchResult("ApiKey", "BILETTERTESTKEY")
+                    .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
+
+                var newAsk = assetPairRates.ask + assetPairRates.ask * deltaSpread / 100;
+                var percent = ((double)(expectedAsk) - newAsk + newAsk*0.2/*lykkays percent*/ + newAsk * 0 /*lykkays pips*/)*100/newAsk;
+
+                string markUp = $"{{\"markup\": {{\"percent\":{percent}, \"pips\": 0}}}}";
+
+                var merchant = new MerchantModel(markUp);
+
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
+                    Assert.That(postModel.ask, Is.EqualTo(roundedAsk), "Actual ask is not equal to expected");
+                });
+            }
+        }
+
+        public class PostAssetPairPipsDiffValuesBidRounding : AssetPairRatesBaseTest
+        {
+            [TestCase(arg1: 999.9999, arg2: 999.999)]
+            [TestCase(arg1: 8888.5648, arg2: 8888.564)]
+            [Category("LykkePay")]
+            public void PostAssetPairPipsDiffValuesBidRoundingTest(object expectedBid, object roundedBid)
+            {
+                var assetPair = "BTCUSD";
+
+                var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
+
+                var bid = assetPairRates.bid;
+                var deltaSpread = new AzureUtils(Environment.GetEnvironmentVariable("AzureDeltaSpread"))
+                    .GetCloudTable("Merchants")
+                    .GetSearchResult("ApiKey", "BILETTERTESTKEY")
+                    .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
+
+                var newBid = assetPairRates.bid - assetPairRates.bid * deltaSpread / 100;
+                var percent = (-(double)(expectedBid) + newBid - newBid * 0.2/*lykkays percent*/ - newBid * 0 /*lykkays pips*/) * 100 / newBid;
+
+                string markUp = $"{{\"markup\": {{\"percent\":{percent}, \"pips\": 0}}}}";
+
+                var merchant = new MerchantModel(markUp);
+
+                var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+
+                Assert.Multiple(() =>
+                {
+                    Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
+                    Assert.That(postModel.bid, Is.EqualTo(roundedBid), "Actual bid is not equal to expected");
+                });
+            }
+        }
+        #endregion
     }
 }

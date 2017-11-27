@@ -10,7 +10,7 @@ using LykkeAutomationPrivate.Resources.ClientAccountResource;
 
 namespace LykkeAutomationPrivate.Api
 {
-    class LykkeApi
+    public class LykkeApi
     {
         public ServiceSettingsApi settings => new ServiceSettingsApi();
         public PersonalData PersonalData => new PersonalData();

@@ -19,7 +19,7 @@ using TestsCore.ApiRestClient;
 
 namespace LykkeAutomationPrivate.Api.PersonalDataResource
 {
-    class PersonalData : RestApi
+    public class PersonalData : RestApi
     {
         private const string resource = "/PersonalData";
         private static PersonalDataSettings _settings;
