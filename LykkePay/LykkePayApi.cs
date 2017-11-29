@@ -1,5 +1,6 @@
 ﻿using LykkePay.Resources.AssetPairRates;
 using LykkePay.Resources.GenerateAddress;
+using LykkePay.Resources.GetBalance;
 using LykkePay.Resources.Purchase;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,9 @@ namespace LykkePay.Api
     public class LykkePayApi
     {
         public ServiceSettingsApi settings => new ServiceSettingsApi();
-
         public AssetPairRates assetPairRates => new AssetPairRates();
-
         public Purchase purchase => new Purchase();
-
         public GenerateAddress generateAddress => new GenerateAddress();
+        public GetBalance getBalance => new GetBalance();
     }
 }

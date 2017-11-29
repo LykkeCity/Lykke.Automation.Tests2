@@ -23,7 +23,7 @@ namespace LykkePay.Resources.GenerateAddress
             string urlToSign = client.BaseUrl + $"{resource}/{id}";
             var merchant = new MerchantModel(urlToSign);
             request.AddHeader("Lykke-Merchant-Id", merchant.LykkeMerchantId);
-            //request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
+            request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
 
             return client.Execute(request);
         }
