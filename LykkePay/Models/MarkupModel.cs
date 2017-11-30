@@ -9,7 +9,7 @@ namespace LykkePay.Models
     {
         public Markup markup { get; set; }
 
-        public MarkupModel(float percent, int pips)
+        public MarkupModel(double percent, int pips)
         {
             markup = new Markup(percent, pips);
         }
@@ -17,10 +17,10 @@ namespace LykkePay.Models
 
     public class Markup
     {
-        public float percent { get; set; }
+        public double percent { get; set; }
         public int pips { get; set; }
 
-        public Markup(float percent, int pips)
+        public Markup(double percent, int pips)
         {
             this.percent = percent;
             this.pips = pips;

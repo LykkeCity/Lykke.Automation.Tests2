@@ -30,7 +30,7 @@ namespace LykkePay.Tests
                 }
             }
 
-            public float NewAsk(string assetPair = "BTCUSD")
+            public double NewAsk(string assetPair = "BTCUSD")
             {
                 var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
 
@@ -40,11 +40,11 @@ namespace LykkePay.Tests
                     .GetSearchResult("ApiKey", "BILETTERTESTKEY")
                     .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
 
-                float newAsk = ask + (float)deltaSpread * ask / 100;
+                double newAsk = ask + deltaSpread * ask / 100;
                 return newAsk;
             }
 
-            public float NewBid(string assetPair = "BTCUSD")
+            public double NewBid(string assetPair = "BTCUSD")
             {
                 var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
 
@@ -54,11 +54,11 @@ namespace LykkePay.Tests
                     .GetSearchResult("ApiKey", "BILETTERTESTKEY")
                     .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
 
-                float newBid = bid - (float)deltaSpread * bid / 100;
+                double newBid = bid - deltaSpread * bid / 100;
                 return newBid;
             }
 
-            public float ExpectedAsk(float percent, int pips, string assetPair = "BTCUSD")
+            public double ExpectedAsk(double percent, int pips, string assetPair = "BTCUSD")
             {
                 var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
 
@@ -68,14 +68,14 @@ namespace LykkePay.Tests
                     .GetSearchResult("ApiKey", "BILETTERTESTKEY")
                     .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
 
-                float newAsk = ask + (float)deltaSpread * ask / 100;
-                float spread = newAsk * float.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100;
-                float lpm = newAsk * 0.1f;
-                var expectedAsk = (float)Math.Round(newAsk * (1 + float.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100 + 0.1), assetPairRates.accuracy);
+                double newAsk = ask + deltaSpread * ask / 100;
+                double spread = newAsk * double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100;
+                double lpm = newAsk * 0.1;
+                var expectedAsk = Math.Round(newAsk * (1 + double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100 + 0.1), assetPairRates.accuracy);
                 return expectedAsk;
             }
 
-            public float ExpectedBid(float percent, int pips, string assetPair = "BTCUSD")
+            public double ExpectedBid(double percent, int pips, string assetPair = "BTCUSD")
             {
                 var assetPairRates = lykkePayApi.assetPairRates.GetAssetPairRatesModel(assetPair);
 
@@ -85,9 +85,9 @@ namespace LykkePay.Tests
                     .GetSearchResult("ApiKey", "BILETTERTESTKEY")
                     .GetCellByKnowRowKeyAndKnownCellValue("DeltaSpread", "bitteller.test.1").DoubleValue.Value;
 
-                float newBid = bid - (float)deltaSpread * bid / 100;
-                var expectedBid = (float)Math.Round(newBid * (1 - Double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100 - 0.1), assetPairRates.accuracy);
-                return expectedBid;
+                double newBid = bid - deltaSpread * bid / 100;
+                var expectedBid = Math.Round(newBid * (1 - Double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100 - 0.1), assetPairRates.accuracy);
+                return expectedBid >= 0 ? expectedBid : 0;
             }
         }
 
@@ -267,7 +267,7 @@ namespace LykkePay.Tests
             {
                 var assetPair = "BTCUSD";
 
-                float percent = 25.0f;
+                double percent = 25.0;
 
                 var expectedAsk = ExpectedAsk(percent, 0);
                 var expectedBid = ExpectedBid(percent, 0);
@@ -291,7 +291,7 @@ namespace LykkePay.Tests
             {
                 var assetPair = "BTCUSD";
 
-                float percent = 20.0f;
+                double percent = 20.0;
 
                 string markUp = $"{{\"markup\": {{\"percent\": {percent}}}}}";
                 var merchant = new MerchantModel(markUp);
@@ -323,14 +323,14 @@ namespace LykkePay.Tests
             [Category("LykkePay")]
             public void PostAssetPairPercentDiffValuesPositiveTest(object percent)
             {
-                var p = float.Parse(percent.ToString(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+                var p = double.Parse(percent.ToString(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
                 var assetPair = "BTCUSD";
 
-                var floatToString = p.ToString(); ;
-                if (!floatToString.Contains("."))
-                    floatToString = p.ToString() + ".0";
+                var doubleToString = p.ToString(); ;
+                if (!doubleToString.Contains("."))
+                    doubleToString = p.ToString() + ".0";
 
-                string markUp = $"{{\"markup\": {{\"percent\":{floatToString}, \"pips\": 0}}}}";
+                string markUp = $"{{\"markup\": {{\"percent\":{doubleToString}, \"pips\": 0}}}}";
 
                 var expectedAsk = ExpectedAsk(p, 0);
                 var expectedBid = ExpectedBid(p, 0);
@@ -462,8 +462,8 @@ namespace LykkePay.Tests
 
                 MarkupModel markUp = new MarkupModel(50, 30);
 
-                var expectedAsk = ExpectedAsk(50.0f, 30);
-                var expectedBid = ExpectedBid(50.0f, 30);
+                var expectedAsk = ExpectedAsk(50.0, 30);
+                var expectedBid = ExpectedBid(50.0, 30);
 
                 var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRates(assetPair, merchant, markUp);
