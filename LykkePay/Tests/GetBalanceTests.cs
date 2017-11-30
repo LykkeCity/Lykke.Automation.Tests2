@@ -2,6 +2,7 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace LykkePay.Tests
 {
@@ -43,9 +44,86 @@ namespace LykkePay.Tests
             }
 
             [Test]
+            [Description("User has no wallets at all(for /{assertId})")]
             public void GetBalanceUserHasNoWalletsAtAllTest()
             {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            [Description("User has no wallets at all(for /{assertId}/nonempty)")]
+            public void GetBalanceNonEmptyUserHasNoWalletsAtAllTest()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class GetBalanceUserHasNoWalletForAsset : BaseTest
+        {
+            [OneTimeSetUp]
+            public void CreateUserWithNoWalletsAtAll()
+            {
                 //TODO: Add implementation
+            }
+
+            [Test]
+            [Description("User has no wallets for assertId(for /{assertId})")]
+            public void GetBalanceUserHasNoWalletForAssetTest()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            [Description("User has no wallets for assertId(for /{assertId}/nonempty)")]
+            public void GetBalanceNonEmptyUserHasNoWalletForAssetTest()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class GetBalanceUserHasEmptyAndNoEmptyWallets : BaseTest
+        {
+            [OneTimeSetUp]
+            public void CreateUserWithNoWalletsAtAll()
+            {
+                //TODO: Add implementation
+            }
+
+            [Test]
+            [Description("User has empty and non empty wallets (for /{assertId})")]
+            public void GetBalanceUserHasEmptyAndNoEmptyWalletsTest()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            [Description("User has empty and non empty wallets (for /{assertId}/nonempty)")]
+            public void GetBalanceNonEmptyUserHasEmptyAndNoEmptyWalletsTest()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class GetBalanceUserHasEmptyAndNoEmptyWalletsForSeveralCurrs : BaseTest
+        {
+            [OneTimeSetUp]
+            public void CreateUserWithNoWalletsAtAll()
+            {
+                //TODO: Add implementation
+            }
+
+            [Test]
+            [Description("User has empty and non empty wallets for several currencies (for /{assertId})")]
+            public void GetBalanceUserHasEmptyAndNoEmptyWalletsForSeveralCurrsTest()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Test]
+            [Description("User has empty and non empty wallets for several currencies (for /{assertId}/nonempty)")]
+            public void GetBalanceNonEmptyUserHasEmptyAndNoEmptyWalletsForSeveralCurrsTest()
+            {
+                throw new NotImplementedException();
             }
         }
     }
