@@ -241,8 +241,8 @@ namespace LykkePay.Tests
                 int pips = 20;
                 string markUp = $"{{\"markup\": {{\"pips\": {pips} }}}}";
 
-                var expectedAsk = ExpectedAsk(0f, pips);
-                var expectedBid = ExpectedBid(0f, pips);
+                var expectedAsk = ExpectedAsk(0, pips);
+                var expectedBid = ExpectedBid(0, pips);
 
                 var merchant = new MerchantModel(markUp);
                 var response = lykkePayApi.assetPairRates.PostAssetPairRatesWithJsonBody(assetPair, merchant, markUp);
