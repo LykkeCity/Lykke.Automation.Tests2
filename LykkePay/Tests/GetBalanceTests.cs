@@ -3,6 +3,7 @@ using System.Net;
 using System.Collections.Generic;
 using System.Text;
 using System;
+using System.Linq;
 
 namespace LykkePay.Tests
 {
@@ -17,7 +18,7 @@ namespace LykkePay.Tests
             public void GetBalanceTest(string asset)
             {
                 var r = lykkePayApi.getBalance.GetGetBalance(asset);
-                Assert.That(r.ResponseStatus, Is.EqualTo(HttpStatusCode.OK), "Not 200 code on valid getbalance request");
+                Assert.That(r.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Not 200 code on valid getbalance request");
             }
         }
 
@@ -30,8 +31,10 @@ namespace LykkePay.Tests
             public void GetBalanceNonEmptyTest(string asset)
             {
                 var r = lykkePayApi.getBalance.GetGetBalanceNonEmpty(asset);
-                Assert.That(r.ResponseStatus, Is.EqualTo(HttpStatusCode.OK), 
+                Assert.That(r.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK), 
                     "Not 200 code on valid getbalance/nonempty request");
+                Assert.That(r.Data.Where(w => w.Amount == 0).Count(), Is.EqualTo(0), 
+                    "Empty wallets has been returned");
             }
         }
 
