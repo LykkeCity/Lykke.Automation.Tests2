@@ -33,23 +33,22 @@ namespace LykkePay.Models
 
     public class PostMarkup
     {
-        public float percent { get; set; }
+        public double percent { get; set; }
         public int pips { get; set; }
-        public float fixedFee { get; set; }
+        public double fixedFee { get; set; }
 
-        public PostMarkup(float percent, int pips, float fixedFee)
+        public PostMarkup(double percent, int pips, double fixedFee)
         {
             this.percent = percent;
             this.pips = pips;
             this.fixedFee = fixedFee;
         }
 
-        public PostMarkup(MarkupModel markupModel, float fixedFee)
+        public PostMarkup(MarkupModel markupModel, double fixedFee)
         {
             this.percent = markupModel.markup.percent;
             this.pips = markupModel.markup.pips;
             this.fixedFee = fixedFee;
         }
-
     }
 }
