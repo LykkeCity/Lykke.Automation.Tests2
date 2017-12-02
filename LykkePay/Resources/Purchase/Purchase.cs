@@ -33,19 +33,19 @@ namespace LykkePay.Resources.Purchase
             AllurePropertiesBuilder.Instance.AddPropertyPair("Version", isAlive.Version);
         }
 
-        public IRestResponse PostPurchaseResponse(PostMerchantModel merchantModel, PostPurchaseModel purchaseModel)
+        public IRestResponse PostPurchaseResponse(MerchantModel merchantModel, PostPurchaseModel purchaseModel)
         {
             var request = new RestRequest(resource, Method.POST);
             request.AddHeader("Lykke-Merchant-Id", merchantModel.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchantModel.LykkeMerchantSign);
-            request.AddHeader("Lykke-Merchant-Session-Id", merchantModel.LykkeMerchantSessionID);
+            request.AddHeader("Lykke-Merchant-Session-Id", merchantModel.LykkeMerchantSessionId);
             request.AddJsonBody(purchaseModel);
             var response = client.Execute(request);
 
             return response;
         }
 
-        public PostPurchaseResponseModel PostPurchaseResponseModel(PostMerchantModel merchantModel, PostPurchaseModel purchaseModel) =>
+        public PostPurchaseResponseModel PostPurchaseResponseModel(MerchantModel merchantModel, PostPurchaseModel purchaseModel) =>
             JsonConvert.DeserializeObject<PostPurchaseResponseModel>(PostPurchaseResponse(merchantModel, purchaseModel).Content);
     }
 }

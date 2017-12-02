@@ -11,6 +11,14 @@ namespace LykkePay.Models
     {
         public string LykkeMerchantId { get; set; }
         public string LykkeMerchantSign { get; set; }
+        public string LykkeMerchantSessionId { get; set; }
+
+        public MerchantModel(string merchantId, string sessionId, object objectToSign)
+        {
+            LykkeMerchantId = merchantId;
+            LykkeMerchantSessionId = sessionId;
+            LykkeMerchantSign = MERCHANT_SIGN(objectToSign);
+        }
 
         public MerchantModel(object objectToSign)
         {

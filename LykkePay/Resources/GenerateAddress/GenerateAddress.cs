@@ -12,6 +12,7 @@ namespace LykkePay.Resources.GenerateAddress
     {
         private string resource = "/generateAddress";
 
+
         public override void SetAllureProperties()
         {
             AllurePropertiesBuilder.Instance.AddPropertyPair("Service", client.BaseUrl.AbsoluteUri + resource);

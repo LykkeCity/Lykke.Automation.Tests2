@@ -52,18 +52,4 @@ namespace LykkePay.Models
         }
 
     }
-
-    public class PostMerchantModel
-    {
-        public string LykkeMerchantId { get; set; }
-        public string LykkeMerchantSign { get; set; }
-        public string LykkeMerchantSessionID { get; set; }
-
-        public PostMerchantModel(string merchantId, string merchantSign, string MerchantSessionID)
-        {
-            LykkeMerchantId = merchantId;
-            LykkeMerchantSign = merchantSign;
-            LykkeMerchantSessionID = MerchantSessionID;
-        }
-    }
 }

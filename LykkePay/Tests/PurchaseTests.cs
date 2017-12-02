@@ -22,10 +22,10 @@ namespace LykkePay.Tests
 
                 #endregion
 
-                PostMerchantModel merchantModel = new PostMerchantModel(merchant.LykkeMerchantId, merchant.LykkeMerchantSign, responseModel.LykkeMerchantSessionId);
                 PostPurchaseModel purchaseModel = new PostPurchaseModel(new PostMarkup(markUp, 0.001f), assetPair);
+                MerchantModel merchantModel = new MerchantModel(merchant.LykkeMerchantId, responseModel.LykkeMerchantSessionId, purchaseModel);
 
-               var result = lykkePayApi.purchase.PostPurchaseResponse(merchantModel, purchaseModel);
+                var result = lykkePayApi.purchase.PostPurchaseResponse(merchantModel, purchaseModel);
             }
         }
 
