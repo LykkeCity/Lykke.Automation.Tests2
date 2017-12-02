@@ -13,17 +13,21 @@ namespace LykkePay.Models
         public string LykkeMerchantSign { get; set; }
         public string LykkeMerchantSessionId { get; set; }
 
-        public MerchantModel(string merchantId, string sessionId, object objectToSign)
+        public MerchantModel(string merchantId, string sessionId)
         {
             LykkeMerchantId = merchantId;
             LykkeMerchantSessionId = sessionId;
-            LykkeMerchantSign = MERCHANT_SIGN(objectToSign);
         }
 
         public MerchantModel(object objectToSign)
         {
             LykkeMerchantId =  "bitteller.test.1";
             LykkeMerchantSign = MERCHANT_SIGN(objectToSign);
+        }
+
+        public void Sign(string stringToSign)
+        {
+            LykkeMerchantSign = MERCHANT_SIGN(stringToSign);
         }
 
         private static RSA CreateRsaFromPrivateKey(string privateKey)

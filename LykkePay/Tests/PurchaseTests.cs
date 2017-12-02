@@ -14,20 +14,18 @@ namespace LykkePay.Tests
             [Test]
             public void PostPurchaseSampleTest()
             {
-                #region create merchant model
-                MarkupModel markUp = new MarkupModel(20, 10);
+                var markUp = new MarkupModel(20, 10);
                 var merchant = new MerchantModel(markUp);
                 var assetPair = "BTCUSD";
-                var responseModel = lykkePayApi.assetPairRates.PostAssetsPairRatesModel(assetPair, merchant, markUp);
+                var baseAsset = "USD";
+                decimal amount = 100;
+                var postAssetsPairRates = lykkePayApi.assetPairRates.PostAssetsPairRatesModel(assetPair, merchant, markUp);
 
-                #endregion
+                var purchaseModel = new PostPurchaseModel(assetPair, baseAsset, amount);
+                merchant.LykkeMerchantSessionId = postAssetsPairRates.LykkeMerchantSessionId;
 
-                PostPurchaseModel purchaseModel = new PostPurchaseModel(new PostMarkup(markUp, 0.001f), assetPair);
-                MerchantModel merchantModel = new MerchantModel(merchant.LykkeMerchantId, responseModel.LykkeMerchantSessionId, purchaseModel);
-
-                var result = lykkePayApi.purchase.PostPurchaseResponse(merchantModel, purchaseModel);
+                var result = lykkePayApi.purchase.PostPurchaseResponse(merchant, purchaseModel);
             }
         }
-
     }
 }

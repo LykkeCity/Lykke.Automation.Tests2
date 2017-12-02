@@ -21,7 +21,7 @@ namespace LykkePay.Resources.GenerateAddress
         public IRestResponse GetGenerateAddress(string id)
         {
             IRestRequest request = new RestRequest($"{resource}/{id}", Method.GET);
-            string urlToSign = client.BaseUrl + $"{resource}/{id}";
+            string urlToSign = (client.BaseUrl + $"{resource}/{id}").Replace("https:", "http:");
             var merchant = new MerchantModel(urlToSign);
             request.AddHeader("Lykke-Merchant-Id", merchant.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);

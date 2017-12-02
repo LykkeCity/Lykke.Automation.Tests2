@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TestsCore.ApiRestClient;
 using TestsCore.TestsCore;
@@ -36,10 +37,15 @@ namespace LykkePay.Resources.Purchase
         public IRestResponse PostPurchaseResponse(MerchantModel merchantModel, PostPurchaseModel purchaseModel)
         {
             var request = new RestRequest(resource, Method.POST);
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            string jsonBody = JsonConvert.SerializeObject(purchaseModel, Formatting.Indented, settings);
+            merchantModel.Sign(jsonBody);
+            request.AddParameter("application/json", jsonBody, "application/json", ParameterType.RequestBody);
             request.AddHeader("Lykke-Merchant-Id", merchantModel.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchantModel.LykkeMerchantSign);
             request.AddHeader("Lykke-Merchant-Session-Id", merchantModel.LykkeMerchantSessionId);
-            request.AddJsonBody(purchaseModel);
+            
             var response = client.Execute(request);
 
             return response;
