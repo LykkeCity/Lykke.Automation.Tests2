@@ -13,6 +13,11 @@ namespace LykkePay.Models
         public string LykkeMerchantSign { get; set; }
         public string LykkeMerchantSessionId { get; set; }
 
+        public MerchantModel()
+        {
+            LykkeMerchantId = "bitteller.test.1";
+        }
+
         public MerchantModel(string merchantId, string sessionId)
         {
             LykkeMerchantId = merchantId;
