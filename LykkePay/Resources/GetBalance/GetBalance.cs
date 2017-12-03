@@ -26,6 +26,18 @@ namespace LykkePay.Resources.GetBalance
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
         }
 
+
+        private void SetMerchantHeadersForGetRequest(ref IRestRequest request, AbstractMerchant merchant)
+        {
+            string urlToSign = client.BaseUrl + request.Resource;
+            //var merchant = new MerchantModel(urlToSign.Replace("https:", "http:"));
+            merchant.Sign(urlToSign.Replace("https:", "http:"));
+            
+
+            request.AddHeader("Lykke-Merchant-Id", merchant.LykkeMerchantId);
+            request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
+        }
+
         public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assertId)
         {
             IRestRequest request = new RestRequest($"{resource}/{assertId}", Method.GET);
@@ -40,6 +52,26 @@ namespace LykkePay.Resources.GetBalance
         {
             IRestRequest request = new RestRequest($"{resource}/{assertId}/nonempty", Method.GET);
             SetMerchantHeadersForGetRequest(ref request);
+
+            var response = client.Execute(request);
+            var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
+            return (response, data);
+        }
+
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assertId, AbstractMerchant merchant)
+        {
+            IRestRequest request = new RestRequest($"{resource}/{assertId}", Method.GET);
+            SetMerchantHeadersForGetRequest(ref request, merchant);
+
+            var response = client.Execute(request);
+            var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
+            return (response, data);
+        }
+
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assertId, AbstractMerchant merchant)
+        {
+            IRestRequest request = new RestRequest($"{resource}/{assertId}/nonempty", Method.GET);
+            SetMerchantHeadersForGetRequest(ref request, merchant);
 
             var response = client.Execute(request);
             var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);

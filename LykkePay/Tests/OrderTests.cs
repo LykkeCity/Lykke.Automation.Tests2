@@ -41,6 +41,45 @@ namespace LykkePay.Tests
                 merchant = new MerchantModel(orderRequestJson);
 
                 var orderResponse = lykkePayApi.order.PostOrderModel(merchant, orderRequestJson, postModel.LykkeMerchantSessionId);
+                Assert.That(orderResponse.currency, Is.EqualTo(orderRequest.exchangeCurrency), "Unexpected currency in order response");
+                Assert.That(orderResponse.exchangeRate * orderResponse.amount, Is.EqualTo(orderRequest.amount), "Exchange rate * amount in order response not equals to request amount");
+            }
+        }
+
+        public class OrderPostBackSuccessResponse : BaseTest
+        {
+            [Test]
+            [Category("LykkePay")]
+            [Description("Validate Order postback response")]
+            public void OrderPostBackSuccessResponseTest()
+            {
+                var assetPair = "BTCUSD";
+
+                MarkupModel markUp = new MarkupModel(50, 30);
+
+                var merchant = new MerchantModel(markUp);
+                var response = lykkePayApi.assetPairRates.PostAssetPairRates(assetPair, merchant, markUp);
+
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Unexpected status code");
+                var postModel = JsonConvert.DeserializeObject<PostAssetsPairRatesModel>(response.Content);
+                Assert.That(postModel.LykkeMerchantSessionId, Is.Not.Null, "LykkeMerchantSessionId not present in response");
+
+                // order request below
+
+                var orderRequest = new OrderRequestModel() { currency = "USD", amount = 10, exchangeCurrency = "BTC", successURL = successURL, errorURL = errorURL, progressURL = progressURL, orderId = TestData.GenerateNumbers(5), markup = new PostMarkup(markUp, 0) };
+                var orderRequestJson = JsonConvert.SerializeObject(orderRequest);
+                merchant = new MerchantModel(orderRequestJson);
+
+                var orderResponse = lykkePayApi.order.PostOrderModel(merchant, orderRequestJson, postModel.LykkeMerchantSessionId);
+                Assert.That(orderResponse.currency, Is.EqualTo(orderRequest.exchangeCurrency), "Unexpected currency in order response");
+                Assert.That(orderResponse.exchangeRate * orderResponse.amount, Is.EqualTo(orderRequest.amount), "Exchange rate * amount in order response not equals to request amount");
+
+                var transfer = new TransferRequestModel() {amount = 9, destinationAddress=orderResponse.address, assetId="BTC", sourceAddress = "n1gDxgVtJmTxaXupcFNd8AeKmdJaihTacx" };
+                var transferJson = JsonConvert.SerializeObject(transfer);
+                var merch = new OrderMerchantModel(transferJson);
+                var convertTransfer = lykkePayApi.transfer.PostTransferModel(merch, transferJson);
+
+                var getB = lykkePayApi.getBalance.GetGetBalance("BTC", merch);
             }
         }
     }
