@@ -1,4 +1,5 @@
 ﻿using LykkePay.Models;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace LykkePay.Resources.GenerateAddress
             AllurePropertiesBuilder.Instance.AddPropertyPair("Service", client.BaseUrl.AbsoluteUri + resource);
         }
 
-        public IRestResponse GetGenerateAddress(string id)
+        public (IRestResponse Response, GetGenerateAddressResponseModel Data) GetGenerateAddress(string id)
         {
             IRestRequest request = new RestRequest($"{resource}/{id}", Method.GET);
             string urlToSign = (client.BaseUrl + $"{resource}/{id}").Replace("https:", "http:");
@@ -26,7 +27,10 @@ namespace LykkePay.Resources.GenerateAddress
             request.AddHeader("Lykke-Merchant-Id", merchant.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
 
-            return client.Execute(request);
+            var response = client.Execute(request);
+            var data = JsonConvert.DeserializeObject<GetGenerateAddressResponseModel>(response.Content);
+
+            return (response, data);
         }
     }
 }

@@ -26,9 +26,9 @@ namespace LykkePay.Resources.GetBalance
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
         }
 
-        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assertId)
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assetId)
         {
-            IRestRequest request = new RestRequest($"{resource}/{assertId}", Method.GET);
+            IRestRequest request = new RestRequest($"{resource}/{assetId}", Method.GET);
             SetMerchantHeadersForGetRequest(ref request);
 
             var response = client.Execute(request);
@@ -36,9 +36,9 @@ namespace LykkePay.Resources.GetBalance
             return (response, data);
         }
 
-        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assertId)
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assetId)
         {
-            IRestRequest request = new RestRequest($"{resource}/{assertId}/nonempty", Method.GET);
+            IRestRequest request = new RestRequest($"{resource}/{assetId}/nonempty", Method.GET);
             SetMerchantHeadersForGetRequest(ref request);
 
             var response = client.Execute(request);
