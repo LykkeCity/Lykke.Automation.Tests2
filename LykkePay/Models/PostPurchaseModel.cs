@@ -17,14 +17,13 @@ namespace LykkePay.Models
         public PostMarkup markup { get; set; }
 
 
-        public PostPurchaseModel(string assetPair, string baseAsset, decimal amount)
+        public PostPurchaseModel(string destinationAddress, string assetPair, string baseAsset, decimal amount)
         {
-            destinationAddress = "mnosddsjcchkwjfnnjcdodsc="; //TODO: Q: Where to get this?
+            this.destinationAddress = destinationAddress;
             this.assetPair = assetPair;
             this.baseAsset = baseAsset;
             this.amount = amount;
-
-            markup = new PostMarkup() { fixedFee = 0.001 };
+            //markup = new PostMarkup() { fixedFee = 0.001 };
         }
     }
 

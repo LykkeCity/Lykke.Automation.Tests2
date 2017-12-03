@@ -26,41 +26,51 @@ namespace LykkePay.Resources.GetBalance
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
         }
 
-
         private void SetMerchantHeadersForGetRequest(ref IRestRequest request, AbstractMerchant merchant)
         {
             string urlToSign = client.BaseUrl + request.Resource;
-            //var merchant = new MerchantModel(urlToSign.Replace("https:", "http:"));
             merchant.Sign(urlToSign.Replace("https:", "http:"));
-            
-
             request.AddHeader("Lykke-Merchant-Id", merchant.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
         }
 
-        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assertId)
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assetId)
         {
-            IRestRequest request = new RestRequest($"{resource}/{assertId}", Method.GET);
+            IRestRequest request = new RestRequest($"{resource}/{assetId}", Method.GET);
             SetMerchantHeadersForGetRequest(ref request);
 
             var response = client.Execute(request);
-            var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
-            return (response, data);
+            try
+            {
+                var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }
         }
 
-        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assertId)
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assetId)
         {
-            IRestRequest request = new RestRequest($"{resource}/{assertId}/nonempty", Method.GET);
+            IRestRequest request = new RestRequest($"{resource}/{assetId}/nonempty", Method.GET);
             SetMerchantHeadersForGetRequest(ref request);
 
             var response = client.Execute(request);
-            var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
-            return (response, data);
+            try
+            {
+                var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }            
         }
 
-        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assertId, AbstractMerchant merchant)
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalance(string assetId, AbstractMerchant merchant)
         {
-            IRestRequest request = new RestRequest($"{resource}/{assertId}", Method.GET);
+            IRestRequest request = new RestRequest($"{resource}/{assetId}", Method.GET);
             SetMerchantHeadersForGetRequest(ref request, merchant);
 
             var response = client.Execute(request);
@@ -68,9 +78,9 @@ namespace LykkePay.Resources.GetBalance
             return (response, data);
         }
 
-        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assertId, AbstractMerchant merchant)
+        public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assetId, AbstractMerchant merchant)
         {
-            IRestRequest request = new RestRequest($"{resource}/{assertId}/nonempty", Method.GET);
+            IRestRequest request = new RestRequest($"{resource}/{assetId}/nonempty", Method.GET);
             SetMerchantHeadersForGetRequest(ref request, merchant);
 
             var response = client.Execute(request);

@@ -34,24 +34,31 @@ namespace LykkePay.Resources.Purchase
             AllurePropertiesBuilder.Instance.AddPropertyPair("Version", isAlive.Version);
         }
 
-        public IRestResponse PostPurchaseResponse(MerchantModel merchantModel, PostPurchaseModel purchaseModel)
+        public (IRestResponse Response, PostPurchaseResponseModel Data) 
+            PostPurchaseResponse(MerchantModel merchantModel, PostPurchaseModel purchaseModel)
         {
             var request = new RestRequest(resource, Method.POST);
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.NullValueHandling = NullValueHandling.Ignore;
             string jsonBody = JsonConvert.SerializeObject(purchaseModel, Formatting.Indented, settings);
             merchantModel.Sign(jsonBody);
+
             request.AddParameter("application/json", jsonBody, "application/json", ParameterType.RequestBody);
             request.AddHeader("Lykke-Merchant-Id", merchantModel.LykkeMerchantId);
             request.AddHeader("Lykke-Merchant-Sign", merchantModel.LykkeMerchantSign);
-            request.AddHeader("Lykke-Merchant-Session-Id", merchantModel.LykkeMerchantSessionId);
-            
+            if (merchantModel.LykkeMerchantSessionId != null)
+                request.AddHeader("Lykke-Merchant-Session-Id", merchantModel.LykkeMerchantSessionId);
+
             var response = client.Execute(request);
-
-            return response;
+            try
+            {
+                var data = JsonConvert.DeserializeObject<PostPurchaseResponseModel>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }
         }
-
-        public PostPurchaseResponseModel PostPurchaseResponseModel(MerchantModel merchantModel, PostPurchaseModel purchaseModel) =>
-            JsonConvert.DeserializeObject<PostPurchaseResponseModel>(PostPurchaseResponse(merchantModel, purchaseModel).Content);
     }
 }
