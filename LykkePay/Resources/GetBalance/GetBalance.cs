@@ -32,8 +32,15 @@ namespace LykkePay.Resources.GetBalance
             SetMerchantHeadersForGetRequest(ref request);
 
             var response = client.Execute(request);
-            var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
-            return (response, data);
+            try
+            {
+                var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }
         }
 
         public (IRestResponse Response, List<GetGetBalanceResponseModel> Data) GetGetBalanceNonEmpty(string assetId)
@@ -42,8 +49,15 @@ namespace LykkePay.Resources.GetBalance
             SetMerchantHeadersForGetRequest(ref request);
 
             var response = client.Execute(request);
-            var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
-            return (response, data);
+            try
+            {
+                var data = JsonConvert.DeserializeObject<List<GetGetBalanceResponseModel>>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }            
         }
     }
 }

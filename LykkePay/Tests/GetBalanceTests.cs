@@ -17,8 +17,9 @@ namespace LykkePay.Tests
             [Category("LykkePay")]
             public void GetBalanceTest(string asset)
             {
-                var r = lykkePayApi.getBalance.GetGetBalance(asset);
-                Assert.That(r.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Not 200 code on valid getbalance request");
+                var getBalance = lykkePayApi.getBalance.GetGetBalance(asset);
+                Assert.That(getBalance.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK), 
+                    "Not 200 code on valid getbalance request");
             }
         }
 
@@ -30,10 +31,10 @@ namespace LykkePay.Tests
             [Category("LykkePay")]
             public void GetBalanceNonEmptyTest(string asset)
             {
-                var r = lykkePayApi.getBalance.GetGetBalanceNonEmpty(asset);
-                Assert.That(r.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK), 
+                var getBalanceNE = lykkePayApi.getBalance.GetGetBalanceNonEmpty(asset);
+                Assert.That(getBalanceNE.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK), 
                     "Not 200 code on valid getbalance/nonempty request");
-                Assert.That(r.Data.Where(w => w.Amount == 0).Count(), Is.EqualTo(0), 
+                Assert.That(getBalanceNE.Data?.Where(w => w.Amount == 0).Count(), Is.EqualTo(0), 
                     "Empty wallets has been returned");
             }
         }

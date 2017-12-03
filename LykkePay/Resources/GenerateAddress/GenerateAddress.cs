@@ -28,9 +28,15 @@ namespace LykkePay.Resources.GenerateAddress
             request.AddHeader("Lykke-Merchant-Sign", merchant.LykkeMerchantSign);
 
             var response = client.Execute(request);
-            var data = JsonConvert.DeserializeObject<GetGenerateAddressResponseModel>(response.Content);
-
-            return (response, data);
+            try
+            {
+                var data = JsonConvert.DeserializeObject<GetGenerateAddressResponseModel>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }
         }
     }
 }
