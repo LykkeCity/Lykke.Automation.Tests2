@@ -35,7 +35,7 @@ namespace LykkePay.Models
 
         public PostMarkup() { }
 
-        public PostMarkup(double percent, int pips, double fixedFee)
+        public PostMarkup(double? percent, int? pips, double? fixedFee)
         {
             this.percent = percent;
             this.pips = pips;
