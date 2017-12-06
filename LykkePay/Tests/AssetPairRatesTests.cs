@@ -73,7 +73,13 @@ namespace LykkePay.Tests
                 double newAsk = ask + deltaSpread * ask / 100;
                 double spread = newAsk * double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100;
                 double lpm = newAsk * 0.1;
-                var expectedAsk = Math.Round(newAsk * (1 + double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100 + 0.1) + pips/Math.Pow(10, assetPairRates.accuracy), assetPairRates.accuracy);
+                var expectedAsk = newAsk * (1 + double.Parse(percent.ToString(), CultureInfo.InvariantCulture) / 100 + 0.1) + pips / Math.Pow(10, assetPairRates.accuracy);
+                var a1 = expectedAsk - Math.Floor(expectedAsk); // fraction
+                var a2 = a1 * 1000 - Math.Floor(a1 * 1000); // 0.000XXX fraction
+                expectedAsk = Math.Floor((Math.Floor(expectedAsk) + a1) * 1000) / 1000;
+                if ((a1 - a2 / 1000) > 0)
+                    expectedAsk += +0.001; //move this to 10^curr
+
                 return expectedAsk;
             }
 
