@@ -8,7 +8,7 @@ namespace LykkePay.Models
     {
         public string sourceAddress { get; set; }
         public string destinationAddress { get; set; }
-        public double amount { get; set; }
+        public decimal amount { get; set; }
         public string assetId { get; set; }
         public string successURL { get; set; }
         public string errorURL { get; set; }
