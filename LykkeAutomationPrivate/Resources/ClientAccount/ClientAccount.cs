@@ -8,24 +8,25 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
     public class ClientAccount : ClientAccountBase
     {
-        public IResponse DeleteClientAccount(string id)
+        public IResponse<ErrorResponse> DeleteClientAccount(string id)
         {
-            return Request.Delete($"/api/ClientAccount/{id}").Build().Execute();
+            return Request.Delete($"/api/ClientAccount/{id}").Build().Execute<ErrorResponse>();
         }
 
-        public IResponse PutClientAccountEmail(string id, string email)
+        public IResponse<ErrorResponse> PutClientAccountEmail(string id, string email)
         {
-            throw new NotImplementedException();
+            return Request.Put($"/api/ClientAccount/{id}/email/{email}").Build().Execute<ErrorResponse>();
         }
 
-        public IResponse GetClientAccountTrusted(string id)
+        public IResponse<bool> GetClientAccountTrusted(string id)
         {
-            throw new NotImplementedException();
+            return Request.Get($"/api/ClientAccount/{id}/trusted").Build().Execute<bool>();
         }
 
-        public IResponse GetUsersCountByPartnerId(string partnerId)
+        public IResponse<Int32> GetUsersCountByPartnerId(string partnerId)
         {
-            throw new NotImplementedException();
+            return Request.Get("/api/ClientAccount/getUsersCountByPartnerId")
+                .AddQueryParameter("partnerId", partnerId).Build().Execute<Int32>();
         }
     }
 }

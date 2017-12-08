@@ -76,8 +76,7 @@ namespace LykkeAutomationPrivate.Tests
             Exception ex = null;
             try
             {
-                AllureReport.GetInstance().StepStarted(TestContext.CurrentContext.Test.FullName,
-                    name);
+                AllureReport.GetInstance().StepStarted(TestContext.CurrentContext.Test.FullName, name);
                 TestLog.WriteLine($"Step: {name}");
                 action();
             }catch(Exception e) {
@@ -86,7 +85,7 @@ namespace LykkeAutomationPrivate.Tests
             finally
             {
                 AllureReport.GetInstance().StepFinished(TestContext.CurrentContext.Test.FullName,
-             TestContext.CurrentContext.Result.Outcome.Status, ex);
+                TestContext.CurrentContext.Result.Outcome.Status, ex);
             }
         }
         #endregion
