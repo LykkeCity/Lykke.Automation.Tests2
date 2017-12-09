@@ -20,5 +20,6 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
         public AccountExist AccountExist => new AccountExist();
         public BannedClients BannedClients => new BannedClients();
         public ClientAccount ClientAccount => new ClientAccount();
+        public ClientAccountInformationResource ClientAccountInformation => new ClientAccountInformationResource();
     }
 }

@@ -8,6 +8,8 @@ namespace Lykke.Client.AutorestClient.Models
 {
     using Newtonsoft.Json;
     using System.Linq;
+    using LykkeAutomationPrivate.Models.Registration.Models;
+    using System;
 
     public partial class AccountRegistrationModel
     {
@@ -17,6 +19,11 @@ namespace Lykke.Client.AutorestClient.Models
         public AccountRegistrationModel()
         {
             CustomInit();
+        }
+
+        internal LykkeAutomationPrivate.Models.Registration.Models.AccountRegistrationModel GetTestModel()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
