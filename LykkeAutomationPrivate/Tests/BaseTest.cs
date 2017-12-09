@@ -8,66 +8,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using TestsCore.TestsCore;
 
 namespace LykkeAutomationPrivate.Tests
 {
     public class BaseTest
     {
         public LykkeApi lykkeApi = new LykkeApi();
+        private Allure2Report allure = new Allure2Report();
 
-        #region response info
-       
-        //TODO: Move out from BaseTest
-        public static void AreEqualByJson(object expected, object actual)
-        {
-            var expectedJson = JsonConvert.SerializeObject(expected);
-            var actualJson = JsonConvert.SerializeObject(actual);
-            Assert.That(expectedJson, Is.EqualTo(actualJson),  "Objects are not equals");
-        }
-
-        #endregion
-
-        #region before after
         [SetUp]
         public void SetUp()
         {
-            var testDescription = TestContext.CurrentContext.Test.Properties["Description"];
-            var textDescription = testDescription.Count>0 ? testDescription[0].ToString() : "No Description";
-            
-           AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
-               TestContext.CurrentContext.Test.Name, textDescription);
-            TestContext.WriteLine("SetUp");
+            allure.AllureBeforeTest();
         }
 
         [TearDown]
         public void TearDown()
         {
-            Console.WriteLine("TearDown");
-          
-            AllureReport.GetInstance().CaseFinished(TestContext.CurrentContext.Test.FullName,
-                TestContext.CurrentContext.Result.Outcome.Status,null);
+            allure.AllureAfterTest();
         }
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var testDescription = TestContext.CurrentContext.Test.Properties["Description"];
-            var textDescription = testDescription.Count > 0 ? testDescription[0].ToString() : "No Description";
-
-            AllureReport.GetInstance().RunStarted();
-            AllureReport.GetInstance().CaseStarted(TestContext.CurrentContext.Test.FullName,
-                TestContext.CurrentContext.Test.Name, textDescription);
-
+            allure.AllureBeforeAllTestsInClass();
         }
 
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            AllureReport.GetInstance().RunFinished();
+            allure.AllureAfterAllTestsInClass();
         }
 
-    #endregion
 
     #region allure helpers
 

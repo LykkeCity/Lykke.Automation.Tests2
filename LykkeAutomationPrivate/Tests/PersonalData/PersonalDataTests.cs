@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using TestsCore.TestsData;
+using static LykkeAutomationPrivate.Tests.Helpers;
 
 namespace LykkeAutomationPrivate.Tests.PersonalData
 {

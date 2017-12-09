@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using LykkeAutomation.TestsCore;
 using System.Linq;
 using NUnit.Framework;
+using TestsCore.TestsCore;
 
 namespace TestsCore.RestRequests.RestSharpRequest
 {
@@ -95,7 +96,8 @@ namespace TestsCore.RestRequests.RestSharpRequest
             if (response.ErrorMessage != null)
                 attachContext.AppendLine(response.ErrorMessage);
             attachContext.AppendLine(response.Content);
-            TestLog.WriteLine(attachContext.ToString());
+            //TestLog.WriteLine(attachContext.ToString());
+            Allure2Helper.AttachJson(attachName, attachContext.ToString());
            // AllureReport.GetInstance().AddAttachment(TestContext.CurrentContext.Test.FullName,
            //  Encoding.UTF8.GetBytes(attachContext.ToString()), attachName, "application/json");
         }
