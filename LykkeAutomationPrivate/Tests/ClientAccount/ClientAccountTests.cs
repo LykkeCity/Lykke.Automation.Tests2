@@ -103,20 +103,21 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
         [Category("ClientAccountResource"), Category("ClientAccount"), Category("ServiceAll")]
         public void GetUsersCountByPartnerIdTest()
         {
-            var partnerAccount = lykkeApi.Registration.PostRegistration(new AccountRegistrationModel().GetTestModel()).Account;
+            string partnerId = "NewTestPartner";
+            var getUsersCountForAccount = lykkeApi.ClientAccount.ClientAccount
+                .GetUsersCountByPartnerId(partnerId);
+            Assert.That(getUsersCountForAccount.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(getUsersCountForAccount.GetResponseObject(), Is.TypeOf<int>());
+
+            int usersCount = getUsersCountForAccount.GetResponseObject();
+
             var accountReg = new AccountRegistrationModel().GetTestModel();
-            accountReg.PartnerId = partnerAccount.Id;
+            accountReg.PartnerId = partnerId;
             var account = lykkeApi.Registration.PostRegistration(accountReg).Account;
 
-            //TODO: Divide to 2 tests
-            var getUsersCountForPartnerAccount = lykkeApi.ClientAccount.ClientAccount.GetUsersCountByPartnerId(partnerAccount.Id);
-            Assert.That(getUsersCountForPartnerAccount.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(getUsersCountForPartnerAccount.GetResponseObject(), Is.EqualTo(0));
-
-            //TODO: Error is here
-            var getUsersCountForAccount = lykkeApi.ClientAccount.ClientAccount.GetUsersCountByPartnerId(account.Id);
-            Assert.That(getUsersCountForAccount.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(getUsersCountForAccount.GetResponseObject(), Is.EqualTo(1));
+            getUsersCountForAccount = lykkeApi.ClientAccount.ClientAccount
+                .GetUsersCountByPartnerId(partnerId);
+            Assert.That(getUsersCountForAccount.GetResponseObject(), Is.EqualTo(usersCount + 1));
         }
     }
 }
