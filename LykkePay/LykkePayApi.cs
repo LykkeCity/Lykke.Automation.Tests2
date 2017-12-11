@@ -3,6 +3,7 @@ using LykkePay.Resources.ConvertTransfer;
 using LykkePay.Resources.GenerateAddress;
 using LykkePay.Resources.GetBalance;
 using LykkePay.Resources.Order;
+using LykkePay.Resources.PostBack;
 using LykkePay.Resources.Purchase;
 using LykkePay.Resources.PurchaseStatus;
 using LykkePay.Resources.Transfer;
@@ -27,5 +28,6 @@ namespace LykkePay.Api
         public LykkePay.Resources.Convert.Convert convert => new LykkePay.Resources.Convert.Convert();
         public PurchaseStatus purchaseStatus => new PurchaseStatus();
         public ConvertTransfer convertTransfer => new ConvertTransfer();
+        public PostBack postBack => new PostBack();
     }
 }
