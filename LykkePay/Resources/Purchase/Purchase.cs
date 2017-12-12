@@ -60,5 +60,28 @@ namespace LykkePay.Resources.Purchase
                 return (response, null);
             }
         }
+
+        public (IRestResponse Response, PostPurchaseResponseModel Data)
+            PostPurchaseResponse(MerchantModel merchantModel, string purchaseModel)
+        {
+            var request = new RestRequest(resource, Method.POST);
+  
+            request.AddParameter("application/json", purchaseModel, "application/json", ParameterType.RequestBody);
+            request.AddHeader("Lykke-Merchant-Id", merchantModel.LykkeMerchantId);
+            request.AddHeader("Lykke-Merchant-Sign", merchantModel.LykkeMerchantSign);
+            if (merchantModel.LykkeMerchantSessionId != null)
+                request.AddHeader("Lykke-Merchant-Session-Id", merchantModel.LykkeMerchantSessionId);
+
+            var response = client.Execute(request);
+            try
+            {
+                var data = JsonConvert.DeserializeObject<PostPurchaseResponseModel>(response.Content);
+                return (response, data);
+            }
+            catch (JsonReaderException)
+            {
+                return (response, null);
+            }
+        }
     }
 }

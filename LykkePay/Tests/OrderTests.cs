@@ -53,9 +53,6 @@ namespace LykkePay.Tests
             [Description("Validate Order postback response")]
             public void OrderPostBackSuccessResponseTest()
             {
-
-                var ppRes = lykkePayApi.postBack.GetCallBackByOrderID("15633");
-
                 var assetPair = "BTCUSD";
 
                 MarkupModel markUp = new MarkupModel(50, 30);

@@ -23,6 +23,19 @@ namespace LykkePay.Tests
             }
         }
 
+        public class GetBalanceNegative : BaseTest
+        {
+            [TestCase("xyz")]
+            [TestCase("321")]
+            [Category("LykkePay")]
+            public void GetBalanceNegativeTest(string asset)
+            {
+                var getBalance = lykkePayApi.getBalance.GetGetBalance(asset);
+                Assert.That(getBalance.Response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound),
+                    "Unexpected code on invalid getbalance request");
+            }
+        }
+
         public class GetBalanceNonEmpty : BaseTest
         {
             [TestCase("BTC")]
@@ -36,6 +49,19 @@ namespace LykkePay.Tests
                     "Not 200 code on valid getbalance/nonempty request");
                 Assert.That(getBalanceNE.Data?.Where(w => w.Amount == 0).Count(), Is.EqualTo(0), 
                     "Empty wallets has been returned");
+            }
+        }
+
+        public class GetBalanceNonEmptyNegative : BaseTest
+        {
+            [TestCase("XYZ")]
+            [TestCase("123")]
+            [Category("LykkePay")]
+            public void GetBalanceNonEmptyNegativeTest(string asset)
+            {
+                var getBalanceNE = lykkePayApi.getBalance.GetGetBalanceNonEmpty(asset);
+                Assert.That(getBalanceNE.Response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound),
+                    "Not 404 code on valid getbalance/nonempty request");
             }
         }
 

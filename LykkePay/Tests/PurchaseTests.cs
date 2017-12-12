@@ -1,4 +1,5 @@
 ﻿using LykkePay.Models;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,9 @@ namespace LykkePay.Tests
 
 
                 var purchaseModel = new PostPurchaseModel(address, assetPair, baseAsset, amount);
-                var merchant = new MerchantModel(purchaseModel);
-                var purchase = lykkePayApi.purchase.PostPurchaseResponse(merchant, purchaseModel);
+                var purchaceJson = JsonConvert.SerializeObject(purchaseModel);
+                var merchant = new MerchantModel(purchaceJson);
+                var purchase = lykkePayApi.purchase.PostPurchaseResponse(merchant, purchaceJson);
 
                 Assert.That(purchase.Response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 //TODO: Check purchase

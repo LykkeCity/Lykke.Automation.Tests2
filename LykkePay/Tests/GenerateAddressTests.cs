@@ -27,11 +27,18 @@ namespace LykkePay.Tests
                 Assert.That(createdWalletBalance, Is.Not.Null, "New wallet addres not found");
                 Assert.That(createdWalletBalance.Amount, Is.EqualTo(0), "Non zero balance in new wallet");
             }
+        }
 
-            [TearDown]
-            public void RemoveAddress(string address)
+        public class GetGenerateAddressNegative : BaseTest
+        {
+            [TestCase("XYZ")]
+            [TestCase("321")]
+            [Category("LykkePay")]
+            public void GetGenerateAddressNegativeTest(string assetId)
             {
-                //TODO: Remove address
+                var newAddress = lykkePayApi.generateAddress.GetGenerateAddress(assetId);
+
+                Assert.That(newAddress.Response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
             }
         }
     }
