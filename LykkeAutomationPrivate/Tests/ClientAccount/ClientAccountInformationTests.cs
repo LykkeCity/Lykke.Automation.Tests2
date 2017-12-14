@@ -4,6 +4,7 @@ using LykkeAutomationPrivate.Models.Registration.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -14,11 +15,13 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
         AccountRegistrationModel registration;
         ClientAccountInformationModel account;
         string pin = "1111";
+        string partnerId = "NewTestPartner";
 
         [OneTimeSetUp]
         public void CreateClient()
         {
             registration = new AccountRegistrationModel().GetTestModel();
+            registration.PartnerId = partnerId;
             account = lykkeApi.Registration.PostRegistration(registration).Account;
             lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(account.Id, pin);
         }
@@ -37,29 +40,20 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
             Assert.That(accountInformation.IsReviewAccount, Is.EqualTo(false));
             Assert.That(accountInformation.IsTrusted, Is.EqualTo(false));
             Assert.That(accountInformation.NotificationsId, Is.EqualTo(account.NotificationsId));
-            Assert.That(accountInformation.PartnerId, Is.Null);
+            Assert.That(accountInformation.PartnerId, Is.EqualTo(partnerId));
             Assert.That(accountInformation.Phone, Is.EqualTo(registration.ContactPhone));
             Assert.That(accountInformation.Pin, Is.EqualTo(pin));
             Assert.That(accountInformation.Registered, Is.EqualTo(DateTime.UtcNow).Within(TimeSpan.FromMinutes(10)));
         }
 
-        //TODO: Body in GET does not alowed https://msdn.microsoft.com/en-us/library/d4cek6cc%28v=vs.110%29.aspx
-        //[Test]
-        //[Description("Get clients by ids.")]
-        //[Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
-        //public void GetClientsByIdsTest()
-        //{
-        //    var clientAccountIds = new ClientAccountIdsModel()
-        //    {
-        //        Ids = new List<string>() { account.Id }
-        //    };
+        [Test]
+        [Ignore("Could not send body in GET request")]
+        [Description("Get clients by ids.")]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void GetClientsByIdsTest()
+        {
 
-        //    var getClientsByIds = lykkeApi.ClientAccount.ClientAccountInformation
-        //        .GetClientsByIds(clientAccountIds);
-        //    Assert.That(getClientsByIds.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-
-        //    var clientsByIds = getClientsByIds.GetResponseObject();
-        //}
+        }
 
         [Test]
         [Description("Get clients by phone.")]
@@ -83,6 +77,69 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
             Assert.That(isPasswordCorrect.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
             Assert.That(isPasswordCorrect.GetResponseObject(), Is.True);
+        }
+
+        [Test]
+        [Description("Get client by id.")]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void GetClientByIdTest()
+        {
+            var client = lykkeApi.ClientAccount.ClientAccountInformation
+                .GetClientById(account.Id);
+            Assert.That(client.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var clientModel = client.GetResponseObject();
+            Assert.That(clientModel.Id, Is.EqualTo(account.Id));
+            Assert.That(clientModel.Email, Is.EqualTo(account.Email));
+            Assert.That(clientModel.PartnerId, Is.EqualTo(partnerId));
+            Assert.That(clientModel.Phone, Is.EqualTo(account.Phone));
+            Assert.That(clientModel.Pin, Is.EqualTo(pin));
+            Assert.That(clientModel.NotificationsId, Is.EqualTo(account.NotificationsId));
+            Assert.That(clientModel.Registered, Is.EqualTo(account.Registered));
+            Assert.That(clientModel.IsReviewAccount, Is.EqualTo(account.IsReviewAccount));
+        }
+
+        [Test]
+        [Description("Get clients by email.")]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void GetClientsByEmailTest()
+        {
+            var client = lykkeApi.ClientAccount.ClientAccountInformation
+                .GetClientsByEmail(account.Email);
+            Assert.That(client.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(client.GetResponseObject().Count, Is.EqualTo(1));
+
+            var clientModel = client.GetResponseObject().First();
+
+            Assert.That(clientModel.Id, Is.EqualTo(account.Id));
+            Assert.That(clientModel.Email, Is.EqualTo(account.Email));
+            Assert.That(clientModel.PartnerId, Is.EqualTo(partnerId));
+            Assert.That(clientModel.Phone, Is.EqualTo(account.Phone));
+            Assert.That(clientModel.Pin, Is.EqualTo(pin));
+            Assert.That(clientModel.NotificationsId, Is.EqualTo(account.NotificationsId));
+            Assert.That(clientModel.Registered, Is.EqualTo(account.Registered));
+            Assert.That(clientModel.IsReviewAccount, Is.EqualTo(account.IsReviewAccount));
+        }
+
+        [Test]
+        [Description("Get client by email and partner id.")]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void GetClientByEmailAndPartnerIdTest()
+        {
+            var client = lykkeApi.ClientAccount.ClientAccountInformation
+                .GetClientByEmailAndPartnerId(account.Email, partnerId);
+            Assert.That(client.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var clientModel = client.GetResponseObject();
+
+            Assert.That(clientModel.Id, Is.EqualTo(account.Id));
+            Assert.That(clientModel.Email, Is.EqualTo(account.Email));
+            Assert.That(clientModel.PartnerId, Is.EqualTo(partnerId));
+            Assert.That(clientModel.Phone, Is.EqualTo(account.Phone));
+            Assert.That(clientModel.Pin, Is.EqualTo(pin));
+            Assert.That(clientModel.NotificationsId, Is.EqualTo(account.NotificationsId));
+            Assert.That(clientModel.Registered, Is.EqualTo(account.Registered));
+            Assert.That(clientModel.IsReviewAccount, Is.EqualTo(account.IsReviewAccount));
         }
     }
 }

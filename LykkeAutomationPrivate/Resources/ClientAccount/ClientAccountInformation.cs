@@ -14,12 +14,11 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
                 .Build().Execute<ClientAccountInformation>();
         }
 
-        //TODO: Body in GET does not alowed https://msdn.microsoft.com/en-us/library/d4cek6cc%28v=vs.110%29.aspx
-        //public IResponse<List<ClientAccountInformation>> GetClientsByIds(ClientAccountIdsModel ids)
-        //{
-        //    return Request.Get("/api/ClientAccountInformation/getClientsByIds").AddJsonBody(ids)
-        //        .Build().Execute<List<ClientAccountInformation>>();
-        //}
+        public IResponse<List<ClientAccountInformation>> GetClientsByIds(ClientAccountIdsModel ids)
+        {
+            //TODO: Body in GET does not alowed https://msdn.microsoft.com/en-us/library/d4cek6cc%28v=vs.110%29.aspx
+            throw new NotSupportedException("Body in GET does not alowed");
+        }
 
         public IResponse<List<string>> GetClientsByPhone(string phoneNumber)
         {
@@ -31,6 +30,25 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
         {
             return Request.Get($"/api/ClientAccountInformation/isPasswordCorrect/{clientId}/{password}")
                 .Build().Execute<bool>();
+        }
+
+        public IResponse<ClientResponseModel> GetClientById(string clientId)
+        {
+            return Request.Get("/api/ClientAccountInformation/getClientById")
+                .AddQueryParameter("id", clientId)
+                .Build().Execute<ClientResponseModel>();
+        }
+
+        public IResponse<List<ClientAccountInformation>> GetClientsByEmail(string email)
+        {
+            return Request.Get($"/api/ClientAccountInformation/getClientsByEmail/{email}")
+                .Build().Execute<List<ClientAccountInformation>>();
+        }
+
+        public IResponse<ClientAccountInformation> GetClientByEmailAndPartnerId(string email, string partnerId)
+        {
+            return Request.Get($"/api/ClientAccountInformation/getClientByEmailandPartnerId/{email}")
+                .AddQueryParameter("partnerId", partnerId).Build().Execute<ClientAccountInformation>();
         }
     }
 }

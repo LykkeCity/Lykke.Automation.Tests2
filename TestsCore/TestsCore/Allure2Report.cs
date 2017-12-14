@@ -92,6 +92,7 @@ namespace TestsCore.TestsCore
         public void AllureBeforeTest()
         {
             var nunitTest = TestExecutionContext.CurrentContext.CurrentTest;
+            var x = TestContext.CurrentContext.Test;
             string suitName = nunitTest.ClassName.Split('.')[2]; //LykkeAutomationPrivate.Tests.ClientAccount.DeleteClientAccount.DeleteClientAccountTest -> ClientAccount
 
             var testResult = new Allure.Commons.TestResult
@@ -100,6 +101,7 @@ namespace TestsCore.TestsCore
                 historyId = nunitTest.FullName,
                 name = nunitTest.MethodName,
                 fullName = nunitTest.FullName,
+                parameters = GetParameters(),
                 labels = new List<Label>
                     {
                         Label.Suite(suitName),
@@ -107,11 +109,32 @@ namespace TestsCore.TestsCore
                         Label.Host(),
                         Label.TestClass(nunitTest.ClassName),
                         Label.TestMethod(nunitTest.MethodName),
-                        Label.Package(nunitTest.ClassName.Replace('+', '.'))
+                        Label.Package(nunitTest.ClassName.Replace('+', '.')),
                     }
             };
 
+            testResult.labels.AddRange(GetCategories());
             Allure.StartTestCase(testResult);
+        }
+
+        private IList<Label> GetCategories()
+        {
+            var key = "Category";
+            var categories = new List<string>();
+            var test = TestExecutionContext.CurrentContext.CurrentTest;
+            if (test.Properties.ContainsKey(key))
+                categories.AddRange(test.Properties[key].Cast<string>());
+            if (test.Parent != null && test.Parent.Properties.ContainsKey(key))
+                categories.AddRange(test.Parent.Properties[key].Cast<string>());
+            return categories.Select(c => Label.Feature(c)).ToList();
+        }
+
+        private List<Parameter> GetParameters()
+        {
+            var parameters = TestExecutionContext.CurrentContext.CurrentTest.Arguments;
+            if (!parameters.Any())
+                return new List<Parameter>();
+            return parameters.Select(p => new Parameter() { name = "param", value = p.ToString() }).ToList();
         }
 
         //[TearDown]
