@@ -134,7 +134,7 @@ namespace TestsCore.TestsCore
             var parameters = TestExecutionContext.CurrentContext.CurrentTest.Arguments;
             if (!parameters.Any())
                 return new List<Parameter>();
-            return parameters.Select(p => new Parameter() { name = "param", value = p.ToString() }).ToList();
+            return parameters.Select(p => new Parameter() { name = "param", value = p?.ToString() ?? "null" }).ToList();
         }
 
         //[TearDown]
