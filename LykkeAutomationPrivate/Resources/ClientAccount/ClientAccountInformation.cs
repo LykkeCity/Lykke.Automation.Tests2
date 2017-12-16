@@ -50,5 +50,22 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
             return Request.Get($"/api/ClientAccountInformation/getClientByEmailandPartnerId/{email}")
                 .AddQueryParameter("partnerId", partnerId).Build().Execute<ClientAccountInformation>();
         }
+
+        public IResponse<ClientAccountInformation> PostAuthenticate(ClientAuthenticationModel auth)
+        {
+            return Request.Post("/api/ClientAccountInformation/authenticate").AddJsonBody(auth)
+                .Build().Execute<ClientAccountInformation>();
+        }
+
+        public IResponse PostSetPIN(string clientId, string pin)
+        {
+            return Request.Post($"/api/ClientAccountInformation/setPIN/{clientId}/{pin}").Build().Execute();
+        }
+
+        public IResponse PostChangeClientPassword(PasswordHashModel passwordHashModel)
+        {
+            return Request.Post("/api/ClientAccountInformation/changeClientPassword")
+                .AddJsonBody(passwordHashModel).Build().Execute();
+        }
     }
 }

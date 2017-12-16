@@ -8,11 +8,6 @@ namespace LykkeAutomationPrivate.Resources.ClientAccountResource
 {
     public class Wallets: ClientAccountBase
     {
-        public void PostClientAccountInformationsetPIN(string clientId, string pin)
-        {
-            Request.Post($"/api/ClientAccountInformation/setPIN/{clientId}/{pin}").Build().Execute();
-        }
-
         public IResponse<WalletDto> PostCreateWallet(CreateWalletRequest wallet)
         {
             return Request.Post("api/Wallets").AddJsonBody(wallet).Build().Execute<WalletDto>();

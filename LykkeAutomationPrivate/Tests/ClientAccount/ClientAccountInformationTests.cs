@@ -1,6 +1,7 @@
 ﻿using LykkeAutomationPrivate.DataGenerators;
 using LykkeAutomationPrivate.Models.ClientAccount.Models;
 using LykkeAutomationPrivate.Models.Registration.Models;
+using LykkeAutomationPrivate.Validators;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
             registration = new AccountRegistrationModel().GetTestModel();
             registration.PartnerId = partnerId;
             account = lykkeApi.Registration.PostRegistration(registration).Account;
-            lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(account.Id, pin);
+            lykkeApi.ClientAccount.ClientAccountInformation.PostSetPIN(account.Id, pin);
         }
 
         [Test]
@@ -140,6 +141,96 @@ namespace LykkeAutomationPrivate.Tests.ClientAccount
             Assert.That(clientModel.NotificationsId, Is.EqualTo(account.NotificationsId));
             Assert.That(clientModel.Registered, Is.EqualTo(account.Registered));
             Assert.That(clientModel.IsReviewAccount, Is.EqualTo(account.IsReviewAccount));
+        }
+    }
+
+    class Authenticate : BaseTest
+    {
+        [Test]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void AuthenticateExistedClientTest()
+        {
+            var registration = new AccountRegistrationModel().GetTestModel();
+            //registration.PartnerId = partnerId;
+            var  account = lykkeApi.Registration.PostRegistration(registration).Account;
+
+            var clientAuthentication = new ClientAuthenticationModel()
+            {
+                Email = registration.Email,
+                Password = registration.Password
+            };
+            var authenticate = lykkeApi.ClientAccount.ClientAccountInformation
+                .PostAuthenticate(clientAuthentication);
+
+            Assert.That(authenticate.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            AccountServiceValidator.Validate(registration, authenticate.GetResponseObject());
+        }
+
+        [Test]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void AuthenticateNonExistedClientTest()
+        {
+            var registration = new AccountRegistrationModel().GetTestModel();
+
+            var clientAuthentication = new ClientAuthenticationModel()
+            {
+                Email = registration.Email,
+                Password = registration.Password
+            };
+            var authenticate = lykkeApi.ClientAccount.ClientAccountInformation
+                .PostAuthenticate(clientAuthentication);
+
+            Assert.That(authenticate.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
+    }
+
+    class SetPin : BaseTest
+    {
+        [Test]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        public void SetPinTest()
+        {
+            var pin = "1111";
+
+            var registration = new AccountRegistrationModel().GetTestModel();
+            var account = lykkeApi.Registration.PostRegistration(registration).Account;
+
+            var setPin = lykkeApi.ClientAccount.ClientAccountInformation.PostSetPIN(account.Id, pin);
+            Assert.That(setPin.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            Assert.That(lykkeApi.ClientAccount.ClientAccountInformation.GetClientAccountInformation(account.Id)
+                .GetResponseObject().Pin, Is.EqualTo(pin), "Wrong PIN");
+        }
+    }
+
+    class ChangePassword : BaseTest
+    {
+        [Test]
+        [Category("ClientAccountInformationResource"), Category("ClientAccount"), Category("ServiceAll")]
+        [Description("Change client password")]
+        public void ChangePasswordTest()
+        {
+            string newPassword = "987654321";
+            var registration = new AccountRegistrationModel().GetTestModel();
+            var account = lykkeApi.Registration.PostRegistration(registration).Account;
+
+            var passwordHash = new PasswordHashModel()
+            {
+                ClientId = account.Id,
+                PwdHash = Sha256.GenerateHash(newPassword)
+            };
+
+            var postChangeClientPassword = lykkeApi.ClientAccount.ClientAccountInformation
+                .PostChangeClientPassword(passwordHash);
+            Assert.That(postChangeClientPassword.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            Assert.That(lykkeApi.ClientAccount.ClientAccountInformation
+                .PostAuthenticate(new ClientAuthenticationModel()
+                {
+                    Email = registration.Email,
+                    Password = newPassword
+                }).StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            //TODO: Add more asserts
         }
     }
 }

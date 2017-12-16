@@ -23,7 +23,7 @@ namespace LykkeAutomation.Tests.ClientAccount
             var client = new AccountRegistrationModel().GetTestModel();
             var registeredclient = lykkeApi.Registration.PostRegistration(client);
             userId = registeredclient.Account.Id;
-            lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(userId, "1111");
+            lykkeApi.ClientAccount.ClientAccountInformation.PostSetPIN(userId, "1111");
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace LykkeAutomation.Tests.ClientAccount
             var client = new AccountRegistrationModel().GetTestModel();
             var registeredclient = lykkeApi.Registration.PostRegistration(client);
             var userId = registeredclient.Account.Id;
-            lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(userId, "1111");
+            lykkeApi.ClientAccount.ClientAccountInformation.PostSetPIN(userId, "1111");
 
             //Create 3 wallets
             var createdWalet1 = lykkeApi.ClientAccount.Wallets.PostCreateWallet(new CreateWalletRequest().GetTestModel(userId)).GetResponseObject();
@@ -204,7 +204,7 @@ namespace LykkeAutomation.Tests.ClientAccount
             var client = new AccountRegistrationModel().GetTestModel();
             var registeredclient = lykkeApi.Registration.PostRegistration(client);
             var clientId = registeredclient.Account.Id;
-            lykkeApi.ClientAccount.Wallets.PostClientAccountInformationsetPIN(clientId, "1111");
+            lykkeApi.ClientAccount.ClientAccountInformation.PostSetPIN(clientId, "1111");
 
             //Create 3 wallets
             var tradingWallet1 = new CreateWalletRequest().GetTestModel(clientId);
