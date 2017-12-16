@@ -126,6 +126,7 @@ namespace TestsCore.TestsCore
                 categories.AddRange(test.Properties[key].Cast<string>());
             if (test.Parent != null && test.Parent.Properties.ContainsKey(key))
                 categories.AddRange(test.Parent.Properties[key].Cast<string>());
+
             return categories.Select(c => Label.Feature(c)).ToList();
         }
 
@@ -134,7 +135,16 @@ namespace TestsCore.TestsCore
             var parameters = TestExecutionContext.CurrentContext.CurrentTest.Arguments;
             if (!parameters.Any())
                 return new List<Parameter>();
-            return parameters.Select(p => new Parameter() { name = "param", value = p?.ToString() ?? "null" }).ToList();
+            return parameters.Select(p => new Parameter() { name = "param", value = GetParamValue(p) }).ToList();
+        }
+
+        private string GetParamValue(object parameter)
+        {
+            if (parameter == null)
+                return "NULL";
+            if (parameter.ToString() == "")
+                return "_empty_string_";
+            return parameter.ToString();
         }
 
         //[TearDown]
